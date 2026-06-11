@@ -1,0 +1,26 @@
+import { Playground } from "@/components/Playground";
+
+export default function Home() {
+  return (
+    <div className="relative mx-auto max-w-6xl px-5 pb-16 sm:px-8">
+      <div className="lamplight" aria-hidden="true" />
+
+      <header className="rise pt-14 text-center sm:pt-20">
+        <p className="smallcaps text-brass">The Axiom Foundation · executable law</p>
+        <h1
+          className="mt-5 font-display text-6xl font-semibold tracking-tight text-parchment sm:text-7xl"
+          style={{ fontVariationSettings: '"opsz" 144, "WONK" 1' }}
+        >
+          Axiom playground
+        </h1>
+        <p className="mx-auto mt-5 max-w-2xl font-body text-lg font-light italic text-parchment-dim">
+          Statutes compiled to WebAssembly, determinations rendered on your machine. The law is
+          delivered to this page once — your answers never leave it.
+        </p>
+        <div className="double-rule mx-auto mt-9 w-40" aria-hidden="true" />
+      </header>
+
+      <Playground />
+    </div>
+  );
+}

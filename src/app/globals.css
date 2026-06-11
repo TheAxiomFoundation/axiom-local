@@ -1,0 +1,320 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   The reading room: a law library at night.
+   Warm near-black ink, parchment text, gilt rules, sealing-wax red,
+   banker's-lamp green. Fraunces for display, Spectral for body,
+   Courier Prime for everything typewritten (statutes, ids, traces).
+--------------------------------------------------------------------------- */
+
+@theme {
+  --color-ink: #161108;
+  --color-ink-raised: #1e1810;
+  --color-ink-well: #100c06;
+  --color-parchment: #eadfc4;
+  --color-parchment-dim: #bcaa82;
+  --color-faint: #8d7c5a;
+  --color-brass: #c9a45a;
+  --color-brass-deep: #95763a;
+  --color-wax: #b3472c;
+  --color-wax-bright: #d05a3a;
+  --color-wax-deep: #7e2f1c;
+  --color-lamp: #8fb795;
+  --color-lamp-deep: #4f7257;
+  --color-rule: #382e1f;
+  --color-rule-strong: #5a4a30;
+  --color-sienna: #cf8a5b;
+}
+
+@theme inline {
+  --font-display: var(--font-fraunces), "Georgia", serif;
+  --font-body: var(--font-spectral), "Georgia", serif;
+  --font-mono: var(--font-courier), "Courier New", monospace;
+}
+
+@layer base {
+  html {
+    background: var(--color-ink);
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--color-ink);
+    color: var(--color-parchment);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-brass);
+    color: var(--color-ink);
+  }
+
+  a {
+    color: var(--color-brass);
+    text-decoration: underline;
+    text-decoration-color: var(--color-brass-deep);
+    text-underline-offset: 3px;
+    transition: color 120ms ease;
+  }
+  a:hover {
+    color: var(--color-parchment);
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--color-brass);
+    outline-offset: 2px;
+  }
+}
+
+/* Component classes live in the components layer so Tailwind utilities can
+   still override individual properties (v4 cascade-layer order). */
+@layer components {
+
+/* ----- atmosphere ------------------------------------------------------- */
+
+/* paper grain: inline turbulence, fixed over everything, barely there */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* the pool of lamplight behind the masthead */
+.lamplight {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60rem 26rem at 50% -8rem, rgba(201, 164, 90, 0.13), transparent 65%),
+    radial-gradient(90rem 50rem at 50% -16rem, rgba(179, 71, 44, 0.05), transparent 70%);
+}
+
+/* ----- archival fittings ------------------------------------------------- */
+
+.smallcaps {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* double hairline, like the rules on a reporter's title page */
+.double-rule {
+  border-top: 1px solid var(--color-rule-strong);
+  position: relative;
+}
+.double-rule::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--color-rule);
+}
+
+.panel {
+  background: var(--color-ink-raised);
+  border: 1px solid var(--color-rule);
+  box-shadow:
+    inset 0 1px 0 rgba(234, 223, 196, 0.04),
+    0 18px 40px -28px rgba(0, 0, 0, 0.8);
+}
+
+.well {
+  background: var(--color-ink-well);
+  border: 1px solid var(--color-rule);
+}
+
+/* dotted ledger leader between a name and its figure */
+.leader {
+  flex: 1 1 2rem;
+  min-width: 2rem;
+  margin: 0 0.6rem;
+  border-bottom: 1px dotted var(--color-rule-strong);
+  transform: translateY(-0.3em);
+}
+
+/* ----- controls ---------------------------------------------------------- */
+
+.field {
+  width: 100%;
+  background: var(--color-ink-well);
+  border: 1px solid var(--color-rule-strong);
+  color: var(--color-parchment);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  padding: 0.5rem 0.75rem;
+  transition: border-color 120ms ease;
+}
+.field:focus {
+  outline: none;
+  border-color: var(--color-brass);
+}
+.field::placeholder {
+  color: var(--color-faint);
+}
+
+input[type="month"].field::-webkit-calendar-picker-indicator {
+  filter: invert(0.8) sepia(0.4);
+  cursor: pointer;
+}
+
+.btn-wax {
+  background: linear-gradient(180deg, var(--color-wax-bright), var(--color-wax) 45%, var(--color-wax-deep));
+  border: 1px solid var(--color-wax-deep);
+  color: #f6e9da;
+  box-shadow:
+    inset 0 1px 0 rgba(246, 233, 218, 0.25),
+    0 10px 24px -12px rgba(179, 71, 44, 0.55);
+  transition:
+    transform 90ms ease,
+    box-shadow 90ms ease,
+    filter 120ms ease;
+}
+.btn-wax:hover {
+  filter: brightness(1.07);
+}
+.btn-wax:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.35),
+    0 4px 12px -8px rgba(179, 71, 44, 0.5);
+}
+.btn-wax:disabled {
+  filter: grayscale(0.6) brightness(0.7);
+  cursor: not-allowed;
+}
+
+.btn-quiet {
+  border: 1px solid var(--color-rule-strong);
+  color: var(--color-parchment-dim);
+  transition:
+    color 120ms ease,
+    border-color 120ms ease,
+    background 120ms ease;
+}
+.btn-quiet:hover {
+  color: var(--color-parchment);
+  border-color: var(--color-brass-deep);
+  background: rgba(201, 164, 90, 0.06);
+}
+
+.stepper-btn {
+  border: 1px solid var(--color-rule-strong);
+  background: var(--color-ink-raised);
+  color: var(--color-parchment-dim);
+  width: 2.25rem;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  line-height: 1;
+  transition:
+    color 120ms ease,
+    border-color 120ms ease;
+}
+.stepper-btn:hover:not(:disabled) {
+  color: var(--color-brass);
+  border-color: var(--color-brass-deep);
+}
+.stepper-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ----- motion ------------------------------------------------------------ */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rise {
+  animation: rise 700ms cubic-bezier(0.2, 0.65, 0.25, 1) both;
+}
+.rise-1 { animation-delay: 60ms; }
+.rise-2 { animation-delay: 160ms; }
+.rise-3 { animation-delay: 260ms; }
+.rise-4 { animation-delay: 360ms; }
+.rise-5 { animation-delay: 480ms; }
+
+@keyframes stamp-in {
+  0% {
+    opacity: 0;
+    transform: scale(1.6) rotate(-7deg);
+    filter: blur(2px);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(0.96) rotate(0.6deg);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.stamp-in {
+  animation: stamp-in 360ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+@keyframes lamp-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(143, 183, 149, 0.45); }
+  60% { box-shadow: 0 0 0 5px rgba(143, 183, 149, 0); }
+}
+
+.lamp-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--color-lamp);
+  animation: lamp-pulse 2.4s ease-out infinite;
+}
+
+.lamp-dot--warn {
+  background: var(--color-wax-bright);
+  animation: none;
+}
+
+/* expandable trace nodes: smooth height without measuring */
+.tree-children {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 220ms ease;
+}
+.tree-children.open {
+  grid-template-rows: 1fr;
+}
+.tree-children > div {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .stamp-in,
+  .lamp-dot {
+    animation: none;
+  }
+  .tree-children {
+    transition: none;
+  }
+}
+
+} /* end @layer components */

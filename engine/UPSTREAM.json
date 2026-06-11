@@ -1,0 +1,7 @@
+{
+  "repo": "https://github.com/TheAxiomFoundation/axiom-rules-engine",
+  "ref": "main",
+  "commit": "07009cec136a3e665fa200d4e5596c6eeaac06f7",
+  "wasm_pack": "0.15.0",
+  "built_at": "2026-06-11T07:21:49Z"
+}
