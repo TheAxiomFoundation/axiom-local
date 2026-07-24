@@ -1,0 +1,225 @@
+"use client";
+
+import { IconFileUpload, IconFlask, IconRestore, IconSearch } from "@tabler/icons-react";
+import { useMemo, useState } from "react";
+import type { GoldenPackage } from "@/lib/goldenPath";
+import { prettifyName } from "@/lib/format";
+import { PanelHeading } from "./PanelHeading";
+
+interface PackagePanelProps {
+  pkg: GoldenPackage;
+  fetchedSha256: string;
+  whatIfActive: boolean;
+  whatIfPreviousValue: string | null;
+  onToggleWhatIf: () => void;
+  presumptionsOpen: boolean;
+  onTogglePresumptions: () => void;
+  refOverrides: Record<string, string>;
+  onRefOverride: (ref: string, value: string | null) => void;
+  onOpenLoader: () => void;
+  onLoadTeachingExample: () => void;
+}
+
+const PAGE_SIZE = 40;
+
+export function PackagePanel({
+  pkg,
+  fetchedSha256,
+  whatIfActive,
+  whatIfPreviousValue,
+  onToggleWhatIf,
+  presumptionsOpen,
+  onTogglePresumptions,
+  refOverrides,
+  onRefOverride,
+  onOpenLoader,
+  onLoadTeachingExample,
+}: PackagePanelProps) {
+  const [query, setQuery] = useState("");
+
+  const shaMatches = fetchedSha256 === pkg.source.artifact_sha256;
+  const entries = useMemo(() => Object.entries(pkg.defaults), [pkg.defaults]);
+  const filtered = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (!needle) return entries;
+    return entries.filter(
+      ([ref, slot]) => slot.name.includes(needle) || ref.toLowerCase().includes(needle),
+    );
+  }, [entries, query]);
+
+  return (
+    <section className="rise rise-2" aria-label="The program" id="program-panel">
+      <PanelHeading
+        section="1"
+        title="The program"
+        aside={`composed artifact · ${entries.length} inputs · developer preview`}
+      />
+
+      <p className="mb-4 mt-1 text-[0.95rem] font-light text-parchment-dim">
+        {pkg.title}: the full composed program — federal statute, federal regulation, and state
+        rule — compiled to one versioned artifact. This is the same release unit the hosted API
+        executes; here it is delivered to the page once and executed in this tab.
+      </p>
+
+      <div className="panel">
+        <dl className="space-y-1.5 px-4 py-3 font-mono text-[0.72rem]">
+          <div className="flex items-baseline">
+            <dt className="text-faint">artifact</dt>
+            <span className="leader" aria-hidden="true" />
+            <dd className="text-parchment">
+              <a
+                href={`https://github.com/${pkg.source.repo}/blob/main/${pkg.source.artifact_path}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {pkg.source.repo.split("/")[1]}:{pkg.source.artifact_path.split("/").pop()}
+              </a>
+            </dd>
+          </div>
+          <div className="flex items-baseline">
+            <dt className="text-faint">sha-256 (fetched · pinned)</dt>
+            <span className="leader" aria-hidden="true" />
+            <dd
+              className={shaMatches ? "text-lamp" : "text-wax-bright"}
+              title={`fetched ${fetchedSha256}\npinned ${pkg.source.artifact_sha256}`}
+            >
+              {fetchedSha256.slice(0, 12)}… {shaMatches ? "= pinned" : "≠ PINNED"}
+            </dd>
+          </div>
+          <div className="flex items-baseline">
+            <dt className="text-faint">compiled by engine</dt>
+            <span className="leader" aria-hidden="true" />
+            <dd className="text-parchment">
+              v{pkg.source.engine_version} · artifact format v{pkg.source.artifact_format_version}
+            </dd>
+          </div>
+          <div className="flex items-baseline">
+            <dt className="text-faint">jurisdiction</dt>
+            <span className="leader" aria-hidden="true" />
+            <dd className="text-parchment">{pkg.jurisdiction}</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div className="mt-4 border border-rule bg-ink-raised p-4" id="what-if">
+        <p className="smallcaps text-[0.62rem] text-brass">What if the law changed?</p>
+        <p className="mt-1.5 text-[0.88rem] font-light text-parchment-dim">
+          The earned-income deduction rate — 7 USC 2014(e)(2), currently{" "}
+          <span className="font-mono text-[0.8rem] text-parchment">
+            {whatIfPreviousValue ?? "0.2"}
+          </span>{" "}
+          — is one JSON entry in the artifact. Amend it to{" "}
+          <span className="font-mono text-[0.8rem] text-parchment">0.3</span> and re-run: the same
+          household, under amended law, in this tab.
+        </p>
+        <div className="mt-3 flex items-center gap-3">
+          <button
+            type="button"
+            className={`${whatIfActive ? "btn-wax" : "btn-quiet"} flex items-center gap-2 px-3 py-1.5 font-mono text-[0.72rem] tracking-wide`}
+            onClick={onToggleWhatIf}
+            aria-pressed={whatIfActive}
+          >
+            <IconFlask size={14} aria-hidden="true" />
+            {whatIfActive ? "Amended law in force — restore current law" : "Amend the deduction rate"}
+          </button>
+          {whatIfActive ? (
+            <span className="smallcaps text-[0.62rem] text-sienna">
+              hypothetical — not current law
+            </span>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            className="btn-quiet flex items-center gap-2 px-3 py-1.5 font-mono text-[0.72rem] tracking-wide"
+            onClick={onTogglePresumptions}
+            aria-expanded={presumptionsOpen}
+          >
+            <IconSearch size={14} aria-hidden="true" />
+            {presumptionsOpen ? "Close the presumed answers" : `Inspect the ${entries.length} presumed answers`}
+          </button>
+          <button
+            className="btn-quiet flex items-center gap-2 px-3 py-1.5 font-mono text-[0.72rem] tracking-wide"
+            onClick={onLoadTeachingExample}
+          >
+            <IconRestore size={14} aria-hidden="true" />
+            Two-module teaching example
+          </button>
+          <button
+            className="btn-quiet flex items-center gap-2 px-3 py-1.5 font-mono text-[0.72rem] tracking-wide"
+            onClick={onOpenLoader}
+          >
+            <IconFileUpload size={14} aria-hidden="true" />
+            Load your own program
+          </button>
+        </div>
+
+        {presumptionsOpen ? (
+          <div className="mt-3 border border-rule bg-ink-raised p-4" id="presumptions">
+            <p className="text-[0.85rem] font-light text-parchment-dim">
+              Every input the program can consider, with the answer this page presumes. A
+              presumption is a legal position — correct any of them and the determination will
+              say so. Values are matched by durable ref.
+            </p>
+            <input
+              className="field mt-3 w-full"
+              placeholder="filter by name or durable ref…"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              spellCheck={false}
+              aria-label="Filter presumed answers"
+            />
+            <div className="mt-3 max-h-96 space-y-2 overflow-y-auto pr-1">
+              {filtered.slice(0, PAGE_SIZE).map(([ref, slot]) => {
+                const overridden = refOverrides[ref] !== undefined;
+                return (
+                  <div key={ref} className="flex items-center gap-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-[0.8rem] text-parchment-dim" title={slot.name}>
+                        {prettifyName(slot.name)}
+                        <span className="ml-2 font-mono text-[0.62rem] text-faint">
+                          {slot.entity.toLowerCase()} · {slot.dtype}
+                        </span>
+                      </p>
+                      <p className="truncate font-mono text-[0.62rem] text-faint" title={ref}>
+                        {ref}
+                      </p>
+                    </div>
+                    <input
+                      className={`field w-24 text-right font-mono text-[0.75rem] ${overridden ? "border-brass" : ""}`}
+                      value={refOverrides[ref] ?? String(slot.value)}
+                      onChange={(event) => onRefOverride(ref, event.target.value)}
+                      aria-label={`Answer for ${slot.name}`}
+                      spellCheck={false}
+                    />
+                    {overridden ? (
+                      <button
+                        type="button"
+                        className="btn-quiet px-2 py-1 font-mono text-[0.62rem]"
+                        onClick={() => onRefOverride(ref, null)}
+                      >
+                        presume
+                      </button>
+                    ) : null}
+                  </div>
+                );
+              })}
+              {filtered.length > PAGE_SIZE ? (
+                <p className="pt-1 font-mono text-[0.62rem] text-faint">
+                  {filtered.length - PAGE_SIZE} more — narrow the filter to see them
+                </p>
+              ) : null}
+              {filtered.length === 0 ? (
+                <p className="pt-1 font-mono text-[0.62rem] text-faint">
+                  nothing matches — the program has no such input
+                </p>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
+      </div>
+    </section>
+  );
+}

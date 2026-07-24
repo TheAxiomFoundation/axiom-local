@@ -41,7 +41,7 @@ export function DeterminationPanel({
   const output = result?.outputs[run?.outputId ?? ""];
 
   return (
-    <section className="rise rise-4" aria-label="The determination">
+    <section className="rise rise-4" aria-label="The determination" id="determination-panel">
       <PanelHeading
         section="3"
         title="The determination"

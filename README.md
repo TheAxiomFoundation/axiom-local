@@ -30,23 +30,35 @@ of citation. The explain-mode trace renders as an expandable tree where every
 derived value, every statutory parameter, and every answer you gave is shown with
 the id it came from.
 
-## The preloaded example
+## The golden path: Colorado SNAP, the full composed program
 
-The page loads with the same federal + state SNAP module pair the engine's own
-test suite (`wasm/test/smoke.mjs`, `tests/module_source.rs`) runs:
+The page loads with the real thing: the **composed Colorado SNAP compiled
+artifact** — 319 rules and 127 statutory parameters spanning 7 USC 2011–2036,
+7 CFR 273, and 10 CCR 2506-1, compiled to one versioned artifact (the same
+release unit the hosted API executes; provenance and sha-256 shown on the
+page). For the canonical two-person household — $1,200 monthly earned income,
+$900 shelter costs — it computes a **$478 monthly allotment** and **$226.50
+net income**, the exact values axiom-api's parity suite pins. The page runs
+this determination on load, so it lands already alive.
 
-- a **federal** module publishing the FY-2026 SNAP maximum-allotment table, and
-- a **state** rule that imports it and computes the monthly allotment as
-  `floor(maximum allotment − 30% of net income)`.
+Four headline questions carry the determination; the program's ~580 other
+inputs take **screening presumptions**, every one inspectable and overridable
+from the program panel — a presumption is a legal position, so the page treats
+it as one. A one-click **what-if** amends the earned-income deduction rate
+(7 USC 2014(e)(2), 20% → 30%) inside the artifact and re-runs the same
+household under amended law, in the tab. See
+[docs/golden-path.md](docs/golden-path.md) for the full walkthrough.
 
-For a household of one with $100 of monthly net income, this computes **$268** —
-the value the engine asserts in CI. The page runs this determination on load, so
-it lands already alive.
+A **guided tour** (`?tour=landed` … `?tour=exit`, dismissable, deep-linkable)
+walks a first-time visitor from the landed verdict to the exit ramps: MCP for
+agents, the artifact release for engineers, the parity suite for domain
+experts who want to challenge the encoding.
 
-You can also paste (or upload) your own program: a JSON object mapping canonical
-targets to RuleSpec YAML text, the exact `{canonical_target: yaml}` shape the
-engine's `compile` boundary receives. It is compiled in the tab like everything
-else.
+The engine's two-module teaching pair (`wasm/test/smoke.mjs`) is one click
+away, and you can still paste (or upload) your own program: a JSON object
+mapping canonical targets to RuleSpec YAML text, the exact
+`{canonical_target: yaml}` shape the engine's `compile` boundary receives.
+It is compiled in the tab like everything else.
 
 ## Architecture
 
@@ -55,7 +67,13 @@ else.
   this product — every byte is served as-is and the calculation runs client-side.
 - **Vendored wasm engine.** Both wasm-pack targets are checked into the repo:
   - `public/engine/` — the `--target web` build, fetched and instantiated by the
-    browser at load time (two requests, both at startup).
+    browser at load time.
+  - `public/programs/co-snap/` — the vendored Colorado SNAP compiled artifact
+    plus its descriptor (defaults, headline questions, provenance), emitted by
+    `scripts/build-co-snap-package.mjs` and pinned by the test suite. Four
+    startup requests in all (engine js + wasm, package descriptor + artifact);
+    the network sentinel arms after startup settles, and determinations never
+    fetch.
   - `engine/pkg-node/` — the `--target nodejs` build, loaded by the test suite.
 
   Checking the built packages in means **CI and any host need no Rust toolchain**;

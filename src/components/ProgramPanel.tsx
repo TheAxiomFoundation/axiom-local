@@ -14,6 +14,10 @@ interface ProgramPanelProps {
   compileError: string | null;
   onLoadProgram: (modules: Record<string, string>, rootTarget: string) => void;
   onRestoreExample: () => void;
+  /** What the restore button offers — defaults to restoring the example. */
+  restoreLabel?: string;
+  /** Open the paste-your-own loader on first render. */
+  loaderOpenInitially?: boolean;
 }
 
 function parseModulesJson(text: string): Record<string, string> {
@@ -44,10 +48,12 @@ export function ProgramPanel({
   compileError,
   onLoadProgram,
   onRestoreExample,
+  restoreLabel = "Restore the example",
+  loaderOpenInitially = false,
 }: ProgramPanelProps) {
   const targets = Object.keys(modules);
   const [activeTarget, setActiveTarget] = useState(targets[0]);
-  const [loaderOpen, setLoaderOpen] = useState(false);
+  const [loaderOpen, setLoaderOpen] = useState(loaderOpenInitially);
   const [draft, setDraft] = useState("");
   const [loadError, setLoadError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -75,7 +81,7 @@ export function ProgramPanel({
   }
 
   return (
-    <section className="rise rise-2" aria-label="The statutes">
+    <section className="rise rise-2" aria-label="The statutes" id="program-panel">
       <PanelHeading
         section="1"
         title="The statutes"
@@ -146,18 +152,16 @@ export function ProgramPanel({
             <IconFileUpload size={14} aria-hidden="true" />
             Load your own program
           </button>
-          {!isExample ? (
-            <button
-              className="btn-quiet flex items-center gap-2 px-3 py-1.5 font-mono text-[0.72rem] tracking-wide"
-              onClick={() => {
-                setLoadError(null);
-                onRestoreExample();
-              }}
-            >
-              <IconRestore size={14} aria-hidden="true" />
-              Restore the example
-            </button>
-          ) : null}
+          <button
+            className="btn-quiet flex items-center gap-2 px-3 py-1.5 font-mono text-[0.72rem] tracking-wide"
+            onClick={() => {
+              setLoadError(null);
+              onRestoreExample();
+            }}
+          >
+            <IconRestore size={14} aria-hidden="true" />
+            {restoreLabel}
+          </button>
         </div>
 
         {loaderOpen ? (

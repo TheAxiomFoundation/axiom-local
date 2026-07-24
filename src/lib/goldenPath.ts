@@ -70,6 +70,12 @@ export interface GoldenAnswers {
   household: Record<string, string>;
   /** Per-person values for per_person headline slots, e.g. member_age. */
   people?: Record<string, string[]>;
+  /**
+   * Overrides for individual presumed answers, keyed by durable input ref.
+   * Wins over both defaults and slot-name answers: a presumption the visitor
+   * corrected is the most specific statement of the facts.
+   */
+  refOverrides?: Record<string, string>;
 }
 
 /**
@@ -151,6 +157,9 @@ export function buildPackageRequest(options: BuildPackageRequestOptions): Compil
         const perPerson = answers.people?.[slot.name];
         if (entityConfig.entity === "Person" && perPerson?.[index - 1] !== undefined) {
           value = perPerson[index - 1];
+        }
+        if (entityConfig.entity === "Household" && answers.refOverrides?.[ref] !== undefined) {
+          value = answers.refOverrides[ref];
         }
         inputs.push({
           name: ref,

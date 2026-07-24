@@ -10,20 +10,53 @@ import {
 } from "@/lib/example";
 import { discoverInputs, moduleOf, type DiscoveredInput } from "@/lib/program";
 import { buildRequest } from "@/lib/request";
+import { buildPackageRequest, type GoldenAnswers } from "@/lib/goldenPath";
+import { loadGoldenPackage, type LoadedPackage } from "@/lib/programSource";
+import { applyWhatIf } from "@/lib/whatIf";
 import { buildDisplayTree } from "@/lib/trace";
 import { loadEngine, type LoadedEngine } from "@/lib/wasm";
 import { useNetworkSentinel } from "@/lib/useNetworkSentinel";
 import { DeterminationPanel, type RunRecord } from "./DeterminationPanel";
+import { GoldenHouseholdPanel } from "./GoldenHouseholdPanel";
 import { HouseholdPanel } from "./HouseholdPanel";
+import { PackagePanel } from "./PackagePanel";
 import { ProgramPanel } from "./ProgramPanel";
 import { ProvenanceFooter } from "./ProvenanceFooter";
 import { StatusStrip } from "./StatusStrip";
+import { TakeItWithYou } from "./TakeItWithYou";
+import { Tour } from "./Tour";
 
-interface ProgramState {
+const GOLDEN_PROGRAM_ID = "co-snap";
+
+/** The canonical parity household the tests pin: $478 for FY-2026. */
+const GOLDEN_DEFAULT_ANSWERS: GoldenAnswers = {
+  household: {
+    household_size: "2",
+    snap_countable_earned_income: "1200",
+    household_shelter_costs_incurred: "900",
+  },
+  people: { member_age: ["42", "9"] },
+  refOverrides: {},
+};
+
+const WHAT_IF_EDIT = {
+  parameter: "snap_earned_income_deduction_rate_for_net_income",
+  value: "0.3",
+};
+
+interface ModulesState {
+  kind: "modules";
   modules: Record<string, string>;
   rootTarget: string;
   isExample: boolean;
+  loaderOpenInitially?: boolean;
 }
+
+interface PackageState {
+  kind: "package";
+}
+
+type SourceState = ModulesState | PackageState;
 
 interface CompiledState {
   artifactJson: string;
@@ -50,25 +83,34 @@ export function Playground() {
   const [engine, setEngine] = useState<LoadedEngine | null>(null);
   const [engineError, setEngineError] = useState<string | null>(null);
 
-  const [program, setProgram] = useState<ProgramState>({
-    modules: EXAMPLE_MODULES,
-    rootTarget: EXAMPLE_ROOT_TARGET,
-    isExample: true,
-  });
+  const [goldenPackage, setGoldenPackage] = useState<LoadedPackage | null>(null);
+  const [packageError, setPackageError] = useState<string | null>(null);
+  const [startupSettled, setStartupSettled] = useState(false);
+
+  const [source, setSource] = useState<SourceState>({ kind: "package" });
+
+  // --- modules-mode state ---------------------------------------------------
   const [compiled, setCompiled] = useState<CompiledState | null>(null);
   const [compileError, setCompileError] = useState<string | null>(null);
-
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [month, setMonth] = useState(EXAMPLE_DEFAULT_MONTH);
   const [selectedOutput, setSelectedOutput] = useState<string>("");
 
+  // --- package-mode state ---------------------------------------------------
+  const [goldenAnswers, setGoldenAnswers] = useState<GoldenAnswers>(GOLDEN_DEFAULT_ANSWERS);
+  const [selectedOutputName, setSelectedOutputName] = useState<string>("snap_allotment");
+  const [whatIfActive, setWhatIfActive] = useState(false);
+  const [presumptionsOpen, setPresumptionsOpen] = useState(false);
+
+  const [month, setMonth] = useState(EXAMPLE_DEFAULT_MONTH);
   const [run, setRun] = useState<RunRecord | null>(null);
   const [runError, setRunError] = useState<string | null>(null);
   const [runKey, setRunKey] = useState<string>("");
 
-  const networkCount = useNetworkSentinel(engine !== null);
+  // The sentinel arms once everything the page fetches at startup — engine
+  // and golden package alike — has arrived. Determinations never fetch.
+  const networkCount = useNetworkSentinel(engine !== null && startupSettled);
 
-  // --- engine -------------------------------------------------------------
+  // --- startup: engine + golden package, in parallel ------------------------
 
   useEffect(() => {
     let cancelled = false;
@@ -80,28 +122,45 @@ export function Playground() {
         if (!cancelled) setEngineError(error instanceof Error ? error.message : String(error));
       },
     );
+    loadGoldenPackage(GOLDEN_PROGRAM_ID)
+      .then(
+        (loaded) => {
+          if (cancelled) return;
+          setGoldenPackage(loaded);
+          setMonth(loaded.pkg.default_period);
+        },
+        (error: unknown) => {
+          if (cancelled) return;
+          setPackageError(error instanceof Error ? error.message : String(error));
+          // The teaching example still works without the package.
+          setSource({ kind: "modules", modules: EXAMPLE_MODULES, rootTarget: EXAMPLE_ROOT_TARGET, isExample: true });
+        },
+      )
+      .finally(() => {
+        if (!cancelled) setStartupSettled(true);
+      });
     return () => {
       cancelled = true;
     };
   }, []);
 
-  // --- compile (once per program, cached until the program changes) --------
+  // --- modules mode: compile once per program -------------------------------
 
   useEffect(() => {
-    if (!engine) return;
+    if (!engine || source.kind !== "modules") return;
     setRun(null);
     setRunError(null);
     try {
       const startedAt = performance.now();
-      const artifactJson = engine.compile(JSON.stringify(program.modules), program.rootTarget);
+      const artifactJson = engine.compile(JSON.stringify(source.modules), source.rootTarget);
       const compileMs = performance.now() - startedAt;
       const artifact = JSON.parse(artifactJson) as CompiledProgramArtifact;
       const inputs = discoverInputs(artifact);
       setCompiled({ artifactJson, artifact, compileMs, inputs });
       setCompileError(null);
-      setAnswers(defaultAnswers(inputs, program.isExample));
+      setAnswers(defaultAnswers(inputs, source.isExample));
       const rootDerived = artifact.program.derived.filter(
-        (derived) => moduleOf(derived.id) === program.rootTarget,
+        (derived) => moduleOf(derived.id) === source.rootTarget,
       );
       const preferred =
         rootDerived[rootDerived.length - 1] ??
@@ -111,88 +170,176 @@ export function Playground() {
       setCompiled(null);
       setCompileError(error instanceof Error ? error.message : String(error));
     }
-  }, [engine, program]);
+  }, [engine, source]);
+
+  // --- the artifact in force (package mode) ---------------------------------
+
+  const packageArtifact = useMemo(() => {
+    if (!goldenPackage) return null;
+    if (!whatIfActive) {
+      return { artifactJson: goldenPackage.artifactJson, previousValue: null as string | null };
+    }
+    const amended = applyWhatIf(goldenPackage.artifactJson, WHAT_IF_EDIT);
+    return { artifactJson: amended.artifactJson, previousValue: amended.previousValue };
+  }, [goldenPackage, whatIfActive]);
 
   // --- run ------------------------------------------------------------------
 
   const currentKey = useMemo(
-    () => JSON.stringify({ answers, month, selectedOutput }),
-    [answers, month, selectedOutput],
+    () =>
+      JSON.stringify(
+        source.kind === "package"
+          ? { goldenAnswers, month, selectedOutputName, whatIfActive }
+          : { answers, month, selectedOutput },
+      ),
+    [source.kind, goldenAnswers, month, selectedOutputName, whatIfActive, answers, selectedOutput],
   );
 
   const sequenceRef = useRef(0);
 
   const doRun = useCallback(() => {
-    if (!engine || !compiled || !selectedOutput) return;
+    if (!engine) return;
     try {
-      const entity =
-        compiled.artifact.program.derived.find(
-          (derived) => derived.id === selectedOutput || derived.name === selectedOutput,
-        )?.entity ?? "Household";
-      const request = buildRequest({
-        inputs: compiled.inputs,
-        answers,
-        month,
-        outputId: selectedOutput,
-        entity,
-        mode: "explain",
-      });
-      const startedAt = performance.now();
-      const responseJson = engine.execute(compiled.artifactJson, JSON.stringify(request));
-      const executeMs = performance.now() - startedAt;
-      const response = JSON.parse(responseJson) as ExecutionResponse;
-      const tree = buildDisplayTree({
-        outputId: selectedOutput,
-        result: response.results[0],
-        artifact: compiled.artifact,
-        dataset: request.dataset,
-      });
-      sequenceRef.current += 1;
-      setRun({
-        response,
-        outputId: selectedOutput,
-        month,
-        executeMs,
-        tree,
-        sequence: sequenceRef.current,
-      });
+      if (source.kind === "package") {
+        if (!goldenPackage || !packageArtifact) return;
+        const request = buildPackageRequest({
+          pkg: goldenPackage.pkg,
+          answers: goldenAnswers,
+          month,
+          mode: "explain",
+        });
+        const startedAt = performance.now();
+        const responseJson = engine.execute(packageArtifact.artifactJson, JSON.stringify(request));
+        const executeMs = performance.now() - startedAt;
+        const response = JSON.parse(responseJson) as ExecutionResponse;
+        const outputId = goldenPackage.pkg.outputs[selectedOutputName];
+        const tree = buildDisplayTree({
+          outputId,
+          result: response.results[0],
+          artifact: JSON.parse(packageArtifact.artifactJson) as CompiledProgramArtifact,
+          dataset: request.dataset,
+        });
+        sequenceRef.current += 1;
+        setRun({ response, outputId, month, executeMs, tree, sequence: sequenceRef.current });
+      } else {
+        if (!compiled || !selectedOutput) return;
+        const entity =
+          compiled.artifact.program.derived.find(
+            (derived) => derived.id === selectedOutput || derived.name === selectedOutput,
+          )?.entity ?? "Household";
+        const request = buildRequest({
+          inputs: compiled.inputs,
+          answers,
+          month,
+          outputId: selectedOutput,
+          entity,
+          mode: "explain",
+        });
+        const startedAt = performance.now();
+        const responseJson = engine.execute(compiled.artifactJson, JSON.stringify(request));
+        const executeMs = performance.now() - startedAt;
+        const response = JSON.parse(responseJson) as ExecutionResponse;
+        const tree = buildDisplayTree({
+          outputId: selectedOutput,
+          result: response.results[0],
+          artifact: compiled.artifact,
+          dataset: request.dataset,
+        });
+        sequenceRef.current += 1;
+        setRun({
+          response,
+          outputId: selectedOutput,
+          month,
+          executeMs,
+          tree,
+          sequence: sequenceRef.current,
+        });
+      }
       setRunError(null);
-      setRunKey(JSON.stringify({ answers, month, selectedOutput }));
+      setRunKey(currentKey);
     } catch (error) {
       setRun(null);
       setRunError(error instanceof Error ? error.message : String(error));
     }
-  }, [engine, compiled, selectedOutput, answers, month]);
+  }, [
+    engine,
+    source.kind,
+    goldenPackage,
+    packageArtifact,
+    goldenAnswers,
+    month,
+    selectedOutputName,
+    compiled,
+    selectedOutput,
+    answers,
+    currentKey,
+  ]);
 
-  // Auto-run the example once, so the page lands already alive.
-  const autoRanRef = useRef(false);
+  // Auto-run whenever the program in force changes (first landing, what-if
+  // toggles, source switches) — the page must always be alive, and the
+  // what-if verdict must appear without a second click.
+  const autoRunKeyRef = useRef("");
   useEffect(() => {
-    if (autoRanRef.current || !engine || !compiled || !program.isExample || !selectedOutput) {
-      return;
-    }
-    autoRanRef.current = true;
+    if (!engine) return;
+    const programKey =
+      source.kind === "package"
+        ? packageArtifact
+          ? `package:${whatIfActive}`
+          : ""
+        : compiled
+          ? `modules:${compiled.artifactJson.length}:${selectedOutput}`
+          : "";
+    if (!programKey || autoRunKeyRef.current === programKey) return;
+    autoRunKeyRef.current = programKey;
     doRun();
-  }, [engine, compiled, program.isExample, selectedOutput, doRun]);
+  }, [engine, source.kind, packageArtifact, whatIfActive, compiled, selectedOutput, doRun]);
 
-  // --- handlers --------------------------------------------------------------
+  // --- handlers -------------------------------------------------------------
 
   const onLoadProgram = useCallback((modules: Record<string, string>, rootTarget: string) => {
-    setProgram({ modules, rootTarget, isExample: false });
+    setSource({ kind: "modules", modules, rootTarget, isExample: false });
+    setMonth(EXAMPLE_DEFAULT_MONTH);
   }, []);
 
-  const onRestoreExample = useCallback(() => {
-    autoRanRef.current = false;
-    setProgram({
+  const onLoadTeachingExample = useCallback(() => {
+    setSource({ kind: "modules", modules: EXAMPLE_MODULES, rootTarget: EXAMPLE_ROOT_TARGET, isExample: true });
+    setMonth(EXAMPLE_DEFAULT_MONTH);
+  }, []);
+
+  const onOpenLoader = useCallback(() => {
+    setSource({
+      kind: "modules",
       modules: EXAMPLE_MODULES,
       rootTarget: EXAMPLE_ROOT_TARGET,
       isExample: true,
+      loaderOpenInitially: true,
     });
     setMonth(EXAMPLE_DEFAULT_MONTH);
   }, []);
 
-  const stale = run !== null && currentKey !== runKey;
+  const onRestorePackage = useCallback(() => {
+    if (!goldenPackage) return;
+    setSource({ kind: "package" });
+    setRun(null);
+    setRunError(null);
+    setMonth(goldenPackage.pkg.default_period);
+  }, [goldenPackage]);
 
+  const onRefOverride = useCallback((ref: string, value: string | null) => {
+    setGoldenAnswers((current) => {
+      const refOverrides = { ...current.refOverrides };
+      if (value === null) {
+        delete refOverrides[ref];
+      } else {
+        refOverrides[ref] = value;
+      }
+      return { ...current, refOverrides };
+    });
+  }, []);
+
+  const stale = run !== null && currentKey !== runKey;
   const outputs = compiled?.artifact.program.derived ?? [];
+  const packageReady = source.kind === "package" && goldenPackage !== null;
 
   return (
     <>
@@ -204,33 +351,83 @@ export function Playground() {
           <p className="mt-1 font-mono text-[0.8rem] text-parchment-dim">{engineError}</p>
         </div>
       ) : null}
+      {packageError && source.kind === "modules" ? (
+        <div className="mx-auto mt-10 max-w-2xl border-l-2 border-wax bg-wax/10 px-4 py-3">
+          <p className="smallcaps text-wax-bright">The Colorado SNAP package could not be fetched</p>
+          <p className="mt-1 font-mono text-[0.8rem] text-parchment-dim">
+            {packageError} — the two-module teaching example is loaded instead.
+          </p>
+        </div>
+      ) : null}
 
       <main className="mt-12 grid gap-14 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-5">
-          <ProgramPanel
-            modules={program.modules}
-            rootTarget={program.rootTarget}
-            isExample={program.isExample}
-            compileMs={compiled?.compileMs ?? null}
-            compileError={compileError}
-            onLoadProgram={onLoadProgram}
-            onRestoreExample={onRestoreExample}
-          />
+          {packageReady && goldenPackage ? (
+            <PackagePanel
+              pkg={goldenPackage.pkg}
+              fetchedSha256={goldenPackage.fetchedSha256}
+              whatIfActive={whatIfActive}
+              whatIfPreviousValue={packageArtifact?.previousValue ?? null}
+              onToggleWhatIf={() => setWhatIfActive((active) => !active)}
+              presumptionsOpen={presumptionsOpen}
+              onTogglePresumptions={() => setPresumptionsOpen((open) => !open)}
+              refOverrides={goldenAnswers.refOverrides ?? {}}
+              onRefOverride={onRefOverride}
+              onOpenLoader={onOpenLoader}
+              onLoadTeachingExample={onLoadTeachingExample}
+            />
+          ) : source.kind === "modules" ? (
+            <ProgramPanel
+              modules={source.modules}
+              rootTarget={source.rootTarget}
+              isExample={source.isExample}
+              compileMs={compiled?.compileMs ?? null}
+              compileError={compileError}
+              onLoadProgram={onLoadProgram}
+              onRestoreExample={goldenPackage ? onRestorePackage : onLoadTeachingExample}
+              restoreLabel={goldenPackage ? "Return to Colorado SNAP" : "Restore the example"}
+              loaderOpenInitially={source.loaderOpenInitially}
+            />
+          ) : (
+            <section className="rise rise-2" aria-label="The program" id="program-panel">
+              <p className="mt-8 text-center font-mono text-[0.75rem] text-faint">
+                fetching the Colorado SNAP package…
+              </p>
+            </section>
+          )}
         </div>
         <div className="space-y-14 lg:col-span-7">
-          <HouseholdPanel
-            inputs={compiled?.inputs ?? []}
-            answers={answers}
-            onAnswer={(ref, value) => setAnswers((current) => ({ ...current, [ref]: value }))}
-            month={month}
-            onMonth={setMonth}
-            outputs={outputs}
-            selectedOutput={selectedOutput}
-            onSelectOutput={setSelectedOutput}
-            onRun={doRun}
-            canRun={engine !== null && compiled !== null}
-            stale={stale}
-          />
+          {packageReady && goldenPackage ? (
+            <GoldenHouseholdPanel
+              pkg={goldenPackage.pkg}
+              answers={goldenAnswers}
+              onAnswers={setGoldenAnswers}
+              month={month}
+              onMonth={setMonth}
+              selectedOutput={selectedOutputName}
+              onSelectOutput={setSelectedOutputName}
+              onRun={doRun}
+              canRun={engine !== null && packageArtifact !== null}
+              stale={stale}
+              presumedCount={Object.keys(goldenPackage.pkg.defaults).length}
+              overriddenCount={Object.keys(goldenAnswers.refOverrides ?? {}).length}
+              onOpenPresumptions={() => setPresumptionsOpen(true)}
+            />
+          ) : (
+            <HouseholdPanel
+              inputs={compiled?.inputs ?? []}
+              answers={answers}
+              onAnswer={(ref, value) => setAnswers((current) => ({ ...current, [ref]: value }))}
+              month={month}
+              onMonth={setMonth}
+              outputs={outputs}
+              selectedOutput={selectedOutput}
+              onSelectOutput={setSelectedOutput}
+              onRun={doRun}
+              canRun={engine !== null && compiled !== null}
+              stale={stale}
+            />
+          )}
           <DeterminationPanel
             run={run}
             runError={runError}
@@ -241,7 +438,9 @@ export function Playground() {
         </div>
       </main>
 
+      <TakeItWithYou />
       <ProvenanceFooter engine={engine} networkCount={networkCount} />
+      <Tour />
     </>
   );
 }

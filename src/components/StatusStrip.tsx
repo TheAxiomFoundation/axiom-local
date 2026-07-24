@@ -12,6 +12,7 @@ export function StatusStrip({ engine, engineError, networkCount }: StatusStripPr
   return (
     <div className="rise rise-1 mt-9 border-y border-rule">
       <div className="flex flex-wrap items-center justify-center gap-x-7 gap-y-1.5 px-2 py-2.5 font-mono text-[0.65rem] tracking-[0.08em] text-faint">
+        <span className="border border-brass/50 px-2 py-0.5 text-brass">developer preview</span>
         <span className="flex items-center gap-2">
           <span
             className={`lamp-dot ${engineError ? "lamp-dot--warn" : ""}`}
