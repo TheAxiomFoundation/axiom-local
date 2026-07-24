@@ -66,11 +66,9 @@ engineers, the parity suite for domain experts who want to challenge the
 encoding. (The hosted API and MCP are deliberately not surfaced — they are
 not launch entry points.)
 
-The engine's two-module teaching pair (`wasm/test/smoke.mjs`) is one click
-away, and you can still paste (or upload) your own program: a JSON object
-mapping canonical targets to RuleSpec YAML text, the exact
-`{canonical_target: yaml}` shape the engine's `compile` boundary receives.
-It is compiled in the tab like everything else.
+The page is deliberately lean: reading and dissecting rule text is the Axiom
+app's job, and compile-your-own-RuleSpec belongs to this repo's engine tests
+and the npm package — the page carries the execution story only.
 
 ## Architecture
 

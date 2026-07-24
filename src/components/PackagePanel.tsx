@@ -1,6 +1,6 @@
 "use client";
 
-import { IconFileUpload, IconFlask, IconRestore, IconSearch } from "@tabler/icons-react";
+import { IconFlask, IconSearch } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
 import type { GoldenPackage } from "@/lib/goldenPath";
 import type { ProgramIndexEntry } from "@/lib/programSource";
@@ -19,8 +19,6 @@ interface PackagePanelProps {
   onTogglePresumptions: () => void;
   refOverrides: Record<string, string>;
   onRefOverride: (ref: string, value: string | null) => void;
-  onOpenLoader: () => void;
-  onLoadTeachingExample: () => void;
 }
 
 const PAGE_SIZE = 40;
@@ -37,8 +35,6 @@ export function PackagePanel({
   onTogglePresumptions,
   refOverrides,
   onRefOverride,
-  onOpenLoader,
-  onLoadTeachingExample,
 }: PackagePanelProps) {
   const [query, setQuery] = useState("");
 
@@ -171,20 +167,6 @@ export function PackagePanel({
           >
             <IconSearch size={14} aria-hidden="true" />
             {presumptionsOpen ? "Close the presumed answers" : `Inspect the ${entries.length} presumed answers`}
-          </button>
-          <button
-            className="btn-quiet flex items-center gap-2 px-3 py-1.5 font-mono text-[0.72rem] tracking-wide"
-            onClick={onLoadTeachingExample}
-          >
-            <IconRestore size={14} aria-hidden="true" />
-            Two-module teaching example
-          </button>
-          <button
-            className="btn-quiet flex items-center gap-2 px-3 py-1.5 font-mono text-[0.72rem] tracking-wide"
-            onClick={onOpenLoader}
-          >
-            <IconFileUpload size={14} aria-hidden="true" />
-            Load your own program
           </button>
         </div>
 
