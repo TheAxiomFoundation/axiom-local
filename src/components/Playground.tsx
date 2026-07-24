@@ -346,15 +346,15 @@ export function Playground() {
       <StatusStrip engine={engine} engineError={engineError} networkCount={networkCount} />
 
       {engineError ? (
-        <div className="mx-auto mt-10 max-w-2xl border-l-2 border-wax bg-wax/10 px-4 py-3">
-          <p className="smallcaps text-wax-bright">The engine could not be instantiated</p>
-          <p className="mt-1 font-mono text-[0.8rem] text-parchment-dim">{engineError}</p>
+        <div className="mx-auto mt-10 max-w-2xl border-l-2 border-error bg-error/10 px-4 py-3">
+          <p className="smallcaps text-error">The engine could not be instantiated</p>
+          <p className="mt-1 font-mono text-[0.8rem] text-ink-secondary">{engineError}</p>
         </div>
       ) : null}
       {packageError && source.kind === "modules" ? (
-        <div className="mx-auto mt-10 max-w-2xl border-l-2 border-wax bg-wax/10 px-4 py-3">
-          <p className="smallcaps text-wax-bright">The Colorado SNAP package could not be fetched</p>
-          <p className="mt-1 font-mono text-[0.8rem] text-parchment-dim">
+        <div className="mx-auto mt-10 max-w-2xl border-l-2 border-error bg-error/10 px-4 py-3">
+          <p className="smallcaps text-error">The Colorado SNAP package could not be fetched</p>
+          <p className="mt-1 font-mono text-[0.8rem] text-ink-secondary">
             {packageError} — the two-module teaching example is loaded instead.
           </p>
         </div>
@@ -390,7 +390,7 @@ export function Playground() {
             />
           ) : (
             <section className="rise rise-2" aria-label="The program" id="program-panel">
-              <p className="mt-8 text-center font-mono text-[0.75rem] text-faint">
+              <p className="mt-8 text-center font-mono text-[0.75rem] text-ink-muted">
                 fetching the Colorado SNAP package…
               </p>
             </section>

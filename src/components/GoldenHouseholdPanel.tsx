@@ -74,12 +74,12 @@ export function GoldenHouseholdPanel({
         aside={`${pkg.headline.length} questions · ${presumedCount} answers presumed · kept on-device`}
       />
 
-      <p className="mb-5 mt-1 text-[0.95rem] font-light text-parchment-dim">
+      <p className="mb-5 mt-1 text-[0.95rem] font-light text-ink-secondary">
         The facts of the case. Four questions carry this determination; the program&apos;s{" "}
         {presumedCount} other inputs take screening presumptions —{" "}
         <button
           type="button"
-          className="underline decoration-dotted underline-offset-2 hover:text-parchment"
+          className="underline decoration-dotted underline-offset-2 hover:text-ink"
           onClick={onOpenPresumptions}
         >
           every one inspectable and overridable
@@ -100,7 +100,7 @@ export function GoldenHouseholdPanel({
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
             <label
-              className="smallcaps mb-1.5 block text-[0.65rem] text-parchment-dim"
+              className="smallcaps mb-1.5 block text-[0.65rem] text-ink-secondary"
               htmlFor="golden-household-size"
             >
               People in the household
@@ -128,7 +128,7 @@ export function GoldenHouseholdPanel({
                 +
               </button>
             </div>
-            <p className="mt-1.5 font-mono text-[0.62rem] text-faint">
+            <p className="mt-1.5 font-mono text-[0.62rem] text-ink-muted">
               each person becomes an entity bound by the membership relation
             </p>
           </div>
@@ -136,14 +136,14 @@ export function GoldenHouseholdPanel({
           {moneyHeadlines.map((headline) => (
             <div key={headline.slot}>
               <label
-                className="smallcaps mb-1.5 block text-[0.65rem] text-parchment-dim"
+                className="smallcaps mb-1.5 block text-[0.65rem] text-ink-secondary"
                 htmlFor={`golden-${headline.slot}`}
               >
                 {headline.label}
               </label>
               <div className="relative">
                 <span
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-mono text-[0.9rem] text-faint"
+                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-mono text-[0.9rem] text-ink-muted"
                   aria-hidden="true"
                 >
                   $
@@ -157,14 +157,14 @@ export function GoldenHouseholdPanel({
                   spellCheck={false}
                 />
               </div>
-              <p className="mt-1.5 truncate font-mono text-[0.62rem] text-faint" title={headline.slot}>
+              <p className="mt-1.5 truncate font-mono text-[0.62rem] text-ink-muted" title={headline.slot}>
                 {headline.slot}
               </p>
             </div>
           ))}
 
           <div className="sm:col-span-2">
-            <span className="smallcaps mb-1.5 block text-[0.65rem] text-parchment-dim">Ages</span>
+            <span className="smallcaps mb-1.5 block text-[0.65rem] text-ink-secondary">Ages</span>
             <div className="flex flex-wrap gap-3">
               {Array.from({ length: size }, (_, index) => (
                 <div key={index}>
@@ -176,7 +176,7 @@ export function GoldenHouseholdPanel({
                     onChange={(event) => setAge(index, event.target.value)}
                     spellCheck={false}
                   />
-                  <p className="mt-1 text-center font-mono text-[0.62rem] text-faint">
+                  <p className="mt-1 text-center font-mono text-[0.62rem] text-ink-muted">
                     person {index + 1}
                   </p>
                 </div>
@@ -186,7 +186,7 @@ export function GoldenHouseholdPanel({
 
           <div>
             <label
-              className="smallcaps mb-1.5 block text-[0.65rem] text-parchment-dim"
+              className="smallcaps mb-1.5 block text-[0.65rem] text-ink-secondary"
               htmlFor="benefit-month"
             >
               Benefit month
@@ -198,14 +198,14 @@ export function GoldenHouseholdPanel({
               value={month}
               onChange={(event) => onMonth(event.target.value)}
             />
-            <p className="mt-1.5 font-mono text-[0.62rem] text-faint">
+            <p className="mt-1.5 font-mono text-[0.62rem] text-ink-muted">
               the period the determination covers
             </p>
           </div>
 
           <div>
             <label
-              className="smallcaps mb-1.5 block text-[0.65rem] text-parchment-dim"
+              className="smallcaps mb-1.5 block text-[0.65rem] text-ink-secondary"
               htmlFor="golden-output-select"
             >
               Determine
@@ -223,7 +223,7 @@ export function GoldenHouseholdPanel({
               ))}
             </select>
             <p
-              className="mt-1.5 truncate font-mono text-[0.62rem] text-faint"
+              className="mt-1.5 truncate font-mono text-[0.62rem] text-ink-muted"
               title={pkg.outputs[selectedOutput]}
             >
               {pkg.outputs[selectedOutput]}
@@ -234,14 +234,14 @@ export function GoldenHouseholdPanel({
         <div className="flex items-center gap-4 pt-1">
           <button
             type="submit"
-            className="btn-wax flex items-center gap-2.5 px-6 py-2.5 font-mono text-[0.78rem] uppercase tracking-[0.14em]"
+            className="btn-accent flex items-center gap-2.5 px-6 py-2.5 font-mono text-[0.78rem] uppercase tracking-[0.14em]"
             disabled={!canRun}
           >
             <IconGavel size={16} aria-hidden="true" />
             Run determination
           </button>
           {stale ? (
-            <span className="smallcaps text-[0.62rem] text-sienna">
+            <span className="smallcaps text-[0.62rem] text-warning">
               answers amended — run again
             </span>
           ) : null}

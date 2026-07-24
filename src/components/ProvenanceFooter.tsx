@@ -15,21 +15,21 @@ export function ProvenanceFooter({ engine, networkCount }: ProvenanceFooterProps
 
       <div className="grid gap-8 md:grid-cols-2">
         <div>
-          <h2 className="smallcaps mb-3 text-[0.65rem] text-parchment-dim">
+          <h2 className="smallcaps mb-3 text-[0.65rem] text-ink-secondary">
             Computed locally — nothing left this page
           </h2>
-          <p className="text-[0.92rem] font-light text-parchment-dim">
+          <p className="text-[0.92rem] font-light text-ink-secondary">
             The RuleSpec compiler and evaluator run as WebAssembly inside this tab. The statute
             text, the compiled artifact, your answers, and the verdict all live and die in this
             page&apos;s memory. There is no calculation API. There is nothing to subpoena.
           </p>
-          <div className="mt-4 border border-rule bg-ink-raised px-4 py-3">
-            <p className="smallcaps text-[0.62rem] text-brass">Verify the claim</p>
-            <p className="mt-1.5 text-[0.88rem] font-light text-parchment-dim">
+          <div className="mt-4 border border-rule bg-paper-elevated px-4 py-3">
+            <p className="smallcaps text-[0.62rem] text-accent">Verify the claim</p>
+            <p className="mt-1.5 text-[0.88rem] font-light text-ink-secondary">
               Open your browser&apos;s developer tools and watch the network tab. After the page
               loads, run as many determinations as you like — no request leaves this machine.
               The counter above reads the browser&apos;s own resource timeline:{" "}
-              <span className={`font-mono text-[0.8rem] ${networkCount === 0 ? "text-lamp" : "text-wax-bright"}`}>
+              <span className={`font-mono text-[0.8rem] ${networkCount === 0 ? "text-success" : "text-error"}`}>
                 {networkCount} since the engine came up
               </span>
               .
@@ -38,32 +38,32 @@ export function ProvenanceFooter({ engine, networkCount }: ProvenanceFooterProps
         </div>
 
         <div>
-          <h2 className="smallcaps mb-3 text-[0.65rem] text-parchment-dim">Provenance</h2>
+          <h2 className="smallcaps mb-3 text-[0.65rem] text-ink-secondary">Provenance</h2>
           <dl className="space-y-1.5 font-mono text-[0.72rem]">
             <div className="flex items-baseline">
-              <dt className="text-faint">engine_version()</dt>
+              <dt className="text-ink-muted">engine_version()</dt>
               <span className="leader" aria-hidden="true" />
-              <dd className="text-parchment">{engine ? engine.engineVersion : "—"}</dd>
+              <dd className="text-ink">{engine ? engine.engineVersion : "—"}</dd>
             </div>
             <div className="flex items-baseline">
-              <dt className="text-faint">artifact_format_version()</dt>
+              <dt className="text-ink-muted">artifact_format_version()</dt>
               <span className="leader" aria-hidden="true" />
-              <dd className="text-parchment">{engine ? engine.artifactFormatVersion : "—"}</dd>
+              <dd className="text-ink">{engine ? engine.artifactFormatVersion : "—"}</dd>
             </div>
             <div className="flex items-baseline">
-              <dt className="text-faint">wasm sha-256</dt>
+              <dt className="text-ink-muted">wasm sha-256</dt>
               <span className="leader" aria-hidden="true" />
               <dd
-                className="max-w-[14rem] truncate text-parchment"
+                className="max-w-[14rem] truncate text-ink"
                 title={engine?.wasmSha256 ?? undefined}
               >
                 {engine ? engine.wasmSha256 : "—"}
               </dd>
             </div>
             <div className="flex items-baseline">
-              <dt className="text-faint">built from</dt>
+              <dt className="text-ink-muted">built from</dt>
               <span className="leader" aria-hidden="true" />
-              <dd className="text-parchment">
+              <dd className="text-ink">
                 <a
                   href={`${upstream.repo}/commit/${upstream.commit}`}
                   target="_blank"
@@ -75,7 +75,7 @@ export function ProvenanceFooter({ engine, networkCount }: ProvenanceFooterProps
             </div>
           </dl>
 
-          <p className="mt-5 text-[0.85rem] font-light text-parchment-dim">
+          <p className="mt-5 text-[0.85rem] font-light text-ink-secondary">
             Source:{" "}
             <a
               href="https://github.com/TheAxiomFoundation/axiom-playground"
@@ -90,8 +90,8 @@ export function ProvenanceFooter({ engine, networkCount }: ProvenanceFooterProps
             </a>{" "}
             (Apache-2.0)
           </p>
-          <p className="mt-2 text-[0.8rem] font-light italic text-faint">
-            Type set in Fraunces, Spectral &amp; Courier Prime — self-hosted, like everything
+          <p className="mt-2 text-[0.8rem] font-light italic text-ink-muted">
+            Type set in Geist &amp; Geist Mono — self-hosted, like everything
             else here.
           </p>
         </div>

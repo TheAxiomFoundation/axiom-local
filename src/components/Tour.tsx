@@ -38,25 +38,25 @@ export function Tour() {
 
   return (
     <aside
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-brass/40 bg-ink-well/95 p-4 shadow-2xl backdrop-blur sm:inset-x-auto sm:bottom-6 sm:right-6 sm:w-96 sm:border sm:p-5"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-accent/40 bg-paper-elevated/95 p-4 shadow-2xl backdrop-blur sm:inset-x-auto sm:bottom-6 sm:right-6 sm:w-96 sm:border sm:p-5"
       role="complementary"
       aria-label={`Guided tour, step ${state.index + 1} of ${TOUR_STEPS.length}`}
     >
       <div className="flex items-start justify-between gap-3">
-        <p className="smallcaps text-[0.62rem] text-brass">
+        <p className="smallcaps text-[0.62rem] text-accent">
           the guided path · {state.index + 1} of {TOUR_STEPS.length}
         </p>
         <button
           type="button"
-          className="text-faint transition-colors hover:text-parchment"
+          className="text-ink-muted transition-colors hover:text-ink"
           aria-label="Dismiss the tour"
           onClick={() => go({ kind: "off" })}
         >
           <IconX size={16} aria-hidden="true" />
         </button>
       </div>
-      <h2 className="mt-2 font-display text-xl font-semibold text-parchment">{step.title}</h2>
-      <p className="mt-2 text-[0.88rem] font-light text-parchment-dim">{step.body}</p>
+      <h2 className="mt-2 font-display text-xl font-semibold text-ink">{step.title}</h2>
+      <p className="mt-2 text-[0.88rem] font-light text-ink-secondary">{step.body}</p>
       <div className="mt-4 flex items-center gap-3">
         {state.index > 0 ? (
           <button
@@ -69,12 +69,12 @@ export function Tour() {
         ) : null}
         <button
           type="button"
-          className="btn-wax px-4 py-1.5 font-mono text-[0.72rem] tracking-wide"
+          className="btn-accent px-4 py-1.5 font-mono text-[0.72rem] tracking-wide"
           onClick={() => go(nextStep(state))}
         >
           {last ? "Finish" : "Next"}
         </button>
-        <a className="ml-auto font-mono text-[0.65rem] text-faint hover:text-parchment" href={tourHref({ kind: "off" })}>
+        <a className="ml-auto font-mono text-[0.65rem] text-ink-muted hover:text-ink" href={tourHref({ kind: "off" })}>
           skip the tour
         </a>
       </div>

@@ -6,14 +6,13 @@ export default function Home() {
       <div className="lamplight" aria-hidden="true" />
 
       <header className="rise pt-14 text-center sm:pt-20">
-        <p className="smallcaps text-brass">The Axiom Foundation · executable law</p>
+        <p className="smallcaps text-accent">The Axiom Foundation · executable law</p>
         <h1
-          className="mt-5 font-display text-6xl font-semibold tracking-tight text-parchment sm:text-7xl"
-          style={{ fontVariationSettings: '"opsz" 144, "WONK" 1' }}
+          className="mt-5 font-display text-6xl font-semibold tracking-tight text-ink sm:text-7xl"
         >
           Axiom playground
         </h1>
-        <p className="mx-auto mt-5 max-w-2xl font-body text-lg font-light italic text-parchment-dim">
+        <p className="mx-auto mt-5 max-w-2xl font-body text-lg font-light italic text-ink-secondary">
           Statutes compiled to WebAssembly, determinations rendered on your machine. The law is
           delivered to this page once — your answers never leave it.
         </p>

@@ -92,7 +92,7 @@ export function ProgramPanel({
         }
       />
 
-      <p className="mb-4 mt-1 text-[0.95rem] font-light text-parchment-dim">
+      <p className="mb-4 mt-1 text-[0.95rem] font-light text-ink-secondary">
         {isExample ? (
           <>
             The same federal and state SNAP module pair the engine&apos;s own test suite runs: a
@@ -119,13 +119,13 @@ export function ProgramPanel({
                 onClick={() => setActiveTarget(target)}
                 className={`max-w-full truncate border-r border-rule px-4 py-2.5 font-mono text-[0.72rem] tracking-wide transition-colors ${
                   active
-                    ? "bg-ink-well text-brass"
-                    : "text-faint hover:bg-ink-well/50 hover:text-parchment-dim"
+                    ? "bg-accent-light text-accent"
+                    : "text-ink-muted hover:bg-accent-light hover:text-ink-secondary"
                 }`}
                 title={target}
               >
                 {target}
-                {target === rootTarget ? <span className="ml-2 text-wax-bright">root</span> : null}
+                {target === rootTarget ? <span className="ml-2 text-error">root</span> : null}
               </button>
             );
           })}
@@ -136,9 +136,9 @@ export function ProgramPanel({
       </div>
 
       {compileError ? (
-        <div className="mt-4 border-l-2 border-wax bg-wax/10 px-4 py-3">
-          <p className="smallcaps text-wax-bright">Objection — compile failed</p>
-          <p className="mt-1 font-mono text-[0.8rem] text-parchment-dim">{compileError}</p>
+        <div className="mt-4 border-l-2 border-error bg-error/10 px-4 py-3">
+          <p className="smallcaps text-error">Objection — compile failed</p>
+          <p className="mt-1 font-mono text-[0.8rem] text-ink-secondary">{compileError}</p>
         </div>
       ) : null}
 
@@ -165,12 +165,12 @@ export function ProgramPanel({
         </div>
 
         {loaderOpen ? (
-          <div className="mt-3 space-y-3 border border-rule bg-ink-raised p-4">
-            <p className="text-[0.85rem] font-light text-parchment-dim">
+          <div className="mt-3 space-y-3 border border-rule bg-paper-elevated p-4">
+            <p className="text-[0.85rem] font-light text-ink-secondary">
               Paste (or upload) a JSON object mapping canonical targets to RuleSpec YAML, the
-              exact shape <code className="font-mono text-[0.78rem] text-brass">compile</code>{" "}
+              exact shape <code className="font-mono text-[0.78rem] text-accent">compile</code>{" "}
               receives:{" "}
-              <code className="font-mono text-[0.78rem] text-parchment">
+              <code className="font-mono text-[0.78rem] text-ink">
                 {'{"us:policies/...": "format: rulespec/v1\\n..."}'}
               </code>
               . It is compiled here, in this tab.
@@ -183,11 +183,11 @@ export function ProgramPanel({
               spellCheck={false}
             />
             {loadError ? (
-              <p className="font-mono text-[0.78rem] text-wax-bright">{loadError}</p>
+              <p className="font-mono text-[0.78rem] text-error">{loadError}</p>
             ) : null}
             <div className="flex items-center gap-3">
               <button
-                className="btn-wax px-4 py-1.5 font-mono text-[0.72rem] tracking-wide"
+                className="btn-accent px-4 py-1.5 font-mono text-[0.72rem] tracking-wide"
                 onClick={() => applyDraft(draft)}
               >
                 Compile program

@@ -11,9 +11,9 @@ const ORIGIN_LABELS: Record<DisplayNode["origin"], string> = {
 };
 
 const ORIGIN_CLASSES: Record<DisplayNode["origin"], string> = {
-  derived: "text-brass border-brass-deep/60",
-  parameter: "text-sienna border-sienna/50",
-  input: "text-lamp border-lamp-deep/70",
+  derived: "text-accent border-accent/60",
+  parameter: "text-warning border-warning/50",
+  input: "text-success border-success/70",
 };
 
 function DurableId({ id }: { id: string }) {
@@ -21,7 +21,7 @@ function DurableId({ id }: { id: string }) {
   return (
     <button
       type="button"
-      className="group/id flex max-w-full items-center gap-1.5 text-left font-mono text-[0.68rem] text-faint transition-colors hover:text-brass"
+      className="group/id flex max-w-full items-center gap-1.5 text-left font-mono text-[0.68rem] text-ink-muted transition-colors hover:text-accent"
       title={`${id} — click to copy`}
       onClick={() => {
         void navigator.clipboard?.writeText(id).then(() => {
@@ -36,7 +36,7 @@ function DurableId({ id }: { id: string }) {
         aria-hidden="true"
         className="shrink-0 opacity-0 transition-opacity group-hover/id:opacity-70"
       />
-      {copied ? <span className="shrink-0 text-lamp">copied</span> : null}
+      {copied ? <span className="shrink-0 text-success">copied</span> : null}
     </button>
   );
 }
@@ -46,13 +46,13 @@ function TraceRow({ node, depth }: { node: DisplayNode; depth: number }) {
   const expandable = node.children.length > 0;
 
   return (
-    <div className={depth > 0 ? "border-l border-rule pl-4 sm:pl-5" : ""}>
+    <div className={depth > 0 ? "border-l border-rule pl-2 sm:pl-5" : ""}>
       <div className="group py-2">
         <div className="flex items-baseline">
           {expandable ? (
             <button
               type="button"
-              className="mr-1 -ml-1 self-center text-faint transition-transform hover:text-brass"
+              className="mr-1 -ml-1 self-center text-ink-muted transition-transform hover:text-accent"
               style={{ transform: open ? "rotate(90deg)" : "none" }}
               onClick={() => setOpen((value) => !value)}
               aria-expanded={open}
@@ -68,32 +68,32 @@ function TraceRow({ node, depth }: { node: DisplayNode; depth: number }) {
           >
             {ORIGIN_LABELS[node.origin]}
           </span>
-          <span className="font-mono text-[0.85rem] text-parchment">{node.label}</span>
+          <span className="min-w-0 truncate font-mono text-[0.85rem] text-ink" title={node.label}>{node.label}</span>
           <span className="leader" aria-hidden="true" />
-          <span className="shrink-0 font-mono text-[0.95rem] font-bold text-parchment">
+          <span className="shrink-0 font-mono text-[0.95rem] font-bold text-ink">
             {node.valueText ?? "—"}
           </span>
         </div>
 
-        <div className="ml-[14px] mt-0.5 space-y-0.5 pl-[3.2rem] sm:pl-[3.4rem]">
+        <div className="ml-[14px] mt-0.5 space-y-0.5 pl-4 sm:pl-[3.4rem]">
           <DurableId id={node.refId} />
           {node.note ? (
-            <p className="font-mono text-[0.68rem] italic text-faint">{node.note}</p>
+            <p className="font-mono text-[0.68rem] italic text-ink-muted [overflow-wrap:anywhere]">{node.note}</p>
           ) : null}
           {node.formula ? (
-            <p className="font-mono text-[0.72rem] text-parchment-dim">
-              <span className="text-faint">= </span>
+            <p className="font-mono text-[0.72rem] text-ink-secondary [overflow-wrap:anywhere]">
+              <span className="text-ink-muted">= </span>
               {node.formula}
             </p>
           ) : null}
           {node.substituted && node.substituted !== node.formula ? (
-            <p className="font-mono text-[0.72rem] text-sienna">
-              <span className="text-faint">= </span>
+            <p className="font-mono text-[0.72rem] text-warning [overflow-wrap:anywhere]">
+              <span className="text-ink-muted">= </span>
               {node.substituted}
             </p>
           ) : null}
           {node.source || node.sourceUrl ? (
-            <p className="font-mono text-[0.68rem] text-faint">
+            <p className="font-mono text-[0.68rem] text-ink-muted">
               {node.sourceUrl ? (
                 <a href={node.sourceUrl} target="_blank" rel="noreferrer">
                   {node.source ?? node.sourceUrl}
@@ -109,7 +109,7 @@ function TraceRow({ node, depth }: { node: DisplayNode; depth: number }) {
       {expandable ? (
         <div className={`tree-children ${open ? "open" : ""}`}>
           <div>
-            <div className="ml-[14px]">
+            <div className="ml-1.5 sm:ml-[14px]">
               {node.children.map((child) => (
                 <TraceRow key={child.key} node={child} depth={depth + 1} />
               ))}
@@ -123,7 +123,7 @@ function TraceRow({ node, depth }: { node: DisplayNode; depth: number }) {
 
 export function TraceTree({ root }: { root: DisplayNode }) {
   return (
-    <div className="well px-4 py-3 sm:px-5">
+    <div className="panel overflow-x-auto px-3 py-3 sm:px-5">
       <TraceRow node={root} depth={0} />
     </div>
   );

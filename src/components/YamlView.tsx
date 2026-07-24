@@ -4,8 +4,8 @@ import type { ReactNode } from "react";
 
 /**
  * A small, honest YAML tinter for read-only statute display. It does not
- * parse YAML — it typesets it: keys in brass, figures in sienna, comments
- * in a librarian's pencil. Courier Prime does the rest.
+ * parse YAML — it typesets it on the shared dark code surface with the
+ * canonical code palette. Geist Mono does the rest.
  */
 
 const NUMBERISH = /^-?\d+(\.\d+)?$/;
@@ -16,20 +16,20 @@ function renderValue(value: string, key: number): ReactNode {
   if (trimmed === "") return null;
   if (NUMBERISH.test(trimmed) || DATEISH.test(trimmed)) {
     return (
-      <span key={key} className="text-sienna">
+      <span key={key} className="text-code-number">
         {value}
       </span>
     );
   }
   if (/^["'].*["']$/.test(trimmed)) {
     return (
-      <span key={key} className="text-sienna">
+      <span key={key} className="text-code-number">
         {value}
       </span>
     );
   }
   return (
-    <span key={key} className="text-parchment">
+    <span key={key} className="text-code-text">
       {value}
     </span>
   );
@@ -37,7 +37,7 @@ function renderValue(value: string, key: number): ReactNode {
 
 function renderLine(line: string): ReactNode {
   if (line.trimStart().startsWith("#")) {
-    return <span className="italic text-faint">{line}</span>;
+    return <span className="italic text-code-comment">{line}</span>;
   }
 
   const keyed = /^(\s*)(- )?([A-Za-z0-9_.-]+):(.*)$/.exec(line);
@@ -46,9 +46,9 @@ function renderLine(line: string): ReactNode {
     return (
       <>
         <span>{indent}</span>
-        {dash ? <span className="text-brass-deep">{dash}</span> : null}
-        <span className="text-brass">{key}</span>
-        <span className="text-faint">:</span>
+        {dash ? <span className="text-code-operator">{dash}</span> : null}
+        <span className="text-code-keyword">{key}</span>
+        <span className="text-code-punctuation">:</span>
         {renderValue(rest, 0)}
       </>
     );
@@ -60,13 +60,13 @@ function renderLine(line: string): ReactNode {
     return (
       <>
         <span>{indent}</span>
-        <span className="text-brass-deep">- </span>
+        <span className="text-code-operator">- </span>
         {renderValue(rest, 0)}
       </>
     );
   }
 
-  return <span className="text-parchment">{line}</span>;
+  return <span className="text-code-text">{line}</span>;
 }
 
 export function YamlView({ yaml }: { yaml: string }) {
@@ -76,7 +76,7 @@ export function YamlView({ yaml }: { yaml: string }) {
       <code>
         {lines.map((line, index) => (
           <div key={index} className="flex">
-            <span className="w-7 shrink-0 select-none pr-3 text-right text-[0.7rem] leading-[1.8] text-faint/60">
+            <span className="w-7 shrink-0 select-none pr-3 text-right text-[0.7rem] leading-[1.8] text-code-comment/60">
               {index + 1}
             </span>
             <span className="whitespace-pre">{renderLine(line)}</span>

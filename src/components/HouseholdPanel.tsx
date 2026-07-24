@@ -78,7 +78,7 @@ export function HouseholdPanel({
         aside={`${inputs.length} answer${inputs.length === 1 ? "" : "s"} · kept on-device`}
       />
 
-      <p className="mb-5 mt-1 text-[0.95rem] font-light text-parchment-dim">
+      <p className="mb-5 mt-1 text-[0.95rem] font-light text-ink-secondary">
         The facts of the case. These answers become the engine&apos;s dataset — assembled in this
         tab, handed to WebAssembly in this tab, and gone when you close it.
       </p>
@@ -94,7 +94,7 @@ export function HouseholdPanel({
           {inputs.map((input) => (
             <div key={input.ref}>
               <label
-                className="smallcaps mb-1.5 block text-[0.65rem] text-parchment-dim"
+                className="smallcaps mb-1.5 block text-[0.65rem] text-ink-secondary"
                 htmlFor={input.ref}
               >
                 {prettifyName(input.name)}
@@ -110,7 +110,7 @@ export function HouseholdPanel({
                 <div className="relative">
                   {input.flavor === "money" ? (
                     <span
-                      className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-mono text-[0.9rem] text-faint"
+                      className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-mono text-[0.9rem] text-ink-muted"
                       aria-hidden="true"
                     >
                       $
@@ -127,7 +127,7 @@ export function HouseholdPanel({
                 </div>
               )}
               <p
-                className="mt-1.5 truncate font-mono text-[0.62rem] text-faint"
+                className="mt-1.5 truncate font-mono text-[0.62rem] text-ink-muted"
                 title={input.ref}
               >
                 {input.ref}
@@ -137,7 +137,7 @@ export function HouseholdPanel({
 
           <div>
             <label
-              className="smallcaps mb-1.5 block text-[0.65rem] text-parchment-dim"
+              className="smallcaps mb-1.5 block text-[0.65rem] text-ink-secondary"
               htmlFor="benefit-month"
             >
               Benefit month
@@ -149,7 +149,7 @@ export function HouseholdPanel({
               value={month}
               onChange={(event) => onMonth(event.target.value)}
             />
-            <p className="mt-1.5 font-mono text-[0.62rem] text-faint">
+            <p className="mt-1.5 font-mono text-[0.62rem] text-ink-muted">
               the period the determination covers
             </p>
           </div>
@@ -157,7 +157,7 @@ export function HouseholdPanel({
           {outputs.length > 1 ? (
             <div>
               <label
-                className="smallcaps mb-1.5 block text-[0.65rem] text-parchment-dim"
+                className="smallcaps mb-1.5 block text-[0.65rem] text-ink-secondary"
                 htmlFor="output-select"
               >
                 Determine
@@ -174,7 +174,7 @@ export function HouseholdPanel({
                   </option>
                 ))}
               </select>
-              <p className="mt-1.5 font-mono text-[0.62rem] text-faint">
+              <p className="mt-1.5 font-mono text-[0.62rem] text-ink-muted">
                 the output the query requests
               </p>
             </div>
@@ -184,14 +184,14 @@ export function HouseholdPanel({
         <div className="flex items-center gap-4 pt-1">
           <button
             type="submit"
-            className="btn-wax flex items-center gap-2.5 px-6 py-2.5 font-mono text-[0.78rem] uppercase tracking-[0.14em]"
+            className="btn-accent flex items-center gap-2.5 px-6 py-2.5 font-mono text-[0.78rem] uppercase tracking-[0.14em]"
             disabled={!canRun}
           >
             <IconGavel size={16} aria-hidden="true" />
             Run determination
           </button>
           {stale ? (
-            <span className="smallcaps text-[0.62rem] text-sienna">
+            <span className="smallcaps text-[0.62rem] text-warning">
               answers amended — run again
             </span>
           ) : null}

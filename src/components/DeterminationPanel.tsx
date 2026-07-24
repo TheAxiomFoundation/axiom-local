@@ -53,14 +53,14 @@ export function DeterminationPanel({
       />
 
       {runError ? (
-        <div className="mt-4 border-l-2 border-wax bg-wax/10 px-4 py-3">
-          <p className="smallcaps text-wax-bright">Objection — execution failed</p>
-          <p className="mt-1 font-mono text-[0.8rem] text-parchment-dim">{runError}</p>
+        <div className="mt-4 border-l-2 border-error bg-error/10 px-4 py-3">
+          <p className="smallcaps text-error">Objection — execution failed</p>
+          <p className="mt-1 font-mono text-[0.8rem] text-ink-secondary [overflow-wrap:anywhere]">{runError}</p>
         </div>
       ) : null}
 
       {!run && !runError ? (
-        <p className="mt-4 text-[0.95rem] font-light italic text-parchment-dim">
+        <p className="mt-4 text-[0.95rem] font-light italic text-ink-secondary">
           {engineReady
             ? "Run a determination to see the computed figure and its chain of citation."
             : "Waiting for the engine to instantiate…"}
@@ -72,33 +72,33 @@ export function DeterminationPanel({
           <div className="panel relative mt-4 overflow-hidden px-6 py-7 sm:px-8">
             <div className="flex flex-wrap items-center justify-between gap-6">
               <div key={run.sequence} className="stamp-in">
-                <p className="smallcaps text-[0.62rem] text-faint">
+                <p className="smallcaps text-[0.62rem] text-ink-muted">
                   {output.kind === "scalar"
                     ? prettifyName(output.name)
                     : `Whether ${prettifyName(output.name).toLowerCase()}`}
                   {" · "}
                   {formatMonth(run.month)}
                 </p>
-                <p className="mt-1 font-display text-6xl font-semibold leading-none text-parchment sm:text-7xl">
+                <p className="mt-1 font-display text-6xl font-semibold leading-none text-ink sm:text-7xl">
                   {outputHeadline(output)}
                 </p>
                 {run.tree?.substituted ? (
-                  <p className="mt-4 font-mono text-[0.8rem] text-sienna">
-                    <span className="text-faint">= </span>
+                  <p className="mt-4 font-mono text-[0.8rem] text-warning [overflow-wrap:anywhere]">
+                    <span className="text-ink-muted">= </span>
                     {run.tree.substituted}
                   </p>
                 ) : null}
                 {run.tree?.formula ? (
-                  <p className="mt-1 font-mono text-[0.8rem] text-parchment-dim">
-                    <span className="text-faint">= </span>
+                  <p className="mt-1 font-mono text-[0.8rem] text-ink-secondary [overflow-wrap:anywhere]">
+                    <span className="text-ink-muted">= </span>
                     {run.tree.formula}
                   </p>
                 ) : null}
               </div>
-              <Seal className="h-28 w-28 shrink-0 text-wax sm:h-32 sm:w-32" />
+              <Seal className="h-28 w-28 shrink-0 text-error sm:h-32 sm:w-32" />
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-x-6 gap-y-1 border-t border-rule pt-3 font-mono text-[0.65rem] text-faint">
+            <div className="mt-6 flex flex-wrap gap-x-6 gap-y-1 border-t border-rule pt-3 font-mono text-[0.65rem] text-ink-muted">
               <span>entity {result.entity_id}</span>
               <span>
                 period {result.period.start} — {result.period.end}
@@ -110,10 +110,10 @@ export function DeterminationPanel({
 
           {run.tree ? (
             <div className="mt-6">
-              <h3 className="smallcaps mb-1 text-[0.65rem] text-parchment-dim">
+              <h3 className="smallcaps mb-1 text-[0.65rem] text-ink-secondary">
                 Chain of citation
               </h3>
-              <p className="mb-3 text-[0.9rem] font-light text-parchment-dim">
+              <p className="mb-3 text-[0.9rem] font-light text-ink-secondary">
                 Every figure, traced to the durable legal id it came from — the engine&apos;s
                 explain-mode trace, not a reconstruction.
               </p>

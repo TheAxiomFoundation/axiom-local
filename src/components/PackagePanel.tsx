@@ -55,7 +55,7 @@ export function PackagePanel({
         aside={`composed artifact · ${entries.length} inputs · developer preview`}
       />
 
-      <p className="mb-4 mt-1 text-[0.95rem] font-light text-parchment-dim">
+      <p className="mb-4 mt-1 text-[0.95rem] font-light text-ink-secondary">
         {pkg.title}: the full composed program — federal statute, federal regulation, and state
         rule — compiled to one versioned artifact. This is the same release unit the hosted API
         executes; here it is delivered to the page once and executed in this tab.
@@ -64,9 +64,9 @@ export function PackagePanel({
       <div className="panel">
         <dl className="space-y-1.5 px-4 py-3 font-mono text-[0.72rem]">
           <div className="flex items-baseline">
-            <dt className="text-faint">artifact</dt>
+            <dt className="text-ink-muted">artifact</dt>
             <span className="leader" aria-hidden="true" />
-            <dd className="text-parchment">
+            <dd className="min-w-0 truncate text-ink" title={pkg.source.artifact_path}>
               <a
                 href={`https://github.com/${pkg.source.repo}/blob/main/${pkg.source.artifact_path}`}
                 target="_blank"
@@ -77,45 +77,45 @@ export function PackagePanel({
             </dd>
           </div>
           <div className="flex items-baseline">
-            <dt className="text-faint">sha-256 (fetched · pinned)</dt>
+            <dt className="text-ink-muted">sha-256 (fetched · pinned)</dt>
             <span className="leader" aria-hidden="true" />
             <dd
-              className={shaMatches ? "text-lamp" : "text-wax-bright"}
+              className={`min-w-0 truncate ${shaMatches ? "text-success" : "text-error"}`}
               title={`fetched ${fetchedSha256}\npinned ${pkg.source.artifact_sha256}`}
             >
               {fetchedSha256.slice(0, 12)}… {shaMatches ? "= pinned" : "≠ PINNED"}
             </dd>
           </div>
           <div className="flex items-baseline">
-            <dt className="text-faint">compiled by engine</dt>
+            <dt className="text-ink-muted">compiled by engine</dt>
             <span className="leader" aria-hidden="true" />
-            <dd className="text-parchment">
+            <dd className="min-w-0 truncate text-ink">
               v{pkg.source.engine_version} · artifact format v{pkg.source.artifact_format_version}
             </dd>
           </div>
           <div className="flex items-baseline">
-            <dt className="text-faint">jurisdiction</dt>
+            <dt className="text-ink-muted">jurisdiction</dt>
             <span className="leader" aria-hidden="true" />
-            <dd className="text-parchment">{pkg.jurisdiction}</dd>
+            <dd className="text-ink">{pkg.jurisdiction}</dd>
           </div>
         </dl>
       </div>
 
-      <div className="mt-4 border border-rule bg-ink-raised p-4" id="what-if">
-        <p className="smallcaps text-[0.62rem] text-brass">What if the law changed?</p>
-        <p className="mt-1.5 text-[0.88rem] font-light text-parchment-dim">
+      <div className="mt-4 border border-rule bg-paper-elevated p-4" id="what-if">
+        <p className="smallcaps text-[0.62rem] text-accent">What if the law changed?</p>
+        <p className="mt-1.5 text-[0.88rem] font-light text-ink-secondary">
           The earned-income deduction rate — 7 USC 2014(e)(2), currently{" "}
-          <span className="font-mono text-[0.8rem] text-parchment">
+          <span className="font-mono text-[0.8rem] text-ink">
             {whatIfPreviousValue ?? "0.2"}
           </span>{" "}
           — is one JSON entry in the artifact. Amend it to{" "}
-          <span className="font-mono text-[0.8rem] text-parchment">0.3</span> and re-run: the same
+          <span className="font-mono text-[0.8rem] text-ink">0.3</span> and re-run: the same
           household, under amended law, in this tab.
         </p>
         <div className="mt-3 flex items-center gap-3">
           <button
             type="button"
-            className={`${whatIfActive ? "btn-wax" : "btn-quiet"} flex items-center gap-2 px-3 py-1.5 font-mono text-[0.72rem] tracking-wide`}
+            className={`${whatIfActive ? "btn-accent" : "btn-quiet"} flex items-center gap-2 px-3 py-1.5 font-mono text-[0.72rem] tracking-wide`}
             onClick={onToggleWhatIf}
             aria-pressed={whatIfActive}
           >
@@ -123,7 +123,7 @@ export function PackagePanel({
             {whatIfActive ? "Amended law in force — restore current law" : "Amend the deduction rate"}
           </button>
           {whatIfActive ? (
-            <span className="smallcaps text-[0.62rem] text-sienna">
+            <span className="smallcaps text-[0.62rem] text-warning">
               hypothetical — not current law
             </span>
           ) : null}
@@ -157,8 +157,8 @@ export function PackagePanel({
         </div>
 
         {presumptionsOpen ? (
-          <div className="mt-3 border border-rule bg-ink-raised p-4" id="presumptions">
-            <p className="text-[0.85rem] font-light text-parchment-dim">
+          <div className="mt-3 border border-rule bg-paper-elevated p-4" id="presumptions">
+            <p className="text-[0.85rem] font-light text-ink-secondary">
               Every input the program can consider, with the answer this page presumes. A
               presumption is a legal position — correct any of them and the determination will
               say so. Values are matched by durable ref.
@@ -177,18 +177,18 @@ export function PackagePanel({
                 return (
                   <div key={ref} className="flex items-center gap-3">
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-[0.8rem] text-parchment-dim" title={slot.name}>
+                      <p className="truncate text-[0.8rem] text-ink-secondary" title={slot.name}>
                         {prettifyName(slot.name)}
-                        <span className="ml-2 font-mono text-[0.62rem] text-faint">
+                        <span className="ml-2 font-mono text-[0.62rem] text-ink-muted">
                           {slot.entity.toLowerCase()} · {slot.dtype}
                         </span>
                       </p>
-                      <p className="truncate font-mono text-[0.62rem] text-faint" title={ref}>
+                      <p className="truncate font-mono text-[0.62rem] text-ink-muted" title={ref}>
                         {ref}
                       </p>
                     </div>
                     <input
-                      className={`field w-24 text-right font-mono text-[0.75rem] ${overridden ? "border-brass" : ""}`}
+                      className={`field w-24 text-right font-mono text-[0.75rem] ${overridden ? "border-accent" : ""}`}
                       value={refOverrides[ref] ?? String(slot.value)}
                       onChange={(event) => onRefOverride(ref, event.target.value)}
                       aria-label={`Answer for ${slot.name}`}
@@ -207,12 +207,12 @@ export function PackagePanel({
                 );
               })}
               {filtered.length > PAGE_SIZE ? (
-                <p className="pt-1 font-mono text-[0.62rem] text-faint">
+                <p className="pt-1 font-mono text-[0.62rem] text-ink-muted">
                   {filtered.length - PAGE_SIZE} more — narrow the filter to see them
                 </p>
               ) : null}
               {filtered.length === 0 ? (
-                <p className="pt-1 font-mono text-[0.62rem] text-faint">
+                <p className="pt-1 font-mono text-[0.62rem] text-ink-muted">
                   nothing matches — the program has no such input
                 </p>
               ) : null}
