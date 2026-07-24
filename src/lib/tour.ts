@@ -59,9 +59,9 @@ export const TOUR_STEPS: TourStep[] = [
     id: "exit",
     title: "Take it with you",
     body:
-      "Everything you just did is available where you work: the same rules in your AI agent " +
-      "via MCP, the same artifact on your own machine, and the same tests to challenge if you " +
-      "find the law encoded wrong.",
+      "Everything you just did is available where you work: every rule readable beside its " +
+      "source law in the Axiom app, the same artifact built to run on your own machine, and " +
+      "the same tests to challenge if you find the law encoded wrong.",
     anchor: "take-it-with-you",
   },
 ];

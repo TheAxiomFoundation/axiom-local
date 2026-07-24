@@ -1,8 +1,8 @@
 # The golden path: Colorado SNAP
 
 One household, one program, carried across every way of running Axiom — this
-page in the browser, an AI agent over MCP, and (once the engine has a tagged
-release) a binary on your own machine. The numbers below are pinned by tests
+page in the browser, a clone of this repo on your own machine, and (once the
+engine has a tagged release) a native binary. The numbers below are pinned by tests
 at every layer, so if any surface disagrees, that is a bug with a
 reproduction, not a shrug.
 
@@ -62,11 +62,11 @@ is running the original artifact again. `tests/whatIf.test.ts` pins that the
 amendment moves the allotment and that current law still computes $478
 afterward.
 
-## The same numbers, elsewhere
+## The same rules, elsewhere
 
-- **Agent (developer preview):** `npx -y @axiom-foundation/mcp` with a
-  self-serve trial key; ask for a Colorado SNAP calculation on this
-  household. The hosted API executes the registered runtime package.
+- **Read them:** every rule this page executed is browsable at
+  app.axiom-foundation.org — the RuleSpec encoding beside the statute or
+  regulation it encodes, with the citation graph. No sign-in.
 - **Your machine (release pending):** the artifact is built for download —
   pin a release, verify its attestation, execute anywhere. Blocked on the
   engine's first tagged release (`v0.1.0`) and dated artifact roll-ups;
@@ -74,3 +74,7 @@ afterward.
 - **Challenge it:** the parity suite in axiom-api and the encodings in
   rulespec-us are public. If your case computes differently than the law
   says it should, file it against rulespec-us with the trace.
+
+The hosted API and MCP server are deliberately not surfaced here — they are
+not launch entry points. When they open up, the agent door slots back into
+this page's exit ramps.

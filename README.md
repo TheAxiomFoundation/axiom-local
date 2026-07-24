@@ -50,9 +50,11 @@ household under amended law, in the tab. See
 [docs/golden-path.md](docs/golden-path.md) for the full walkthrough.
 
 A **guided tour** (`?tour=landed` … `?tour=exit`, dismissable, deep-linkable)
-walks a first-time visitor from the landed verdict to the exit ramps: MCP for
-agents, the artifact release for engineers, the parity suite for domain
-experts who want to challenge the encoding.
+walks a first-time visitor from the landed verdict to the exit ramps: the
+Axiom app to read every rule beside its source law, the local run for
+engineers, the parity suite for domain experts who want to challenge the
+encoding. (The hosted API and MCP are deliberately not surfaced — they are
+not launch entry points.)
 
 The engine's two-module teaching pair (`wasm/test/smoke.mjs`) is one click
 away, and you can still paste (or upload) your own program: a JSON object
@@ -106,15 +108,34 @@ engine/
 public/engine/         vendored web wasm build (served to the browser)
 ```
 
-## Development
+## Run it locally
 
-Requires [Bun](https://bun.sh). No Rust toolchain is needed for normal
-development — the wasm packages are vendored.
+This repo is the local distribution: the wasm engine and the composed,
+hash-pinned CO SNAP artifact are checked in, so a clone runs the whole thing
+offline with no Rust toolchain. Requires [Bun](https://bun.sh) only.
 
 ```sh
-bun install
+git clone https://github.com/TheAxiomFoundation/axiom-playground
+cd axiom-playground && bun install
+
+# The page, with hot reload:
 bun run dev          # http://localhost:3000
+
+# Or the same determination straight from your terminal:
+bun scripts/determine.mjs                                   # $478, the pinned case
+bun scripts/determine.mjs --earned 2400                     # ineligible
+bun scripts/determine.mjs --size 3 --ages 42,9,70 --shelter 1400
+bun scripts/determine.mjs --what-if snap_earned_income_deduction_rate_for_net_income=0.3
+bun scripts/determine.mjs --set assistance_payments=500     # override a presumption
+bun scripts/determine.mjs --trace                           # chain of citation
+bun scripts/determine.mjs --slots                           # list all 585 inputs
+bun scripts/determine.mjs --json                            # machine-readable
 ```
+
+Native engine binaries (no bun, no clone) arrive with the engine's first
+tagged release; until then the clone is the supported local path.
+
+## Development
 
 Other scripts:
 

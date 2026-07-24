@@ -4,9 +4,10 @@ import { PanelHeading } from "./PanelHeading";
 
 /**
  * The exit ramps: where this page's capabilities live outside this page.
- * Three doors by audience. The engineer door tells the truth about what is
- * not yet released rather than linking somewhere that will 404 — per the
- * launch plan, binary releases are pending the engine's first tagged release.
+ * Three doors by audience. Doors tell the truth about what is not yet
+ * released rather than linking somewhere that will 404 — binary releases
+ * are pending the engine's first tagged release. The hosted API and MCP
+ * are deliberately absent: they are not launch entry points.
  */
 export function TakeItWithYou() {
   return (
@@ -14,45 +15,45 @@ export function TakeItWithYou() {
       <PanelHeading section="4" title="Take it with you" aside="the same rules, where you work" />
 
       <p className="mb-6 mt-1 text-[0.95rem] font-light text-ink-secondary">
-        Everything this page just did — search, retrieval, determination, the cited trace — is
+        Everything this page just did — the rules, the determination, the cited trace — is
         available outside it. Pick your door.
       </p>
 
       <div className="grid gap-5 md:grid-cols-3">
         <div className="panel flex flex-col p-5">
-          <p className="smallcaps text-[0.62rem] text-accent">for AI agents · developer preview</p>
+          <p className="smallcaps text-[0.62rem] text-accent">for readers</p>
           <h3 className="mt-2 font-display text-lg font-semibold text-ink">
-            Wire it into your agent
+            Read the law behind this
           </h3>
           <p className="mt-2 flex-1 text-[0.88rem] font-light text-ink-secondary">
-            The MCP server puts these rules — search, sources, dependency graphs, and this same
-            calculation — in Claude, Cursor, or any MCP client. A self-serve trial key is one
-            request; no signup.
+            Every rule this page executed is browsable: the RuleSpec encoding side-by-side with
+            the statute or regulation it encodes, searchable, with the citation graph — no
+            sign-in, nothing to install.
           </p>
-          <pre className="mt-3 overflow-x-auto bg-code-bg px-3 py-2 font-mono text-[0.7rem] text-code-text">
-            npx -y @axiom-foundation/mcp
-          </pre>
           <a
             className="mt-3 font-mono text-[0.72rem] text-accent underline-offset-2 hover:underline"
-            href="https://axiom-api-eta.vercel.app/docs/mcp"
+            href="https://app.axiom-foundation.org"
             target="_blank"
             rel="noreferrer"
           >
-            MCP quickstart →
+            app.axiom-foundation.org →
           </a>
         </div>
 
         <div className="panel flex flex-col p-5">
-          <p className="smallcaps text-[0.62rem] text-accent">for engineers · release pending</p>
+          <p className="smallcaps text-[0.62rem] text-accent">for engineers · works today</p>
           <h3 className="mt-2 font-display text-lg font-semibold text-ink">
             Run it on your machine
           </h3>
           <p className="mt-2 flex-1 text-[0.88rem] font-light text-ink-secondary">
-            The unit this page executes is a versioned, signed artifact — built for download:
-            pin a release, verify its attestation, execute anywhere. Engine binaries await the
-            engine&apos;s first tagged release; until then, the engine builds from source with
-            cargo.
+            This repo is the local distribution: the engine (WebAssembly) and the composed,
+            hash-pinned artifact are checked in. Clone it and the same determination runs in
+            your terminal — offline, no Rust toolchain. Amend the law, override presumptions,
+            print the citation trace.
           </p>
+          <pre className="mt-3 overflow-x-auto bg-code-bg px-3 py-2 font-mono text-[0.7rem] text-code-text">
+            {"git clone TheAxiomFoundation/axiom-playground\nbun install && bun scripts/determine.mjs"}
+          </pre>
           <a
             className="mt-3 font-mono text-[0.72rem] text-accent underline-offset-2 hover:underline"
             href="https://github.com/TheAxiomFoundation/axiom-rules-engine"
