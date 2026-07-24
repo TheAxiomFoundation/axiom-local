@@ -1,0 +1,3577 @@
+{
+ "program_id": "co-snap",
+ "jurisdiction": "us-co",
+ "title": "Colorado SNAP — monthly allotment",
+ "source": {
+  "repo": "TheAxiomFoundation/axiom-api",
+  "artifact_path": "data/runtime-artifacts/us-co-snap.compiled.json",
+  "artifact_sha256": "c1a40a8face8d713f4198df431b85807abfd34bd201436d6f80397dc070996e8",
+  "engine_version": "0.1.0",
+  "artifact_format_version": 1
+ },
+ "query": {
+  "entity_id": "household:1"
+ },
+ "entities": [
+  {
+   "entity": "Household",
+   "id_template": "household:1",
+   "count": 1
+  },
+  {
+   "entity": "Person",
+   "id_template": "person:1:{index}",
+   "count_from": "household_size",
+   "relations": [
+    {
+     "name": "us:statutes/7/2012/j#relation.member_of_household",
+     "tuple": [
+      "person:1:{index}",
+      "household:1"
+     ]
+    }
+   ]
+  }
+ ],
+ "headline": [
+  {
+   "slot": "household_size",
+   "entity": "Household",
+   "label": "People in the household"
+  },
+  {
+   "slot": "snap_countable_earned_income",
+   "entity": "Household",
+   "label": "Monthly earned income"
+  },
+  {
+   "slot": "household_shelter_costs_incurred",
+   "entity": "Household",
+   "label": "Monthly shelter costs"
+  },
+  {
+   "slot": "member_age",
+   "entity": "Person",
+   "label": "Age",
+   "per_person": true
+  }
+ ],
+ "outputs": {
+  "snap_allotment": "us-co:regulations/10-ccr-2506-1/4.207.2#snap_allotment",
+  "snap_net_income": "us:statutes/7/2014/e/6/A#snap_net_income",
+  "snap_eligible": "us-co:policies/cdhs/snap/fy-2026-benefit-calculation#snap_eligible"
+ },
+ "default_period": "2026-01",
+ "defaults": {
+  "us:policies/usda/snap/fy-2026-cola/maximum-allotments#input.household_size": {
+   "name": "household_size",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": 1
+  },
+  "us:statutes/7/2012/j#input.snap_member_is_elderly_or_disabled": {
+   "name": "snap_member_is_elderly_or_disabled",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:policies/usda/snap/fy-2026-cola/deductions#input.household_size": {
+   "name": "household_size",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": 1
+  },
+  "us:policies/usda/snap/fy-2026-cola/income-eligibility-standards#input.household_size": {
+   "name": "household_size",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": 1
+  },
+  "us:regulations/7-cfr/273/3#input.resident_of_battered_women_and_children_shelter_and_prior_abusive_household_member": {
+   "name": "resident_of_battered_women_and_children_shelter_and_prior_abusive_household_member",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/3#input.household_contains_individual_participating_in_more_than_one_household_or_project_area": {
+   "name": "household_contains_individual_participating_in_more_than_one_household_or_project_area",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/3#input.household_lives_in_application_state": {
+   "name": "household_lives_in_application_state",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": true
+  },
+  "us:regulations/7-cfr/273/3#input.household_in_project_area_solely_for_vacation": {
+   "name": "household_in_project_area_solely_for_vacation",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.member_is_us_citizen": {
+   "name": "member_is_us_citizen",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": true
+  },
+  "us:regulations/7-cfr/273/4#input.member_is_us_noncitizen_national": {
+   "name": "member_is_us_noncitizen_national",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.member_is_american_indian_born_in_canada_or_recognized_indian_tribe_member": {
+   "name": "member_is_american_indian_born_in_canada_or_recognized_indian_tribe_member",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.member_is_hmong_or_highland_laotian_qualifying_person_or_family_member": {
+   "name": "member_is_hmong_or_highland_laotian_qualifying_person_or_family_member",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.member_is_trafficking_victim_or_qualifying_family_member": {
+   "name": "member_is_trafficking_victim_or_qualifying_family_member",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.member_is_qualified_alien_with_forty_qualifying_quarters": {
+   "name": "member_is_qualified_alien_with_forty_qualifying_quarters",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.member_is_refugee": {
+   "name": "member_is_refugee",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.member_is_asylee": {
+   "name": "member_is_asylee",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.member_has_deportation_or_removal_withheld": {
+   "name": "member_has_deportation_or_removal_withheld",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.member_is_cuban_or_haitian_entrant": {
+   "name": "member_is_cuban_or_haitian_entrant",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.member_is_amerasian_immigrant": {
+   "name": "member_is_amerasian_immigrant",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.member_has_eligible_military_connection": {
+   "name": "member_has_eligible_military_connection",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.member_receives_blindness_or_disability_benefits": {
+   "name": "member_receives_blindness_or_disability_benefits",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.member_was_lawfully_residing_on_1996_08_22_and_born_on_or_before_1931_08_22": {
+   "name": "member_was_lawfully_residing_on_1996_08_22_and_born_on_or_before_1931_08_22",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.member_is_under_age_eighteen": {
+   "name": "member_is_under_age_eighteen",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.member_is_qualified_alien_subject_to_five_year_wait": {
+   "name": "member_is_qualified_alien_subject_to_five_year_wait",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.qualified_alien_five_year_status_period_met": {
+   "name": "qualified_alien_five_year_status_period_met",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/4#input.alien_status_documentation_missing_or_unwilling": {
+   "name": "alien_status_documentation_missing_or_unwilling",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.student_school_term_has_begun": {
+   "name": "student_school_term_has_begun",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.student_enrollment_status_ending_event_occurred": {
+   "name": "student_enrollment_status_ending_event_occurred",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.enrolled_at_least_half_time": {
+   "name": "enrolled_at_least_half_time",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.enrolled_in_business_technical_trade_or_vocational_school_requiring_high_school_diploma": {
+   "name": "enrolled_in_business_technical_trade_or_vocational_school_requiring_high_school_diploma",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.enrolled_in_college_or_university_degree_program": {
+   "name": "enrolled_in_college_or_university_degree_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.student_age": {
+   "name": "student_age",
+   "entity": "Person",
+   "dtype": "integer",
+   "value": 0
+  },
+  "us:regulations/7-cfr/273/5#input.student_physically_or_mentally_unfit": {
+   "name": "student_physically_or_mentally_unfit",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.student_receives_tanf": {
+   "name": "student_receives_tanf",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.enrolled_through_jobs_or_successor_program": {
+   "name": "enrolled_through_jobs_or_successor_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.student_paid_employment_hours_per_week": {
+   "name": "student_paid_employment_hours_per_week",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us:regulations/7-cfr/273/5#input.student_self_employment_hours_per_week": {
+   "name": "student_self_employment_hours_per_week",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us:regulations/7-cfr/273/5#input.student_self_employment_weekly_earnings": {
+   "name": "student_self_employment_weekly_earnings",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us:regulations/7-cfr/273/5#input.federal_minimum_wage": {
+   "name": "federal_minimum_wage",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us:regulations/7-cfr/273/5#input.state_agency_averaged_student_work_hours_meet_twenty_per_week": {
+   "name": "state_agency_averaged_student_work_hours_meet_twenty_per_week",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.student_participating_in_state_or_federally_financed_work_study": {
+   "name": "student_participating_in_state_or_federally_financed_work_study",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.work_study_approved_at_snap_application": {
+   "name": "work_study_approved_at_snap_application",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.work_study_approved_for_school_term": {
+   "name": "work_study_approved_for_school_term",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.student_anticipates_working_in_work_study": {
+   "name": "student_anticipates_working_in_work_study",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.work_study_exemption_period_active": {
+   "name": "work_study_exemption_period_active",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.known_student_refused_work_study_assignment": {
+   "name": "known_student_refused_work_study_assignment",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.student_participating_in_on_the_job_training_program": {
+   "name": "student_participating_in_on_the_job_training_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.student_currently_being_trained_by_employer": {
+   "name": "student_currently_being_trained_by_employer",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.responsible_for_care_of_dependent_household_member_under_age_six": {
+   "name": "responsible_for_care_of_dependent_household_member_under_age_six",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.responsible_for_care_of_dependent_household_member_age_six_to_under_twelve": {
+   "name": "responsible_for_care_of_dependent_household_member_age_six_to_under_twelve",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.adequate_child_care_unavailable_to_attend_class_and_meet_student_work_requirement": {
+   "name": "adequate_child_care_unavailable_to_attend_class_and_meet_student_work_requirement",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.single_parent_enrolled_full_time_in_higher_education": {
+   "name": "single_parent_enrolled_full_time_in_higher_education",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.responsible_for_care_of_dependent_child_under_twelve": {
+   "name": "responsible_for_care_of_dependent_child_under_twelve",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.single_parent_household_condition_satisfied": {
+   "name": "single_parent_household_condition_satisfied",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/5#input.assigned_or_placed_in_higher_education_through_qualifying_employment_training_program": {
+   "name": "assigned_or_placed_in_higher_education_through_qualifying_employment_training_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/6#input.member_has_documentary_or_collateral_evidence_of_ssn_application_or_every_effort": {
+   "name": "member_has_documentary_or_collateral_evidence_of_ssn_application_or_every_effort",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/6#input.state_agency_fault_in_ssn_application_processing": {
+   "name": "state_agency_fault_in_ssn_application_processing",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/6#input.member_unable_to_obtain_documents_required_for_ssn_application_with_caseworker_assistance_needed": {
+   "name": "member_unable_to_obtain_documents_required_for_ssn_application_with_caseworker_assistance_needed",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/6#input.member_ssn_application_filed_pending_state_agency_notification": {
+   "name": "member_ssn_application_filed_pending_state_agency_notification",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/6#input.member_refused_or_failed_to_provide_or_apply_for_ssn": {
+   "name": "member_refused_or_failed_to_provide_or_apply_for_ssn",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/6#input.member_later_provided_ssn_ending_disqualification": {
+   "name": "member_later_provided_ssn_ending_disqualification",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/10#input.household_size": {
+   "name": "household_size",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": 1
+  },
+  "us:statutes/7/2014/e/2#input.snap_countable_earned_income": {
+   "name": "snap_countable_earned_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us:statutes/7/2014/e/2#input.work_supplementation_earned_income": {
+   "name": "work_supplementation_earned_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us:statutes/7/2017/a#input.household_size": {
+   "name": "household_size",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": 1
+  },
+  "us:regulations/7-cfr/273/7#input.member_age": {
+   "name": "member_age",
+   "entity": "Person",
+   "dtype": "integer",
+   "value": 0
+  },
+  "us:regulations/7-cfr/273/7#input.member_age_16_or_17_is_not_household_head_or_attends_school_or_training_half_time": {
+   "name": "member_age_16_or_17_is_not_household_head_or_attends_school_or_training_half_time",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/7#input.member_physically_or_mentally_unfit_for_employment": {
+   "name": "member_physically_or_mentally_unfit_for_employment",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/7#input.member_subject_to_and_complying_with_title_iv_work_requirement": {
+   "name": "member_subject_to_and_complying_with_title_iv_work_requirement",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/7#input.member_responsible_for_dependent_child_under_six_or_incapacitated_person": {
+   "name": "member_responsible_for_dependent_child_under_six_or_incapacitated_person",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/7#input.member_receiving_or_applying_for_unemployment_compensation_and_complying": {
+   "name": "member_receiving_or_applying_for_unemployment_compensation_and_complying",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/7#input.member_regular_participant_in_drug_or_alcohol_treatment": {
+   "name": "member_regular_participant_in_drug_or_alcohol_treatment",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/7#input.member_weekly_work_hours": {
+   "name": "member_weekly_work_hours",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us:regulations/7-cfr/273/7#input.member_weekly_wages": {
+   "name": "member_weekly_wages",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us:regulations/7-cfr/273/7#input.federal_or_state_minimum_wage": {
+   "name": "federal_or_state_minimum_wage",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us:regulations/7-cfr/273/7#input.migrant_or_seasonal_farmworker_under_contract_to_begin_employment_within_30_days": {
+   "name": "migrant_or_seasonal_farmworker_under_contract_to_begin_employment_within_30_days",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/7#input.alaska_subsistence_hunts_or_fishes_30_hours_weekly": {
+   "name": "alaska_subsistence_hunts_or_fishes_30_hours_weekly",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/7#input.member_student_enrolled_at_least_half_time_and_student_eligible": {
+   "name": "member_student_enrolled_at_least_half_time_and_student_eligible",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/7#input.member_registered_for_work_or_registered_by_state": {
+   "name": "member_registered_for_work_or_registered_by_state",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/7#input.member_participated_in_snap_et_if_assigned": {
+   "name": "member_participated_in_snap_et_if_assigned",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/7#input.member_participated_in_workfare_if_assigned": {
+   "name": "member_participated_in_workfare_if_assigned",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/7#input.member_provided_employment_status_or_availability_information": {
+   "name": "member_provided_employment_status_or_availability_information",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/7#input.member_reported_to_referred_suitable_employer_if_referred": {
+   "name": "member_reported_to_referred_suitable_employer_if_referred",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/7#input.member_accepted_bona_fide_suitable_employment_offer_if_offered": {
+   "name": "member_accepted_bona_fide_suitable_employment_offer_if_offered",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/7#input.member_voluntarily_quit_or_reduced_work_below_30_hours_without_good_cause": {
+   "name": "member_voluntarily_quit_or_reduced_work_below_30_hours_without_good_cause",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/7#input.member_snap_work_requirements_waived_due_to_pending_ssi_joint_application": {
+   "name": "member_snap_work_requirements_waived_due_to_pending_ssi_joint_application",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/24#input.member_abawd_weekly_work_hours": {
+   "name": "member_abawd_weekly_work_hours",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us:regulations/7-cfr/273/24#input.member_abawd_monthly_work_hours": {
+   "name": "member_abawd_monthly_work_hours",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us:regulations/7-cfr/273/24#input.member_participates_in_abawd_work_program_20_hours_weekly": {
+   "name": "member_participates_in_abawd_work_program_20_hours_weekly",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/24#input.member_combines_work_and_work_program_20_hours_weekly": {
+   "name": "member_combines_work_and_work_program_20_hours_weekly",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/24#input.member_participates_in_abawd_workfare_program": {
+   "name": "member_participates_in_abawd_workfare_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/24#input.member_age": {
+   "name": "member_age",
+   "entity": "Person",
+   "dtype": "integer",
+   "value": 0
+  },
+  "us:regulations/7-cfr/273/24#input.member_medically_certified_physically_or_mentally_unfit_for_employment": {
+   "name": "member_medically_certified_physically_or_mentally_unfit_for_employment",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/24#input.member_is_parent_of_household_member_under_age_eighteen": {
+   "name": "member_is_parent_of_household_member_under_age_eighteen",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/24#input.member_resides_with_household_member_under_age_eighteen": {
+   "name": "member_resides_with_household_member_under_age_eighteen",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/24#input.member_is_pregnant": {
+   "name": "member_is_pregnant",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/24#input.member_is_homeless": {
+   "name": "member_is_homeless",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/24#input.member_is_veteran": {
+   "name": "member_is_veteran",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/24#input.member_age_24_or_younger_and_was_in_foster_care_on_attaining_age_18": {
+   "name": "member_age_24_or_younger_and_was_in_foster_care_on_attaining_age_18",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/24#input.member_covered_by_abawd_time_limit_waiver": {
+   "name": "member_covered_by_abawd_time_limit_waiver",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/24#input.snap_abawd_countable_months_in_three_year_period": {
+   "name": "snap_abawd_countable_months_in_three_year_period",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us:regulations/7-cfr/273/24#input.member_regained_abawd_eligibility": {
+   "name": "member_regained_abawd_eligibility",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us:regulations/7-cfr/273/24#input.member_has_additional_three_month_abawd_eligibility": {
+   "name": "member_has_additional_three_month_abawd_eligibility",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402#input.income_pay_frequency": {
+   "name": "income_pay_frequency",
+   "entity": "Household",
+   "dtype": "text",
+   "value": "monthly"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402#input.average_income_per_pay_period": {
+   "name": "average_income_per_pay_period",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402#input.anticipated_income_reasonably_certain": {
+   "name": "anticipated_income_reasonably_certain",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.1#input.anticipated_income_amount_reasonably_certain": {
+   "name": "anticipated_income_amount_reasonably_certain",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.1#input.anticipated_income_receipt_month_reasonably_certain": {
+   "name": "anticipated_income_receipt_month_reasonably_certain",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.1#input.anticipated_income_certain_portion": {
+   "name": "anticipated_income_certain_portion",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.1#input.income_received_within_past_30_days": {
+   "name": "income_received_within_past_30_days",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.1#input.anticipated_income_change_requires_adjustment": {
+   "name": "anticipated_income_change_requires_adjustment",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.1#input.income_received_in_past_30_days": {
+   "name": "income_received_in_past_30_days",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.1#input.longer_past_period_more_accurate_for_anticipated_income": {
+   "name": "longer_past_period_more_accurate_for_anticipated_income",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.1#input.longer_past_period_average_income": {
+   "name": "longer_past_period_average_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.1#input.seasonal_income_last_season_more_accurate": {
+   "name": "seasonal_income_last_season_more_accurate",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.1#input.last_season_average_income": {
+   "name": "last_season_average_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.1#input.eligible_striker": {
+   "name": "eligible_striker",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.1#input.striker_income_for_prospective_budgeting": {
+   "name": "striker_income_for_prospective_budgeting",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.2#input.income_intended_to_cover_specific_period": {
+   "name": "income_intended_to_cover_specific_period",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.2#input.income_intended_cover_months": {
+   "name": "income_intended_cover_months",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.2#input.household_derives_annual_income_from_self_employment": {
+   "name": "household_derives_annual_income_from_self_employment",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.2#input.annual_self_employment_income": {
+   "name": "annual_self_employment_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.2#input.household_derives_annual_income_from_contract": {
+   "name": "household_derives_annual_income_from_contract",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.2#input.contract_income_hourly_or_piecework": {
+   "name": "contract_income_hourly_or_piecework",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.2#input.annual_contract_income": {
+   "name": "annual_contract_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.2#input.educational_income": {
+   "name": "educational_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.2#input.educational_income_intended_cover_months": {
+   "name": "educational_income_intended_cover_months",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.2#input.household_elects_to_average_fluctuating_income": {
+   "name": "household_elects_to_average_fluctuating_income",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.2#input.fluctuating_income_intended_to_cover_period": {
+   "name": "fluctuating_income_intended_to_cover_period",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.2#input.fluctuating_income_intended_cover_months": {
+   "name": "fluctuating_income_intended_cover_months",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.2#input.known_income_from_previous_months": {
+   "name": "known_income_from_previous_months",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.402.2#input.known_previous_month_count": {
+   "name": "known_previous_month_count",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.2#input.boarder_payments_for_room_meals_and_shelter_contributions": {
+   "name": "boarder_payments_for_room_meals_and_shelter_contributions",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.2#input.actual_documented_boarder_room_and_meal_costs": {
+   "name": "actual_documented_boarder_room_and_meal_costs",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.2#input.boarder_income_is_foster_care_payment": {
+   "name": "boarder_income_is_foster_care_payment",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.2#input.earned_income_excluding_boarder_net_income": {
+   "name": "earned_income_excluding_boarder_net_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.2#input.household_shelter_costs_incurred": {
+   "name": "household_shelter_costs_incurred",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.2#input.shelter_expenses_paid_directly_by_boarder_to_third_party": {
+   "name": "shelter_expenses_paid_directly_by_boarder_to_third_party",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.3#input.school_employee": {
+   "name": "school_employee",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.3#input.employment_contract_renewable_on_annual_basis": {
+   "name": "employment_contract_renewable_on_annual_basis",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.3#input.school_contract_income_hourly_or_piecework": {
+   "name": "school_contract_income_hourly_or_piecework",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.3#input.school_employee_annual_contract_income": {
+   "name": "school_employee_annual_contract_income",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.3#input.household_other_monthly_income": {
+   "name": "household_other_monthly_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.3#input.household_school_employee_average_monthly_contract_income": {
+   "name": "household_school_employee_average_monthly_contract_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.11#input.self_employment_gross_income_for_period": {
+   "name": "self_employment_gross_income_for_period",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.11#input.self_employment_capital_gains_for_period": {
+   "name": "self_employment_capital_gains_for_period",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.11#input.allowable_self_employment_business_costs_for_period": {
+   "name": "allowable_self_employment_business_costs_for_period",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.11#input.self_employment_income_period_months": {
+   "name": "self_employment_income_period_months",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 1
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.11#input.anticipated_capital_gains_next_12_months": {
+   "name": "anticipated_capital_gains_next_12_months",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.11#input.anticipated_monthly_self_employment_income": {
+   "name": "anticipated_monthly_self_employment_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.11#input.anticipated_monthly_allowable_self_employment_business_costs": {
+   "name": "anticipated_monthly_allowable_self_employment_business_costs",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.11#input.self_employment_income_calculated_on_anticipated_basis": {
+   "name": "self_employment_income_calculated_on_anticipated_basis",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.12#input.self_employment_income_is_primary_annual_support": {
+   "name": "self_employment_income_is_primary_annual_support",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.12#input.self_employment_income_is_partial_annual_support": {
+   "name": "self_employment_income_is_partial_annual_support",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.12#input.self_employment_months": {
+   "name": "self_employment_months",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.12#input.self_employment_income_is_from_new_source": {
+   "name": "self_employment_income_is_from_new_source",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.12#input.self_employment_business_months_in_operation": {
+   "name": "self_employment_business_months_in_operation",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.12#input.self_employment_income_period_months": {
+   "name": "self_employment_income_period_months",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 1
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.12#input.substantial_increase_or_decrease_in_business": {
+   "name": "substantial_increase_or_decrease_in_business",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.12#input.anticipated_self_employment_income_for_projection_period": {
+   "name": "anticipated_self_employment_income_for_projection_period",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.12#input.historical_self_employment_income_for_averaging_period": {
+   "name": "historical_self_employment_income_for_averaging_period",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.12#input.expected_gross_annual_farm_income": {
+   "name": "expected_gross_annual_farm_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.12#input.farm_income_production_costs_for_period": {
+   "name": "farm_income_production_costs_for_period",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.12#input.farm_gross_income_for_period": {
+   "name": "farm_gross_income_for_period",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.12#input.farm_loss_period_months": {
+   "name": "farm_loss_period_months",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.12#input.other_self_employment_income": {
+   "name": "other_self_employment_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.12#input.earned_income_excluding_farm_and_self_employment": {
+   "name": "earned_income_excluding_farm_and_self_employment",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403.12#input.other_unearned_income": {
+   "name": "other_unearned_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_money_from_rental_or_lease_of_self_employment_property": {
+   "name": "payment_is_money_from_rental_or_lease_of_self_employment_property",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.property_active_management_average_hours_per_week": {
+   "name": "property_active_management_average_hours_per_week",
+   "entity": "Payment",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_earnings_from_wioa_on_the_job_training": {
+   "name": "payment_is_earnings_from_wioa_on_the_job_training",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.household_member_age_years": {
+   "name": "household_member_age_years",
+   "entity": "Payment",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.household_member_under_parental_control_of_another_adult_member": {
+   "name": "household_member_under_parental_control_of_another_adult_member",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_for_services_as_employee": {
+   "name": "payment_is_for_services_as_employee",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_countable_employment_income_received_by_higher_education_student_in_state_work_study": {
+   "name": "payment_is_countable_employment_income_received_by_higher_education_student_in_state_work_study",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_countable_employment_income_received_by_higher_education_student_in_fellowship_with_work_requirement": {
+   "name": "payment_is_countable_employment_income_received_by_higher_education_student_in_fellowship_with_work_requirement",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_garnishment_from_employee_services": {
+   "name": "payment_is_garnishment_from_employee_services",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_money_legally_obligated_to_employee_and_diverted_to_third_party_for_employee_household_expenses": {
+   "name": "payment_is_money_legally_obligated_to_employee_and_diverted_to_third_party_for_employee_household_expenses",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_government_payment_from_agricultural_stabilization_and_conservation_service": {
+   "name": "payment_is_government_payment_from_agricultural_stabilization_and_conservation_service",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_vista_wages": {
+   "name": "payment_is_vista_wages",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.client_was_receiving_snap_benefits_when_joined_vista": {
+   "name": "client_was_receiving_snap_benefits_when_joined_vista",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_advance_on_wages": {
+   "name": "payment_is_advance_on_wages",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.advance_on_wages_reasonably_anticipated": {
+   "name": "advance_on_wages_reasonably_anticipated",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_wages_held_at_employee_request": {
+   "name": "payment_is_wages_held_at_employee_request",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.month_is_month_wages_would_otherwise_have_been_paid_by_employer": {
+   "name": "month_is_month_wages_would_otherwise_have_been_paid_by_employer",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_wages_held_by_employer_as_general_practice": {
+   "name": "payment_is_wages_held_by_employer_as_general_practice",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.household_anticipates_receiving_previously_withheld_wages": {
+   "name": "household_anticipates_receiving_previously_withheld_wages",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_sick_leave_vacation_or_bonus_pay": {
+   "name": "payment_is_sick_leave_vacation_or_bonus_pay",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.person_was_still_employed_while_receiving_pay": {
+   "name": "person_was_still_employed_while_receiving_pay",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_from_vocational_or_rehabilitation_program_recognized_by_federal_state_or_local_government": {
+   "name": "payment_is_from_vocational_or_rehabilitation_program_recognized_by_federal_state_or_local_government",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_reimbursement": {
+   "name": "payment_is_reimbursement",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_allowance_paid_under_wioa": {
+   "name": "payment_is_allowance_paid_under_wioa",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_pre_strike_or_current_striker_income_selected_under_striker_rule": {
+   "name": "payment_is_pre_strike_or_current_striker_income_selected_under_striker_rule",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_money_from_sale_of_capital_goods_services_or_property_connected_to_self_employment_enterprise": {
+   "name": "payment_is_money_from_sale_of_capital_goods_services_or_property_connected_to_self_employment_enterprise",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_llc_or_s_corporation_owner_regular_earned_income": {
+   "name": "payment_is_llc_or_s_corporation_owner_regular_earned_income",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_boarder_direct_payment_to_household_for_room_or_meals": {
+   "name": "payment_is_boarder_direct_payment_to_household_for_room_or_meals",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_is_boarder_contribution_to_household_for_shelter_expenses": {
+   "name": "payment_is_boarder_contribution_to_household_for_shelter_expenses",
+   "entity": "Payment",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.403#input.payment_amount": {
+   "name": "payment_amount",
+   "entity": "Payment",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.average_rental_property_management_hours_per_week": {
+   "name": "average_rental_property_management_hours_per_week",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.rental_property_gross_income": {
+   "name": "rental_property_gross_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.rental_property_business_costs": {
+   "name": "rental_property_business_costs",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.sponsored_noncitizen_household": {
+   "name": "sponsored_noncitizen_household",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.sponsor_income_deemed_to_household": {
+   "name": "sponsor_income_deemed_to_household",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.vacation_sick_or_bonus_pay_after_terminated_employment": {
+   "name": "vacation_sick_or_bonus_pay_after_terminated_employment",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.vacation_sick_or_bonus_pay_received_in_installments": {
+   "name": "vacation_sick_or_bonus_pay_received_in_installments",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.vacation_sick_or_bonus_pay": {
+   "name": "vacation_sick_or_bonus_pay",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.vacation_sick_or_bonus_pay_received_as_lump_sum": {
+   "name": "vacation_sick_or_bonus_pay_received_as_lump_sum",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.nonprofit_gifts_received_in_fiscal_quarter": {
+   "name": "nonprofit_gifts_received_in_fiscal_quarter",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.gifts_from_other_sources_can_be_anticipated": {
+   "name": "gifts_from_other_sources_can_be_anticipated",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.gifts_from_other_sources": {
+   "name": "gifts_from_other_sources",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.trust_fund_withdrawals": {
+   "name": "trust_fund_withdrawals",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.available_trust_dividends": {
+   "name": "available_trust_dividends",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.substantial_lottery_or_gambling_winnings_received": {
+   "name": "substantial_lottery_or_gambling_winnings_received",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.household_member_allocated_lottery_or_gambling_winnings": {
+   "name": "household_member_allocated_lottery_or_gambling_winnings",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.assistance_payments": {
+   "name": "assistance_payments",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.retirement_disability_payments": {
+   "name": "retirement_disability_payments",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.direct_support_and_alimony_payments": {
+   "name": "direct_support_and_alimony_payments",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.404#input.other_gain_or_benefit_payments": {
+   "name": "other_gain_or_benefit_payments",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.irregular_income_received_too_infrequently_or_irregularly_to_anticipate": {
+   "name": "irregular_income_received_too_infrequently_or_irregularly_to_anticipate",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.irregular_income_received_in_three_months": {
+   "name": "irregular_income_received_in_three_months",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.third_party_beneficiary_payment_received": {
+   "name": "third_party_beneficiary_payment_received",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.non_household_beneficiary_portion_readily_identified": {
+   "name": "non_household_beneficiary_portion_readily_identified",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.identified_non_household_beneficiary_payment_portion": {
+   "name": "identified_non_household_beneficiary_payment_portion",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.payment_used_for_non_household_beneficiary": {
+   "name": "payment_used_for_non_household_beneficiary",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.third_party_beneficiary_payment": {
+   "name": "third_party_beneficiary_payment",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.non_household_beneficiary_count": {
+   "name": "non_household_beneficiary_count",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.intended_beneficiary_count": {
+   "name": "intended_beneficiary_count",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.child_lives_with_parent_or_under_parental_control": {
+   "name": "child_lives_with_parent_or_under_parental_control",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.child_student_at_least_half_time": {
+   "name": "child_student_at_least_half_time",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.child_under_18": {
+   "name": "child_under_18",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.child_turns_18_in_current_month": {
+   "name": "child_turns_18_in_current_month",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.child_earned_income": {
+   "name": "child_earned_income",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.recoupment_from_same_nonexempt_income_source": {
+   "name": "recoupment_from_same_nonexempt_income_source",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.intentional_means_tested_program_noncompliance_overpayment": {
+   "name": "intentional_means_tested_program_noncompliance_overpayment",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.gross_nonexempt_income_source_payment": {
+   "name": "gross_nonexempt_income_source_payment",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.recouped_overpayment_amount": {
+   "name": "recouped_overpayment_amount",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.title_iv_a_participant": {
+   "name": "title_iv_a_participant",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.child_support_must_be_transferred_to_title_iv_d": {
+   "name": "child_support_must_be_transferred_to_title_iv_d",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.child_support_payment_received": {
+   "name": "child_support_payment_received",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.nonrecurring_lump_sum_payment_received": {
+   "name": "nonrecurring_lump_sum_payment_received",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.nonrecurring_lump_sum_payment": {
+   "name": "nonrecurring_lump_sum_payment",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.lump_sum_excluded_as_resource_by_federal_law": {
+   "name": "lump_sum_excluded_as_resource_by_federal_law",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.nonrecurring_lump_sum_payment_remaining_as_resource": {
+   "name": "nonrecurring_lump_sum_payment_remaining_as_resource",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.bona_fide_loan_received": {
+   "name": "bona_fide_loan_received",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.reverse_annuity_mortgage_loan_received": {
+   "name": "reverse_annuity_mortgage_loan_received",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.loan_amount_received": {
+   "name": "loan_amount_received",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.in_kind_benefit_value": {
+   "name": "in_kind_benefit_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.vendor_payment_funds_otherwise_payable_to_household": {
+   "name": "vendor_payment_funds_otherwise_payable_to_household",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.vendor_payment_is_direct_third_party_payment_using_non_household_funds": {
+   "name": "vendor_payment_is_direct_third_party_payment_using_non_household_funds",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.emergency_pa_ga_payment_to_third_party_for_migrant_seasonal_job_stream": {
+   "name": "emergency_pa_ga_payment_to_third_party_for_migrant_seasonal_job_stream",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.employer_pays_rent_directly_in_addition_to_regular_wages": {
+   "name": "employer_pays_rent_directly_in_addition_to_regular_wages",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.employer_provided_housing": {
+   "name": "employer_provided_housing",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.vendor_payment_is_medical_childcare_emergency_special_or_housing_authority_assistance": {
+   "name": "vendor_payment_is_medical_childcare_emergency_special_or_housing_authority_assistance",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.federally_authorized_demo_cash_conversion_of_vendor_payment": {
+   "name": "federally_authorized_demo_cash_conversion_of_vendor_payment",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.court_ordered_support_or_alimony_paid_to_third_party": {
+   "name": "court_ordered_support_or_alimony_paid_to_third_party",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.vendor_payment_amount": {
+   "name": "vendor_payment_amount",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.reimbursement_for_identified_non_living_expense": {
+   "name": "reimbursement_for_identified_non_living_expense",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.reimbursement_used_for_intended_expense": {
+   "name": "reimbursement_used_for_intended_expense",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.reimbursement_amount": {
+   "name": "reimbursement_amount",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.405#input.actual_reimbursed_non_living_expense": {
+   "name": "actual_reimbursed_non_living_expense",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406#input.income_source_normally_received_monthly_or_more_frequently": {
+   "name": "income_source_normally_received_monthly_or_more_frequently",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406#input.income_expected_again_from_same_source_during_application_or_following_month": {
+   "name": "income_expected_again_from_same_source_during_application_or_following_month",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406#input.income_anticipated_in_month_normally_received": {
+   "name": "income_anticipated_in_month_normally_received",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406#input.new_source_income_amount": {
+   "name": "new_source_income_amount",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406#input.new_source_income_normally_received_monthly_or_more_frequently": {
+   "name": "new_source_income_normally_received_monthly_or_more_frequently",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406#input.income_received_from_new_source_within_30_days_before_filing": {
+   "name": "income_received_from_new_source_within_30_days_before_filing",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406#input.income_received_within_last_normal_interval_between_payments": {
+   "name": "income_received_within_last_normal_interval_between_payments",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406#input.new_source_income_received_by_tenth_calendar_day": {
+   "name": "new_source_income_received_by_tenth_calendar_day",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406#input.household_only_income_from_terminated_source_before_application": {
+   "name": "household_only_income_from_terminated_source_before_application",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406#input.household_only_income_from_new_source": {
+   "name": "household_only_income_from_new_source",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406#input.household_only_income_combines_terminated_source_before_application_and_new_source": {
+   "name": "household_only_income_combines_terminated_source_before_application_and_new_source",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406#input.migrant_or_seasonal_farmworker_household": {
+   "name": "migrant_or_seasonal_farmworker_household",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406#input.first_month_of_certification_period": {
+   "name": "first_month_of_certification_period",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406#input.prior_expedited_certification": {
+   "name": "prior_expedited_certification",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406#input.postponed_verification_completed_since_last_expedited_certification": {
+   "name": "postponed_verification_completed_since_last_expedited_certification",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406#input.certified_under_normal_processing_since_last_expedited_certification": {
+   "name": "certified_under_normal_processing_since_last_expedited_certification",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406.1#input.new_source_income_amount": {
+   "name": "new_source_income_amount",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406.1#input.new_source_income_received_or_anticipated_within_10_days": {
+   "name": "new_source_income_received_or_anticipated_within_10_days",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406.1#input.income_received_from_first_of_month_through_application_date": {
+   "name": "income_received_from_first_of_month_through_application_date",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406.1#input.normal_application_month_countable_income": {
+   "name": "normal_application_month_countable_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406.1#input.initial_month_application_or_after_certification_expired": {
+   "name": "initial_month_application_or_after_certification_expired",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406.1#input.employer_travel_advance_reimburses_new_employee_relocation_travel_costs": {
+   "name": "employer_travel_advance_reimburses_new_employee_relocation_travel_costs",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406.1#input.employer_travel_advance_amount": {
+   "name": "employer_travel_advance_amount",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.406.1#input.travel_advance_is_written_contract_wage_advance_subtracted_from_later_wages": {
+   "name": "travel_advance_is_written_contract_wage_advance_subtracted_from_later_wages",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.401#input.snap_basic_categorical_eligible": {
+   "name": "snap_basic_categorical_eligible",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.401#input.snap_expanded_categorical_eligible": {
+   "name": "snap_expanded_categorical_eligible",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.401#input.co_resident_group_size": {
+   "name": "co_resident_group_size",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.401#input.elderly_disabled_person_unable_to_purchase_and_prepare_meals": {
+   "name": "elderly_disabled_person_unable_to_purchase_and_prepare_meals",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.401#input.co_resident_gross_income": {
+   "name": "co_resident_gross_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.1#input.liquid_resource_current_redemption_rate": {
+   "name": "liquid_resource_current_redemption_rate",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.1#input.liquid_resource_encumbrances": {
+   "name": "liquid_resource_encumbrances",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.1#input.non_liquid_resource_market_value": {
+   "name": "non_liquid_resource_market_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.1#input.non_liquid_resource_condition_adjustment": {
+   "name": "non_liquid_resource_condition_adjustment",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.1#input.non_liquid_resource_verified_encumbrances": {
+   "name": "non_liquid_resource_verified_encumbrances",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.1#input.real_property_actual_value_reported_by_county_assessor": {
+   "name": "real_property_actual_value_reported_by_county_assessor",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": true
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.1#input.real_property_county_assessor_actual_value": {
+   "name": "real_property_county_assessor_actual_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.1#input.real_property_current_assessed_valuation": {
+   "name": "real_property_current_assessed_valuation",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.1#input.real_property_assessment_percentage_rate": {
+   "name": "real_property_assessment_percentage_rate",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 1
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.1#input.real_property_amount_owed": {
+   "name": "real_property_amount_owed",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.household_vehicle_resource_value": {
+   "name": "household_vehicle_resource_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.home_and_surrounding_property_owned_or_purchased": {
+   "name": "home_and_surrounding_property_owned_or_purchased",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.household_occupies_home": {
+   "name": "household_occupies_home",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.temporary_absence_for_allowed_reason_with_intent_to_return": {
+   "name": "temporary_absence_for_allowed_reason_with_intent_to_return",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.household_intends_to_build_permanent_home_on_property": {
+   "name": "household_intends_to_build_permanent_home_on_property",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.home_and_surrounding_property_value": {
+   "name": "home_and_surrounding_property_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.prorated_income_still_being_counted_as_income": {
+   "name": "prorated_income_still_being_counted_as_income",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.prorated_income_resource_value": {
+   "name": "prorated_income_resource_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.household_goods_personal_effects_life_insurance_and_exempt_livestock_value": {
+   "name": "household_goods_personal_effects_life_insurance_and_exempt_livestock_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.federal_tax_preferred_retirement_account_value": {
+   "name": "federal_tax_preferred_retirement_account_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.tax_deferred_education_account_value": {
+   "name": "tax_deferred_education_account_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.bona_fide_prepaid_funeral_agreement": {
+   "name": "bona_fide_prepaid_funeral_agreement",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.prepaid_funeral_agreement_equity_value_excluding_burial_plot": {
+   "name": "prepaid_funeral_agreement_equity_value_excluding_burial_plot",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.property_produces_annual_income_consistent_with_fair_market_value": {
+   "name": "property_produces_annual_income_consistent_with_fair_market_value",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.income_producing_property_value": {
+   "name": "income_producing_property_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.installment_contract_produces_income_consistent_with_fair_market_value": {
+   "name": "installment_contract_produces_income_consistent_with_fair_market_value",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.installment_contract_and_secured_property_value": {
+   "name": "installment_contract_and_secured_property_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.farm_self_employment_terminated": {
+   "name": "farm_self_employment_terminated",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.months_since_farm_self_employment_terminated": {
+   "name": "months_since_farm_self_employment_terminated",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.farm_self_employment_property_value": {
+   "name": "farm_self_employment_property_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.trust_arrangement_will_not_likely_cease_during_certification_period": {
+   "name": "trust_arrangement_will_not_likely_cease_during_certification_period",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.household_member_cannot_revoke_trust_or_change_beneficiary": {
+   "name": "household_member_cannot_revoke_trust_or_change_beneficiary",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.trustee_is_independent_or_court_limited": {
+   "name": "trustee_is_independent_or_court_limited",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.trust_investments_do_not_assist_household_controlled_business": {
+   "name": "trust_investments_do_not_assist_household_controlled_business",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.trust_funds_are_for_allowed_investment_education_or_medical_purpose_or_from_nonhousehold_member": {
+   "name": "trust_funds_are_for_allowed_investment_education_or_medical_purpose_or_from_nonhousehold_member",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.resource_cash_value_not_accessible_to_household": {
+   "name": "resource_cash_value_not_accessible_to_household",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.resource_in_probate_or_sale_barred_by_lien": {
+   "name": "resource_in_probate_or_sale_barred_by_lien",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.real_property_good_faith_sale_effort": {
+   "name": "real_property_good_faith_sale_effort",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.non_liquid_resource_net_return_if_sold": {
+   "name": "non_liquid_resource_net_return_if_sold",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.inaccessible_resource_value": {
+   "name": "inaccessible_resource_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.resource_is_negotiable_financial_instrument": {
+   "name": "resource_is_negotiable_financial_instrument",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": true
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.estimated_return_after_sale_costs_and_ownership_share": {
+   "name": "estimated_return_after_sale_costs_and_ownership_share",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.no_significant_return_resource_value": {
+   "name": "no_significant_return_resource_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.battered_shelter_resident": {
+   "name": "battered_shelter_resident",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.resource_access_depends_on_abusive_former_household_member": {
+   "name": "resource_access_depends_on_abusive_former_household_member",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.inaccessible_former_household_resource_value": {
+   "name": "inaccessible_former_household_resource_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.resource_exclusion_applies_because_used_by_or_for_household_member_or_counted_disqualified_person": {
+   "name": "resource_exclusion_applies_because_used_by_or_for_household_member_or_counted_disqualified_person",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.household_member_use_resource_value": {
+   "name": "household_member_use_resource_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.specific_purpose_or_federally_excluded_government_payment_resource_value": {
+   "name": "specific_purpose_or_federally_excluded_government_payment_resource_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.federal_eitc_received_in_current_or_following_month": {
+   "name": "federal_eitc_received_in_current_or_following_month",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.federal_eitc_resource_value": {
+   "name": "federal_eitc_resource_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.eitc_recipient_was_participating_in_snap_when_eitc_received": {
+   "name": "eitc_recipient_was_participating_in_snap_when_eitc_received",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.snap_participation_continues_or_temporary_nonparticipation_is_administrative": {
+   "name": "snap_participation_continues_or_temporary_nonparticipation_is_administrative",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.months_since_eitc_received": {
+   "name": "months_since_eitc_received",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.earned_income_tax_credit_resource_value": {
+   "name": "earned_income_tax_credit_resource_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.federal_income_tax_refund_received_on_or_after_2010_01_01": {
+   "name": "federal_income_tax_refund_received_on_or_after_2010_01_01",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.months_since_federal_income_tax_refund_received": {
+   "name": "months_since_federal_income_tax_refund_received",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.410#input.federal_income_tax_refund_resource_value": {
+   "name": "federal_income_tax_refund_resource_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408#input.snap_expanded_categorical_eligible": {
+   "name": "snap_expanded_categorical_eligible",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408#input.snap_basic_categorical_eligible": {
+   "name": "snap_basic_categorical_eligible",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408#input.sponsored_noncitizen_household": {
+   "name": "sponsored_noncitizen_household",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408#input.sponsor_total_resources": {
+   "name": "sponsor_total_resources",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.2#input.snap_expanded_categorical_eligible": {
+   "name": "snap_expanded_categorical_eligible",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.2#input.snap_basic_categorical_eligible": {
+   "name": "snap_basic_categorical_eligible",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.2#input.resource_transfer_by_counted_person_within_review_period": {
+   "name": "resource_transfer_by_counted_person_within_review_period",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.2#input.transferred_resources_would_not_affect_eligibility": {
+   "name": "transferred_resources_would_not_affect_eligibility",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.2#input.transferred_resources_sold_or_traded_at_or_near_fair_market_value": {
+   "name": "transferred_resources_sold_or_traded_at_or_near_fair_market_value",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.2#input.resources_transferred_between_same_household_members": {
+   "name": "resources_transferred_between_same_household_members",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.2#input.transfer_reason_other_than_snap_qualification": {
+   "name": "transfer_reason_other_than_snap_qualification",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.2#input.resource_transferred_knowingly_to_qualify_for_snap": {
+   "name": "resource_transferred_knowingly_to_qualify_for_snap",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.2#input.nonexempt_transferred_resources": {
+   "name": "nonexempt_transferred_resources",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.408.2#input.other_countable_resources": {
+   "name": "other_countable_resources",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.cash_on_hand": {
+   "name": "cash_on_hand",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.checking_account_balances": {
+   "name": "checking_account_balances",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.savings_account_balances": {
+   "name": "savings_account_balances",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.savings_certificates_value": {
+   "name": "savings_certificates_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.stocks_and_bonds_value": {
+   "name": "stocks_and_bonds_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.countable_lump_sum_resources": {
+   "name": "countable_lump_sum_resources",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.non_liquid_resource_fair_market_value": {
+   "name": "non_liquid_resource_fair_market_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.non_liquid_resource_verified_amount_owed": {
+   "name": "non_liquid_resource_verified_amount_owed",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.household_demonstrates_no_access_to_joint_resource": {
+   "name": "household_demonstrates_no_access_to_joint_resource",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.household_demonstrates_partial_access_to_joint_resource": {
+   "name": "household_demonstrates_partial_access_to_joint_resource",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.accessible_joint_resource_value": {
+   "name": "accessible_joint_resource_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.jointly_owned_resource_total_value": {
+   "name": "jointly_owned_resource_total_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.joint_resource_cannot_practically_be_subdivided": {
+   "name": "joint_resource_cannot_practically_be_subdivided",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.joint_owner_refuses_to_comply": {
+   "name": "joint_owner_refuses_to_comply",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.excluded_funds_kept_in_separate_uncommingled_account": {
+   "name": "excluded_funds_kept_in_separate_uncommingled_account",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.months_since_excluded_funds_were_commingled": {
+   "name": "months_since_excluded_funds_were_commingled",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.409#input.commingled_excluded_funds_amount": {
+   "name": "commingled_excluded_funds_amount",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.sanctioned_abawd": {
+   "name": "sanctioned_abawd",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.abawd_snap_benefit_months_in_36_month_period": {
+   "name": "abawd_snap_benefit_months_in_36_month_period",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.disqualified_for_ipv_or_fraud": {
+   "name": "disqualified_for_ipv_or_fraud",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.work_requirement_sanctioned": {
+   "name": "work_requirement_sanctioned",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.fleeing_felon": {
+   "name": "fleeing_felon",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.ineligible_noncitizen": {
+   "name": "ineligible_noncitizen",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.failed_or_refused_ssn": {
+   "name": "failed_or_refused_ssn",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.household_contains_full_count_disqualified_member": {
+   "name": "household_contains_full_count_disqualified_member",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.full_count_disqualified_member_income": {
+   "name": "full_count_disqualified_member_income",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.household_required_to_meet_resource_standard": {
+   "name": "household_required_to_meet_resource_standard",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.household_contains_prorated_count_disqualified_member": {
+   "name": "household_contains_prorated_count_disqualified_member",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.disqualified_or_sanctioned_member_resources": {
+   "name": "disqualified_or_sanctioned_member_resources",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.disqualified_member_nonexempt_income": {
+   "name": "disqualified_member_nonexempt_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.remaining_household_member_count": {
+   "name": "remaining_household_member_count",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.household_size_including_disqualified_members": {
+   "name": "household_size_including_disqualified_members",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.disqualified_member_earned_income": {
+   "name": "disqualified_member_earned_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.disqualified_member_paid_or_billed_shelter_and_dependent_care_expenses": {
+   "name": "disqualified_member_paid_or_billed_shelter_and_dependent_care_expenses",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.prorated_member_earned_income_deduction": {
+   "name": "prorated_member_earned_income_deduction",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.standard_utility_allowance_if_household_qualifies": {
+   "name": "standard_utility_allowance_if_household_qualifies",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.disqualified_or_sanctioned_member_count": {
+   "name": "disqualified_or_sanctioned_member_count",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.non_household_member_cash_payments_to_household": {
+   "name": "non_household_member_cash_payments_to_household",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.shared_expense_payments_or_contributions_can_be_differentiated": {
+   "name": "shared_expense_payments_or_contributions_can_be_differentiated",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.household_paid_or_contributed_shared_expenses": {
+   "name": "household_paid_or_contributed_shared_expenses",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.shared_deductible_expenses": {
+   "name": "shared_deductible_expenses",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.household_expense_contributor_count": {
+   "name": "household_expense_contributor_count",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.total_people_paying_or_contributing_to_shared_expenses": {
+   "name": "total_people_paying_or_contributing_to_shared_expenses",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.household_share_of_combined_wage_can_be_identified": {
+   "name": "household_share_of_combined_wage_can_be_identified",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.identified_household_share_of_combined_wage": {
+   "name": "identified_household_share_of_combined_wage",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.combined_wage": {
+   "name": "combined_wage",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.household_members_covered_by_combined_wage_count": {
+   "name": "household_members_covered_by_combined_wage_count",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.411#input.total_people_covered_by_combined_wage_count": {
+   "name": "total_people_covered_by_combined_wage_count",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.31#input.household_incurred_or_anticipated_heating_or_cooling_costs_separate_from_rent_or_mortgage": {
+   "name": "household_incurred_or_anticipated_heating_or_cooling_costs_separate_from_rent_or_mortgage",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.31#input.household_received_leap_or_e_ebt_payment_within_previous_12_months": {
+   "name": "household_received_leap_or_e_ebt_payment_within_previous_12_months",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.31#input.private_rental_housing_landlord_bills_heating_or_cooling_separately": {
+   "name": "private_rental_housing_landlord_bills_heating_or_cooling_separately",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.31#input.household_shares_residence_and_pays_portion_of_heating_or_cooling_cost": {
+   "name": "household_shares_residence_and_pays_portion_of_heating_or_cooling_cost",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.31#input.public_housing_responsible_for_excess_heating_or_cooling_costs": {
+   "name": "public_housing_responsible_for_excess_heating_or_cooling_costs",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.31#input.irregular_heating_or_cooling_costs_between_billing_periods": {
+   "name": "irregular_heating_or_cooling_costs_between_billing_periods",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.31#input.household_pays_electricity_utility_cost": {
+   "name": "household_pays_electricity_utility_cost",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.31#input.household_pays_water_utility_cost": {
+   "name": "household_pays_water_utility_cost",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.31#input.household_pays_sewer_utility_cost": {
+   "name": "household_pays_sewer_utility_cost",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.31#input.household_pays_trash_utility_cost": {
+   "name": "household_pays_trash_utility_cost",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.31#input.household_pays_cooking_fuel_utility_cost": {
+   "name": "household_pays_cooking_fuel_utility_cost",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.31#input.household_pays_telephone_service_cost": {
+   "name": "household_pays_telephone_service_cost",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.3#input.all_household_members_experiencing_homelessness": {
+   "name": "all_household_members_experiencing_homelessness",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.3#input.homeless_household_free_shelter_all_month": {
+   "name": "homeless_household_free_shelter_all_month",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.3#input.verified_higher_homeless_shelter_costs": {
+   "name": "verified_higher_homeless_shelter_costs",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.3#input.homeless_household_has_shelter_costs": {
+   "name": "homeless_household_has_shelter_costs",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.4#input.dependent_care_expense_necessary_for_work_or_training": {
+   "name": "dependent_care_expense_necessary_for_work_or_training",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.4#input.dependent_care_expenses_paid": {
+   "name": "dependent_care_expenses_paid",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.4#input.dependent_care_reimbursed_or_paid_by_other_program": {
+   "name": "dependent_care_reimbursed_or_paid_by_other_program",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.5#input.child_support_payment_verified": {
+   "name": "child_support_payment_verified",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.5#input.child_support_payment_history_months": {
+   "name": "child_support_payment_history_months",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.5#input.average_monthly_child_support_paid": {
+   "name": "average_monthly_child_support_paid",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.5#input.estimated_monthly_child_support_paid": {
+   "name": "estimated_monthly_child_support_paid",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.407.6#input.total_medical_expenses": {
+   "name": "total_medical_expenses",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.302#input.member_has_documentary_or_collateral_evidence_of_ssn_application_or_every_effort": {
+   "name": "member_has_documentary_or_collateral_evidence_of_ssn_application_or_every_effort",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.302#input.member_unable_to_obtain_documents_required_by_ssa_for_ssn_application": {
+   "name": "member_unable_to_obtain_documents_required_by_ssa_for_ssn_application",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.302#input.household_not_at_fault_for_not_providing_proof_of_application_with_ssa": {
+   "name": "household_not_at_fault_for_not_providing_proof_of_application_with_ssa",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.302#input.member_required_to_provide_ssn": {
+   "name": "member_required_to_provide_ssn",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.302#input.member_refused_to_supply_ssn_at_application_or_failed_to_provide_proof_of_ssn_application": {
+   "name": "member_refused_to_supply_ssn_at_application_or_failed_to_provide_proof_of_ssn_application",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.302#input.member_later_provided_ssn_or_verification_of_ssn_application_to_local_office": {
+   "name": "member_later_provided_ssn_or_verification_of_ssn_application_to_local_office",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.302#input.member_refuses_to_provide_ssn_based_on_sincere_religious_objection": {
+   "name": "member_refuses_to_provide_ssn_based_on_sincere_religious_objection",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.302#input.member_is_newborn_child": {
+   "name": "member_is_newborn_child",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.302#input.household_unable_to_provide_proof_of_ssn_application_for_newborn": {
+   "name": "household_unable_to_provide_proof_of_ssn_application_for_newborn",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.302#input.household_provides_ssn_or_application_proof_at_next_recertification": {
+   "name": "household_provides_ssn_or_application_proof_at_next_recertification",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.302#input.months_following_baby_birth_at_next_recertification": {
+   "name": "months_following_baby_birth_at_next_recertification",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.302#input.local_office_required_social_security_card_or_other_official_documents_to_verify_ssn": {
+   "name": "local_office_required_social_security_card_or_other_official_documents_to_verify_ssn",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.302#input.participating_household_benefits_reduced_or_terminated_within_certification_period": {
+   "name": "participating_household_benefits_reduced_or_terminated_within_certification_period",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.302#input.household_member_disqualified_for_failure_to_meet_ssn_requirement": {
+   "name": "household_member_disqualified_for_failure_to_meet_ssn_requirement",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.302#input.local_office_issued_notice_of_adverse_action": {
+   "name": "local_office_issued_notice_of_adverse_action",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.household_lives_in_county_or_district_where_application_is_made": {
+   "name": "household_lives_in_county_or_district_where_application_is_made",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.local_office_arranged_for_household_to_apply_in_nearby_specified_county_or_district_office": {
+   "name": "local_office_arranged_for_household_to_apply_in_nearby_specified_county_or_district_office",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.applicant_maintains_residence_in_county_or_district_for_purpose_other_than_vacation": {
+   "name": "applicant_maintains_residence_in_county_or_district_for_purpose_other_than_vacation",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.applicant_resides_in_county_or_district_without_permanent_dwelling_or_fixed_mailing_address": {
+   "name": "applicant_resides_in_county_or_district_without_permanent_dwelling_or_fixed_mailing_address",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.household_resides_at_migrant_campsite_in_county_or_district": {
+   "name": "household_resides_at_migrant_campsite_in_county_or_district",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.household_resides_at_homeless_shelter_in_county_or_district": {
+   "name": "household_resides_at_homeless_shelter_in_county_or_district",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.household_is_homeless_person_residing_in_county_or_district": {
+   "name": "household_is_homeless_person_residing_in_county_or_district",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.durational_residency_requirement_imposed": {
+   "name": "durational_residency_requirement_imposed",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.intent_to_permanently_remain_in_state_required_as_condition_of_eligibility": {
+   "name": "intent_to_permanently_remain_in_state_required_as_condition_of_eligibility",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.household_has_dual_participation_in_month_of_eligibility": {
+   "name": "household_has_dual_participation_in_month_of_eligibility",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.individual_household_participation_count_in_month": {
+   "name": "individual_household_participation_count_in_month",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.individual_is_resident_of_shelter_for_battered_women_and_children": {
+   "name": "individual_is_resident_of_shelter_for_battered_women_and_children",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.household_county_or_district_participation_count_in_month": {
+   "name": "household_county_or_district_participation_count_in_month",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.all_household_members_are_residents_of_shelter_for_battered_women_and_children": {
+   "name": "all_household_members_are_residents_of_shelter_for_battered_women_and_children",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.household_on_indian_reservation": {
+   "name": "household_on_indian_reservation",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.household_participates_in_commodity_food_distribution_program_for_period": {
+   "name": "household_participates_in_commodity_food_distribution_program_for_period",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.household_participates_in_snap_for_same_period": {
+   "name": "household_participates_in_snap_for_same_period",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.household_resides_in_shelter_for_battered_women_and_children": {
+   "name": "household_resides_in_shelter_for_battered_women_and_children",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.household_lacks_permanent_dwelling": {
+   "name": "household_lacks_permanent_dwelling",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.household_resides_in_permanent_dwelling": {
+   "name": "household_resides_in_permanent_dwelling",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.household_provided_physical_address": {
+   "name": "household_provided_physical_address",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.household_provided_information_identifying_location_of_home": {
+   "name": "household_provided_information_identifying_location_of_home",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.303#input.household_provided_only_mailing_address": {
+   "name": "household_provided_only_mailing_address",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.person_is_united_states_citizen": {
+   "name": "person_is_united_states_citizen",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.person_is_noncitizen_national": {
+   "name": "person_is_noncitizen_national",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.trafficking_victim_certification_or_eligibility_letter_present": {
+   "name": "trafficking_victim_certification_or_eligibility_letter_present",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.trafficked_minor_has_interim_assistance_letter": {
+   "name": "trafficked_minor_has_interim_assistance_letter",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.trafficking_minor_interim_assistance_letter_calendar_days_since_effective_date": {
+   "name": "trafficking_minor_interim_assistance_letter_calendar_days_since_effective_date",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.person_is_refugee": {
+   "name": "person_is_refugee",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.person_is_asylee": {
+   "name": "person_is_asylee",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.person_has_deportation_or_removal_withheld": {
+   "name": "person_has_deportation_or_removal_withheld",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.person_is_cuban_or_haitian_entrant": {
+   "name": "person_is_cuban_or_haitian_entrant",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.person_is_amerasian": {
+   "name": "person_is_amerasian",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.person_is_iraqi_or_afghan_special_immigrant": {
+   "name": "person_is_iraqi_or_afghan_special_immigrant",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.person_is_battered_or_subject_to_extreme_cruelty_covered_noncitizen": {
+   "name": "person_is_battered_or_subject_to_extreme_cruelty_covered_noncitizen",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.battered_noncitizen_has_approved_or_pending_qualifying_immigration_petition": {
+   "name": "battered_noncitizen_has_approved_or_pending_qualifying_immigration_petition",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.substantial_connection_between_battery_or_extreme_cruelty_and_need_for_snap": {
+   "name": "substantial_connection_between_battery_or_extreme_cruelty_and_need_for_snap",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.battered_noncitizen_child_or_parent_no_longer_resides_with_abuser": {
+   "name": "battered_noncitizen_child_or_parent_no_longer_resides_with_abuser",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.person_is_lawful_permanent_resident": {
+   "name": "person_is_lawful_permanent_resident",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.person_adjusted_to_lpr_after_status_without_additional_condition": {
+   "name": "person_adjusted_to_lpr_after_status_without_additional_condition",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.person_paroled_into_united_states_for_at_least_one_year": {
+   "name": "person_paroled_into_united_states_for_at_least_one_year",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.person_granted_conditional_entry_before_applicable_1980_date": {
+   "name": "person_granted_conditional_entry_before_applicable_1980_date",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.qualifying_work_quarters_countable_for_snap": {
+   "name": "qualifying_work_quarters_countable_for_snap",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.qualified_noncitizen_years_lived_in_united_states_in_qualified_status": {
+   "name": "qualified_noncitizen_years_lived_in_united_states_in_qualified_status",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.qualified_noncitizen_is_under_eighteen_and_lawfully_resides_in_united_states": {
+   "name": "qualified_noncitizen_is_under_eighteen_and_lawfully_resides_in_united_states",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.qualified_noncitizen_is_blind_or_disabled_and_receives_benefits_or_assistance_for_condition": {
+   "name": "qualified_noncitizen_is_blind_or_disabled_and_receives_benefits_or_assistance_for_condition",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.qualified_noncitizen_born_on_or_before_august_22_1931_and_lawfully_resided_in_united_states_on_august_22_1996": {
+   "name": "qualified_noncitizen_born_on_or_before_august_22_1931_and_lawfully_resided_in_united_states_on_august_22_1996",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.qualified_noncitizen_has_eligible_military_connection": {
+   "name": "qualified_noncitizen_has_eligible_military_connection",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.qualified_noncitizen_is_under_eighteen_and_in_qualified_status": {
+   "name": "qualified_noncitizen_is_under_eighteen_and_in_qualified_status",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.person_is_certain_american_indian_born_abroad": {
+   "name": "person_is_certain_american_indian_born_abroad",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.305#input.person_is_hmong_or_highland_laotian_tribal_member_or_qualifying_family_member": {
+   "name": "person_is_hmong_or_highland_laotian_tribal_member_or_qualifying_family_member",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306#input.training_in_employment_environment": {
+   "name": "training_in_employment_environment",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306#input.internship_field_work_or_practical_experience_associated_with_higher_education_course": {
+   "name": "internship_field_work_or_practical_experience_associated_with_higher_education_course",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306#input.person_age": {
+   "name": "person_age",
+   "entity": "Person",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306#input.enrolled_at_least_half_time_in_institution_of_higher_education": {
+   "name": "enrolled_at_least_half_time_in_institution_of_higher_education",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306#input.enrolled_less_than_half_time": {
+   "name": "enrolled_less_than_half_time",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306#input.enrolled_full_time_in_school_or_training_program_that_is_not_institution_of_higher_education": {
+   "name": "enrolled_full_time_in_school_or_training_program_that_is_not_institution_of_higher_education",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306#input.attending_high_school": {
+   "name": "attending_high_school",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306#input.meets_student_exemption_criteria_at_4_306_1": {
+   "name": "meets_student_exemption_criteria_at_4_306_1",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306#input.student_started_classes_for_school_term": {
+   "name": "student_started_classes_for_school_term",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306#input.student_graduated": {
+   "name": "student_graduated",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306#input.student_suspended_or_expelled": {
+   "name": "student_suspended_or_expelled",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306#input.student_dropped_out": {
+   "name": "student_dropped_out",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306#input.student_does_not_intend_to_register_for_next_normal_school_term_excluding_summer_session": {
+   "name": "student_does_not_intend_to_register_for_next_normal_school_term_excluding_summer_session",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_physically_or_mentally_unfit_for_employment": {
+   "name": "student_physically_or_mentally_unfit_for_employment",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_is_employed_and_paid": {
+   "name": "student_is_employed_and_paid",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_paid_employment_average_hours_per_week": {
+   "name": "student_paid_employment_average_hours_per_week",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_paid_employment_average_hours_per_month": {
+   "name": "student_paid_employment_average_hours_per_month",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_is_self_employed": {
+   "name": "student_is_self_employed",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_self_employment_average_hours_per_week": {
+   "name": "student_self_employment_average_hours_per_week",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_self_employment_earnings_after_allowable_business_expenses": {
+   "name": "student_self_employment_earnings_after_allowable_business_expenses",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.federal_minimum_wage": {
+   "name": "federal_minimum_wage",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_participating_in_state_or_federally_financed_work_study_program": {
+   "name": "student_participating_in_state_or_federally_financed_work_study_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_approved_for_work_study_program_at_snap_application": {
+   "name": "student_approved_for_work_study_program_at_snap_application",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.work_study_approved_for_school_term": {
+   "name": "work_study_approved_for_school_term",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_anticipates_working_during_work_study_term": {
+   "name": "student_anticipates_working_during_work_study_term",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.work_study_exemption_period_is_active": {
+   "name": "work_study_exemption_period_is_active",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.local_office_knows_student_refused_work_study_assignment": {
+   "name": "local_office_knows_student_refused_work_study_assignment",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.work_study_between_terms_break_of_one_full_month_or_longer_without_break_participation": {
+   "name": "work_study_between_terms_break_of_one_full_month_or_longer_without_break_participation",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_responsible_for_more_than_half_physical_care_of_dependent_household_member": {
+   "name": "student_responsible_for_more_than_half_physical_care_of_dependent_household_member",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.dependent_household_member_age": {
+   "name": "dependent_household_member_age",
+   "entity": "Person",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_is_full_time_student": {
+   "name": "student_is_full_time_student",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_is_single_parent_under_snap_household_single_parent_provision": {
+   "name": "student_is_single_parent_under_snap_household_single_parent_provision",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_responsible_for_care_of_dependent_child": {
+   "name": "student_responsible_for_care_of_dependent_child",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.dependent_child_age": {
+   "name": "dependent_child_age",
+   "entity": "Person",
+   "dtype": "integer",
+   "value": "0"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.local_office_determined_adequate_childcare_not_available_to_attend_class_and_meet_student_work_or_work_study_requirement": {
+   "name": "local_office_determined_adequate_childcare_not_available_to_attend_class_and_meet_student_work_or_work_study_requirement",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_receiving_title_iv_a_tanf_cash_grant": {
+   "name": "student_receiving_title_iv_a_tanf_cash_grant",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_needs_included_in_tanf_cash_grant": {
+   "name": "student_needs_included_in_tanf_cash_grant",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.grant_is_family_preservation": {
+   "name": "grant_is_family_preservation",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_assigned_or_placed_in_higher_education_through_wioa_program": {
+   "name": "student_assigned_or_placed_in_higher_education_through_wioa_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_assigned_or_placed_in_higher_education_through_employment_first": {
+   "name": "student_assigned_or_placed_in_higher_education_through_employment_first",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_assigned_or_placed_in_higher_education_through_trade_act_section_236_program": {
+   "name": "student_assigned_or_placed_in_higher_education_through_trade_act_section_236_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_assigned_or_placed_in_higher_education_through_state_or_local_employment_training_program_with_snap_ef_equivalent_component": {
+   "name": "student_assigned_or_placed_in_higher_education_through_state_or_local_employment_training_program_with_snap_ef_equivalent_component",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_assigned_or_placed_in_higher_education_as_result_of_jobs_program_participation": {
+   "name": "student_assigned_or_placed_in_higher_education_as_result_of_jobs_program_participation",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_self_initiated_higher_education_placement_while_enrolled_in_employment_training_program": {
+   "name": "student_self_initiated_higher_education_placement_while_enrolled_in_employment_training_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.self_initiated_placement_complies_with_employment_training_program_requirements": {
+   "name": "self_initiated_placement_complies_with_employment_training_program_requirements",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.employment_training_program_has_higher_education_enrollment_component": {
+   "name": "employment_training_program_has_higher_education_enrollment_component",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.employment_training_program_accepts_self_initiated_placement": {
+   "name": "employment_training_program_accepts_self_initiated_placement",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_voluntarily_participates_in_qualifying_employment_training_program": {
+   "name": "student_voluntarily_participates_in_qualifying_employment_training_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_placed_in_higher_education_through_or_in_compliance_with_employment_training_program_requirements": {
+   "name": "student_placed_in_higher_education_through_or_in_compliance_with_employment_training_program_requirements",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_participating_in_on_the_job_training_program": {
+   "name": "student_participating_in_on_the_job_training_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.306.1#input.student_currently_being_trained_by_employer": {
+   "name": "student_currently_being_trained_by_employer",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.310#input.member_registered_for_work_at_initial_application_or_recognition_by_required_signature": {
+   "name": "member_registered_for_work_at_initial_application_or_recognition_by_required_signature",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.310#input.member_registered_for_work_at_recognition_by_required_signature": {
+   "name": "member_registered_for_work_at_recognition_by_required_signature",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.310#input.member_provided_eligibility_technician_sufficient_employment_status_or_availability_information": {
+   "name": "member_provided_eligibility_technician_sufficient_employment_status_or_availability_information",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.310#input.member_committed_act_of_voluntary_quit": {
+   "name": "member_committed_act_of_voluntary_quit",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.310#input.member_accepted_offer_of_suitable_employment": {
+   "name": "member_accepted_offer_of_suitable_employment",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.310#input.member_reported_to_employer_if_referred_by_local_office_and_potential_employment_was_suitable": {
+   "name": "member_reported_to_employer_if_referred_by_local_office_and_potential_employment_was_suitable",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.310#input.member_determined_exempt_from_snap_work_requirements": {
+   "name": "member_determined_exempt_from_snap_work_requirements",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.311#input.member_receiving_temporary_or_permanent_disability_benefits": {
+   "name": "member_receiving_temporary_or_permanent_disability_benefits",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.311#input.member_obviously_mentally_or_physically_unfit_for_employment_as_determined_by_local_office": {
+   "name": "member_obviously_mentally_or_physically_unfit_for_employment_as_determined_by_local_office",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.311#input.member_provided_qualified_health_professional_statement_of_unfitness_for_employment": {
+   "name": "member_provided_qualified_health_professional_statement_of_unfitness_for_employment",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.311#input.member_age": {
+   "name": "member_age",
+   "entity": "Person",
+   "dtype": "integer",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.311#input.member_resides_in_same_physical_household_with_individual_under_age_eighteen": {
+   "name": "member_resides_in_same_physical_household_with_individual_under_age_eighteen",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.311#input.member_abawd_weekly_work_hours": {
+   "name": "member_abawd_weekly_work_hours",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.311#input.member_abawd_monthly_work_hours": {
+   "name": "member_abawd_monthly_work_hours",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.311#input.member_participates_in_abawd_work_program_20_hours_weekly": {
+   "name": "member_participates_in_abawd_work_program_20_hours_weekly",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.311#input.member_combined_work_and_work_program_hours_meet_abawd_requirement": {
+   "name": "member_combined_work_and_work_program_hours_meet_abawd_requirement",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.311#input.member_participates_in_and_complies_with_colorado_workfare_program": {
+   "name": "member_participates_in_and_complies_with_colorado_workfare_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.311#input.snap_abawd_countable_months_in_three_year_period": {
+   "name": "snap_abawd_countable_months_in_three_year_period",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.311#input.countable_months_measured_within_abawd_calendar_month_period": {
+   "name": "countable_months_measured_within_abawd_calendar_month_period",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.207.3#input.snap_basic_categorical_eligible": {
+   "name": "snap_basic_categorical_eligible",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.207.3#input.snap_expanded_categorical_eligible": {
+   "name": "snap_expanded_categorical_eligible",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.207.3#input.household_size": {
+   "name": "household_size",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": 1
+  },
+  "us-co:regulations/10-ccr-2506-1/4.207.3#input.initial_application_month": {
+   "name": "initial_application_month",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.207.2#input.public_institution_joint_ssi_snap_application_before_release": {
+   "name": "public_institution_joint_ssi_snap_application_before_release",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.207.2#input.public_institution_release_date": {
+   "name": "public_institution_release_date",
+   "entity": "Household",
+   "dtype": "date",
+   "value": "2026-01-01"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.207.2#input.application_date": {
+   "name": "application_date",
+   "entity": "Household",
+   "dtype": "date",
+   "value": "2026-01-01"
+  },
+  "us-co:regulations/10-ccr-2506-1/4.207.2#input.migrant_or_seasonal_farmworker_household_in_job_stream": {
+   "name": "migrant_or_seasonal_farmworker_household_in_job_stream",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:regulations/10-ccr-2506-1/4.207.2#input.break_in_participation_days": {
+   "name": "break_in_participation_days",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:regulations/10-ccr-2506-1/4.207.2#input.initial_application_month": {
+   "name": "initial_application_month",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "us-co:policies/cdhs/snap/fy-2026-benefit-calculation#input.number_of_boarders": {
+   "name": "number_of_boarders",
+   "entity": "Household",
+   "dtype": "integer",
+   "value": 0
+  },
+  "us-co:policies/cdhs/snap/fy-2026-benefit-calculation#input.snap_capital_goods_sale_self_employment_income": {
+   "name": "snap_capital_goods_sale_self_employment_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:policies/cdhs/snap/fy-2026-benefit-calculation#input.household_shelter_costs_incurred": {
+   "name": "household_shelter_costs_incurred",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:policies/cdhs/snap/fy-2026-benefit-calculation#input.other_household_resource_value": {
+   "name": "other_household_resource_value",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "us-co:policies/cdhs/snap/fy-2026-benefit-calculation#input.snap_countable_earned_income": {
+   "name": "snap_countable_earned_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-co:policies/cdhs/snap/fy-2026-benefit-calculation#input.total_medical_expenses": {
+   "name": "total_medical_expenses",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  }
+ }
+}
