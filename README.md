@@ -80,12 +80,13 @@ It is compiled in the tab like everything else.
 - **Vendored wasm engine.** Both wasm-pack targets are checked into the repo:
   - `public/engine/` — the `--target web` build, fetched and instantiated by the
     browser at load time.
-  - `public/programs/co-snap/` — the vendored Colorado SNAP compiled artifact
-    plus its descriptor (defaults, headline questions, provenance), emitted by
-    `scripts/build-co-snap-package.mjs` and pinned by the test suite. Four
-    startup requests in all (engine js + wasm, package descriptor + artifact);
-    the network sentinel arms after startup settles, and determinations never
-    fetch.
+  - `public/programs/<id>/` — the vendored compiled artifacts plus their
+    descriptors (defaults, headline questions, provenance), emitted by
+    `scripts/build-packages.mjs` and pinned by the test suite;
+    `public/programs/index.json` is the registry the page and CLI read.
+    Four startup requests per program (engine js + wasm once, then package
+    descriptor + artifact); the network sentinel re-arms after each program
+    loads, and determinations never fetch.
   - `engine/pkg-node/` — the `--target nodejs` build, loaded by the test suite.
 
   Checking the built packages in means **CI and any host need no Rust toolchain**;
@@ -121,7 +122,7 @@ public/engine/         vendored web wasm build (served to the browser)
 ## Run it locally
 
 This repo is the local distribution: the wasm engine and the composed,
-hash-pinned CO SNAP artifact are checked in, so a clone runs the whole thing
+hash-pinned artifacts are checked in, so a clone runs the whole thing
 offline with no Rust toolchain. Requires [Bun](https://bun.sh) only.
 
 ```sh
@@ -135,8 +136,8 @@ bun run dev          # http://localhost:3000
 bun scripts/determine.mjs --programs                        # list the programs
 bun scripts/determine.mjs                                   # $478, the pinned case
 bun scripts/determine.mjs --program fiit --set taxable_income=120000
-bun scripts/determine.mjs --earned 2400                     # ineligible
-bun scripts/determine.mjs --size 3 --ages 42,9,70 --shelter 1400
+bun scripts/determine.mjs --set snap_countable_earned_income=2400   # ineligible
+bun scripts/determine.mjs --people member_age=42,9,70
 bun scripts/determine.mjs --what-if snap_earned_income_deduction_rate_for_net_income=0.3
 bun scripts/determine.mjs --set assistance_payments=500     # override a presumption
 bun scripts/determine.mjs --trace                           # chain of citation
