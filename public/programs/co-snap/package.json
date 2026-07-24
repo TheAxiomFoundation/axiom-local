@@ -31,6 +31,11 @@
      ]
     }
    ]
+  },
+  {
+   "entity": "Payment",
+   "id_template": "payment:1",
+   "count": 1
   }
  ],
  "headline": [
@@ -62,6 +67,24 @@
   "snap_eligible": "us-co:policies/cdhs/snap/fy-2026-benefit-calculation#snap_eligible"
  },
  "default_period": "2026-01",
+ "example": {
+  "household": {
+   "household_size": "2",
+   "snap_countable_earned_income": "1200",
+   "household_shelter_costs_incurred": "900"
+  },
+  "people": {
+   "member_age": [
+    "42",
+    "9"
+   ]
+  }
+ },
+ "what_if": {
+  "parameter": "snap_earned_income_deduction_rate_for_net_income",
+  "value": "0.3",
+  "label": "The earned-income deduction rate — 7 USC 2014(e)(2)"
+ },
  "defaults": {
   "us:policies/usda/snap/fy-2026-cola/maximum-allotments#input.household_size": {
    "name": "household_size",
@@ -685,7 +708,16 @@
    "name": "income_pay_frequency",
    "entity": "Household",
    "dtype": "text",
-   "value": "monthly"
+   "value": "monthly",
+   "options": [
+    "annual",
+    "biweekly",
+    "every_other_month",
+    "quarterly",
+    "semi_monthly",
+    "twice_yearly",
+    "weekly"
+   ]
   },
   "us-co:regulations/10-ccr-2506-1/4.402#input.average_income_per_pay_period": {
    "name": "average_income_per_pay_period",

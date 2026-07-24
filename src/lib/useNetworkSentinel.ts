@@ -14,6 +14,10 @@ export function useNetworkSentinel(armed: boolean): number {
 
   useEffect(() => {
     if (!armed || typeof PerformanceObserver === "undefined") return;
+    // Re-arming (e.g. after switching programs, which fetches the next
+    // package) restarts the count: the claim is that *determinations*
+    // never fetch, measured from the moment the program is resident.
+    setCount(0);
     const armedAt = performance.now();
     const observer = new PerformanceObserver((list) => {
       const fresh = list.getEntries().filter((entry) => entry.startTime > armedAt);

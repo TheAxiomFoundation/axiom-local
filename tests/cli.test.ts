@@ -15,8 +15,8 @@ const run = (...args: string[]) =>
 describe("bun scripts/determine.mjs", () => {
   it("computes the pinned $478 for the canonical household", () => {
     const out = run();
-    expect(out).toContain("snap_allotment     478");
-    expect(out).toContain("snap_net_income    226.5");
+    expect(out).toMatch(/snap_allotment\s+478/);
+    expect(out).toMatch(/snap_net_income\s+226\.5/);
     expect(out).toContain("holds");
   });
 
@@ -24,7 +24,7 @@ describe("bun scripts/determine.mjs", () => {
     const out = run("--what-if", "snap_earned_income_deduction_rate_for_net_income=0.3");
     expect(out).toContain("AMENDED LAW");
     expect(out).toContain("current law: 0.2");
-    expect(out).not.toContain("snap_allotment     478");
+    expect(out).not.toMatch(/snap_allotment\s+478\b/);
   });
 
   it("overrides a presumption with --set", () => {
@@ -39,9 +39,22 @@ describe("bun scripts/determine.mjs", () => {
     expect(parsed.outputs.snap_allotment).toBe("478");
   });
 
+  it("runs other programs with --program", () => {
+    const out = run("--program", "fiit");
+    expect(out).toMatch(/regular_tax_before_credits\s+7912/);
+    const fl = run("--program", "fl-tca", "--json");
+    expect(JSON.parse(fl).outputs.fl_tca_eligible).toBe("holds");
+  });
+
+  it("lists programs with --programs", () => {
+    const out = run("--programs");
+    expect(out).toContain("co-snap");
+    expect(out).toContain("fiit");
+  });
+
   it("prints the chain of citation with --trace", () => {
     const out = run("--trace");
-    expect(out).toContain("chain of citation:");
+    expect(out).toContain("chain of citation");
     expect(out).toContain("us-co:regulations/10-ccr-2506-1/4.207.2#snap_allotment");
   });
 });

@@ -41,8 +41,15 @@ function DurableId({ id }: { id: string }) {
   );
 }
 
+/**
+ * Deep programs produce deep traces; a fully-expanded tree of 300 rules is
+ * unreadable. The first two levels land open — the verdict and what it
+ * directly rests on — and everything deeper waits behind its chevron.
+ */
+const OPEN_BY_DEFAULT_DEPTH = 2;
+
 function TraceRow({ node, depth }: { node: DisplayNode; depth: number }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(depth < OPEN_BY_DEFAULT_DEPTH);
   const expandable = node.children.length > 0;
 
   return (

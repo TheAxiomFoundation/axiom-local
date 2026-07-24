@@ -1,0 +1,36 @@
+{
+ "programs": [
+  {
+   "id": "co-snap",
+   "title": "Colorado SNAP — monthly allotment",
+   "jurisdiction": "us-co",
+   "inputs": 585,
+   "rules": 319,
+   "parameters": 127
+  },
+  {
+   "id": "ma-snap",
+   "title": "Massachusetts SNAP — monthly benefit",
+   "jurisdiction": "us-ma",
+   "inputs": 719,
+   "rules": 372,
+   "parameters": 125
+  },
+  {
+   "id": "fiit",
+   "title": "Federal individual income tax",
+   "jurisdiction": "us",
+   "inputs": 184,
+   "rules": 137,
+   "parameters": 78
+  },
+  {
+   "id": "fl-tca",
+   "title": "Florida Temporary Cash Assistance",
+   "jurisdiction": "us-fl",
+   "inputs": 2113,
+   "rules": 831,
+   "parameters": 230
+  }
+ ]
+}

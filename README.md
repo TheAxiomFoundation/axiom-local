@@ -30,19 +30,29 @@ of citation. The explain-mode trace renders as an expandable tree where every
 derived value, every statutory parameter, and every answer you gave is shown with
 the id it came from.
 
-## The golden path: Colorado SNAP, the full composed program
+## The programs: full composed artifacts, not demos
 
-The page loads with the real thing: the **composed Colorado SNAP compiled
-artifact** — 319 rules and 127 statutory parameters spanning 7 USC 2011–2036,
-7 CFR 273, and 10 CCR 2506-1, compiled to one versioned artifact (the same
-release unit the hosted API executes; provenance and sha-256 shown on the
-page). For the canonical two-person household — $1,200 monthly earned income,
-$900 shelter costs — it computes a **$478 monthly allotment** and **$226.50
-net income**, the exact values axiom-api's parity suite pins. The page runs
-this determination on load, so it lands already alive.
+The page ships a library of **composed compiled artifacts** — the same
+versioned release units the hosted engine executes, provenance and sha-256
+shown on the page — selectable from the program panel:
 
-Four headline questions carry the determination; the program's ~580 other
-inputs take **screening presumptions**, every one inspectable and overridable
+| Program | Rules | Inputs | Law |
+|---|---|---|---|
+| Colorado SNAP (the golden path) | 319 | 585 | 7 USC 2011–2036 · 7 CFR 273 · 10 CCR 2506-1 |
+| Massachusetts SNAP | 372 | 719 | 7 USC · 7 CFR 273 · 106 CMR 360–366 |
+| Federal individual income tax | 137 | 184 | 26 USC 1, 24, 32, 55, 63, 151… |
+| Florida Temporary Cash Assistance | 831 | 2,113 | 45 CFR · FL 65A-4 |
+
+The page lands on Colorado SNAP: for the canonical two-person household —
+$1,200 monthly earned income, $900 shelter costs — it computes a **$478
+monthly allotment** and **$226.50 net income**, the exact values axiom-api's
+parity suite pins. The determination runs on load, so the page lands already
+alive; switching programs lands on that program's example case, computed.
+`scripts/build-packages.mjs` admits new artifacts (descriptor generation is
+engine-probed; see the PROGRAMS config).
+
+A handful of headline questions carry each determination; the program's
+remaining inputs take **screening presumptions**, every one inspectable and overridable
 from the program panel — a presumption is a legal position, so the page treats
 it as one. A one-click **what-if** amends the earned-income deduction rate
 (7 USC 2014(e)(2), 20% → 30%) inside the artifact and re-runs the same
@@ -122,7 +132,9 @@ cd axiom-playground && bun install
 bun run dev          # http://localhost:3000
 
 # Or the same determination straight from your terminal:
+bun scripts/determine.mjs --programs                        # list the programs
 bun scripts/determine.mjs                                   # $478, the pinned case
+bun scripts/determine.mjs --program fiit --set taxable_income=120000
 bun scripts/determine.mjs --earned 2400                     # ineligible
 bun scripts/determine.mjs --size 3 --ages 42,9,70 --shelter 1400
 bun scripts/determine.mjs --what-if snap_earned_income_deduction_rate_for_net_income=0.3

@@ -1,19 +1,21 @@
 /**
- * Run the Colorado SNAP determination locally — same engine, same composed
- * artifact, same request path as the page, from your terminal:
+ * Run any vendored program locally — same engine, same composed artifacts,
+ * same request path as the page, from your terminal:
  *
- *   bun scripts/determine.mjs                       # the canonical household ($478)
- *   bun scripts/determine.mjs --earned 2400
- *   bun scripts/determine.mjs --size 3 --ages 42,9,70 --shelter 1400
- *   bun scripts/determine.mjs --what-if snap_earned_income_deduction_rate_for_net_income=0.3
- *   bun scripts/determine.mjs --set assistance_payments=500   # override any presumption
- *   bun scripts/determine.mjs --trace                          # chain of citation
- *   bun scripts/determine.mjs --json                           # machine-readable
+ *   bun scripts/determine.mjs --programs                     # list programs
+ *   bun scripts/determine.mjs                                # co-snap example ($478)
+ *   bun scripts/determine.mjs --program fiit                 # federal income tax
+ *   bun scripts/determine.mjs --program fiit --set taxable_income=120000
+ *   bun scripts/determine.mjs --set snap_countable_earned_income=2400
+ *   bun scripts/determine.mjs --people member_age=42,9,70    # per-person values
+ *   bun scripts/determine.mjs --what-if <parameter>=<value>  # amend the law
+ *   bun scripts/determine.mjs --set assistance_payments=500  # override a presumption
+ *   bun scripts/determine.mjs --trace [--depth 3]            # chain of citation
+ *   bun scripts/determine.mjs --slots | --json               # discover / integrate
  *
- * No Rust toolchain, no network: the wasm engine and the artifact are
- * checked into this repo. This is the "run it on your machine" door made
- * literal — a clone of this repo IS the local distribution until the
- * engine's first tagged binary release.
+ * Every program starts from its descriptor's example case; --set/--people
+ * override slots by name. No Rust toolchain, no network: the wasm engine
+ * and the artifacts are checked into this repo.
  */
 
 import { createRequire } from "node:module";
@@ -28,17 +30,14 @@ const require = createRequire(import.meta.url);
 const engine = require("../engine/pkg-node/axiom_rules_engine_wasm.js");
 
 const here = dirname(fileURLToPath(import.meta.url));
-const programDir = join(here, "..", "public", "programs", "co-snap");
-let artifactJson = readFileSync(join(programDir, "artifact.json"), "utf8");
-const pkg = JSON.parse(readFileSync(join(programDir, "package.json"), "utf8"));
+const programsDir = join(here, "..", "public", "programs");
 
 // --- arguments --------------------------------------------------------------
 
 const args = process.argv.slice(2);
 const flag = (name) => {
   const index = args.indexOf(`--${name}`);
-  if (index === -1) return undefined;
-  return args[index + 1];
+  return index === -1 ? undefined : args[index + 1];
 };
 const has = (name) => args.includes(`--${name}`);
 
@@ -47,49 +46,69 @@ if (has("help")) {
   process.exit(0);
 }
 
-const size = flag("size") ?? "2";
-const ages = (flag("ages") ?? (size === "2" ? "42,9" : Array(Number(size)).fill("30").join(",")))
-  .split(",")
-  .map((age) => age.trim());
-if (ages.length !== Number(size) && !flag("size")) {
-  // --ages alone implies the size
-  args.push("--size", String(ages.length));
+const index = JSON.parse(readFileSync(join(programsDir, "index.json"), "utf8")).programs;
+
+if (has("programs")) {
+  for (const program of index) {
+    console.log(
+      `${program.id.padEnd(14)} ${program.title} — ${program.rules} rules, ${program.inputs} inputs (${program.jurisdiction})`,
+    );
+  }
+  process.exit(0);
 }
 
+const programId = flag("program") ?? "co-snap";
+if (!index.some((program) => program.id === programId)) {
+  console.error(`Unknown program "${programId}". Try: bun scripts/determine.mjs --programs`);
+  process.exit(1);
+}
+
+const programDir = join(programsDir, programId);
+let artifactJson = readFileSync(join(programDir, "artifact.json"), "utf8");
+const pkg = JSON.parse(readFileSync(join(programDir, "package.json"), "utf8"));
+
+if (has("slots")) {
+  for (const slot of Object.values(pkg.defaults)) {
+    console.log(`${slot.entity.toLowerCase().padEnd(9)} ${slot.dtype.padEnd(8)} ${slot.name}`);
+  }
+  process.exit(0);
+}
+
+// The descriptor's example is the base case; --set and --people override it.
 const answers = {
-  household: {
-    household_size: flag("size") ?? String(ages.length),
-    snap_countable_earned_income: flag("earned") ?? "1200",
-    household_shelter_costs_incurred: flag("shelter") ?? "900",
-  },
-  people: { member_age: ages },
+  household: { ...pkg.example.household },
+  people: Object.fromEntries(
+    Object.entries(pkg.example.people ?? {}).map(([slot, values]) => [slot, [...values]]),
+  ),
   refOverrides: {},
 };
 
-// --set slot=value: override any presumption by slot name (all matching refs)
-for (let i = 0; i < args.length; i += 1) {
-  if (args[i] !== "--set") continue;
-  const [slot, value] = (args[i + 1] ?? "").split("=");
-  if (!slot || value === undefined) {
-    console.error(`--set expects slot=value, got "${args[i + 1]}"`);
-    process.exit(1);
-  }
-  const refs = Object.entries(pkg.defaults).filter(([, s]) => s.name === slot);
-  if (refs.length === 0) {
-    console.error(`No input slot named "${slot}" — try: bun scripts/determine.mjs --slots | grep ${slot}`);
-    process.exit(1);
-  }
-  for (const [ref, s] of refs) {
-    if (s.entity === "Household") answers.refOverrides[ref] = value;
-    else answers.people[slot] = ages.map(() => value);
-  }
-}
+const slotByName = (name) => Object.values(pkg.defaults).find((slot) => slot.name === name);
 
-if (has("slots")) {
-  for (const s of Object.values(pkg.defaults)) {
-    console.log(`${s.entity.toLowerCase().padEnd(9)} ${s.dtype.padEnd(8)} ${s.name}`);
+for (let i = 0; i < args.length; i += 1) {
+  if (args[i] === "--set") {
+    const [slot, value] = (args[i + 1] ?? "").split("=");
+    if (!slot || value === undefined) {
+      console.error(`--set expects slot=value, got "${args[i + 1]}"`);
+      process.exit(1);
+    }
+    if (!slotByName(slot)) {
+      console.error(`No input slot named "${slot}" — see --slots`);
+      process.exit(1);
+    }
+    answers.household[slot] = value;
   }
-  process.exit(0);
+  if (args[i] === "--people") {
+    const [slot, values] = (args[i + 1] ?? "").split("=");
+    if (!slot || values === undefined) {
+      console.error(`--people expects slot=v1,v2,…, got "${args[i + 1]}"`);
+      process.exit(1);
+    }
+    answers.people[slot] = values.split(",").map((value) => value.trim());
+    // Growing the people list grows the counted entity with it.
+    const sizeSlot = pkg.entities.find((entity) => entity.count_from)?.count_from;
+    if (sizeSlot) answers.household[sizeSlot] = String(answers.people[slot].length);
+  }
 }
 
 // --what-if parameter=value: amend the law before running
@@ -115,35 +134,53 @@ const value = (name) => {
 
 if (has("json")) {
   const outputs = Object.fromEntries(Object.keys(pkg.outputs).map((name) => [name, value(name)]));
-  console.log(JSON.stringify({ program: pkg.program_id, period: request.queries[0].period, amendment: whatIf ?? null, answers, outputs }, null, 2));
+  console.log(
+    JSON.stringify(
+      {
+        program: pkg.program_id,
+        period: request.queries[0].period,
+        amendment: whatIf ?? null,
+        answers,
+        outputs,
+      },
+      null,
+      2,
+    ),
+  );
   process.exit(0);
 }
 
-console.log(`\n${pkg.title}`);
-console.log(`period ${request.queries[0].period.start} — household of ${answers.household.household_size}, ages ${ages.join("/")}`);
-console.log(`earned $${answers.household.snap_countable_earned_income}/mo · shelter $${answers.household.household_shelter_costs_incurred}/mo`);
+console.log(`\n${pkg.title} (${pkg.jurisdiction})`);
+console.log(`period ${request.queries[0].period.start}`);
+for (const [slot, v] of Object.entries(answers.household)) console.log(`  ${slot} = ${v}`);
+for (const [slot, values] of Object.entries(answers.people)) {
+  if (values.length) console.log(`  ${slot} = ${values.join(", ")}`);
+}
 if (amendment) {
   console.log(`AMENDED LAW: ${whatIf} (current law: ${amendment.previousValue}) — hypothetical`);
 }
 console.log("");
+const width = Math.max(...Object.keys(pkg.outputs).map((name) => name.length)) + 2;
 for (const name of Object.keys(pkg.outputs)) {
-  console.log(`  ${name.padEnd(18)} ${value(name)}`);
+  console.log(`  ${name.padEnd(width)} ${value(name)}`);
 }
 
 if (has("trace")) {
   const tree = buildDisplayTree({
-    outputId: pkg.outputs[flag("output") ?? "snap_allotment"],
+    outputId: pkg.outputs[flag("output") ?? Object.keys(pkg.outputs)[0]],
     result,
     artifact: JSON.parse(artifactJson),
     dataset: request.dataset,
   });
+  const maxDepth = Number(flag("depth") ?? 3);
   const render = (node, depth) => {
+    if (depth > maxDepth) return;
     const pad = "  ".repeat(depth);
     console.log(`${pad}${node.label} = ${node.valueText ?? "—"}  [${node.origin}] ${node.refId}`);
     if (node.substituted) console.log(`${pad}  = ${node.substituted}`);
     for (const child of node.children) render(child, depth + 1);
   };
-  console.log("\nchain of citation:");
+  console.log(`\nchain of citation (to depth ${maxDepth}; --depth N for more):`);
   render(tree, 1);
 }
 console.log("");

@@ -28,6 +28,8 @@ export interface PackageDefault {
   entity: string;
   dtype: string;
   value: unknown;
+  /** For text inputs: the values the program's own comparisons mention. */
+  options?: string[];
 }
 
 export interface PackageHeadline {
@@ -43,6 +45,17 @@ export interface PackageEntityConfig {
   count?: number;
   count_from?: string;
   relations?: { name: string; tuple: string[] }[];
+}
+
+export interface PackageWhatIf {
+  parameter: string;
+  value: string;
+  label: string;
+}
+
+export interface PackageExample {
+  household: Record<string, string>;
+  people: Record<string, string[]>;
 }
 
 export interface GoldenPackage {
@@ -61,6 +74,8 @@ export interface GoldenPackage {
   headline: PackageHeadline[];
   outputs: Record<string, string>;
   default_period: string;
+  example: PackageExample;
+  what_if?: PackageWhatIf;
   defaults: Record<string, PackageDefault>;
 }
 
@@ -151,14 +166,17 @@ export function buildPackageRequest(options: BuildPackageRequestOptions): Compil
       for (const [ref, slot] of Object.entries(pkg.defaults)) {
         if (slot.entity !== entityConfig.entity) continue;
         let value: unknown = slot.value;
-        if (entityConfig.entity === "Household" && answers.household[slot.name] !== undefined) {
+        // Slot-name answers apply to whichever entity the slot lives on —
+        // Household for the SNAPs, TaxUnit for the tax programs. Per-person
+        // arrays win on indexed entities; ref overrides are most specific.
+        if (answers.household[slot.name] !== undefined) {
           value = answers.household[slot.name];
         }
         const perPerson = answers.people?.[slot.name];
-        if (entityConfig.entity === "Person" && perPerson?.[index - 1] !== undefined) {
+        if (perPerson?.[index - 1] !== undefined) {
           value = perPerson[index - 1];
         }
-        if (entityConfig.entity === "Household" && answers.refOverrides?.[ref] !== undefined) {
+        if (answers.refOverrides?.[ref] !== undefined) {
           value = answers.refOverrides[ref];
         }
         inputs.push({

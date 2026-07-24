@@ -1,0 +1,21 @@
+import { createRequire } from "node:module";
+import { readFileSync } from "node:fs";
+import { buildPackageRequest } from "../src/lib/goldenPath.ts";
+import { buildDisplayTree } from "../src/lib/trace.ts";
+const require = createRequire(import.meta.url);
+const engine = require("../engine/pkg-node/axiom_rules_engine_wasm.js");
+const [id, outName, depthArg] = process.argv.slice(2);
+const dir = `../public/programs/${id}`;
+const artifactJson = readFileSync(`${dir}/artifact.json`, "utf8");
+const pkg = JSON.parse(readFileSync(`${dir}/package.json`, "utf8"));
+const answers = { ...pkg.example, refOverrides: {} };
+const request = buildPackageRequest({ pkg, answers });
+const response = JSON.parse(engine.execute(artifactJson, JSON.stringify(request)));
+const tree = buildDisplayTree({ outputId: pkg.outputs[outName], result: response.results[0], artifact: JSON.parse(artifactJson), dataset: request.dataset });
+const maxDepth = Number(depthArg ?? 3);
+const render = (n, d) => {
+  if (d > maxDepth) return;
+  console.log(`${"  ".repeat(d)}${n.label}=${n.valueText} [${n.origin}]`);
+  for (const c of n.children) render(c, d + 1);
+};
+render(tree, 0);

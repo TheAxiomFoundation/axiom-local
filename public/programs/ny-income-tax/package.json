@@ -1,0 +1,133 @@
+{
+ "program_id": "ny-income-tax",
+ "jurisdiction": "us-ny",
+ "title": "New York income tax — pilot",
+ "source": {
+  "repo": "TheAxiomFoundation/axiom-api",
+  "artifact_path": "data/runtime-artifacts/us-ny-income-tax.compiled.json",
+  "artifact_sha256": "bbf059125fc9248ccfdbde9911f94628bf1edc9dcd32f896b90cf72c08020095",
+  "engine_version": "0.1.0",
+  "artifact_format_version": 1
+ },
+ "query": {
+  "entity_id": "taxunit:1"
+ },
+ "entities": [
+  {
+   "entity": "TaxUnit",
+   "id_template": "taxunit:1",
+   "count": 1
+  }
+ ],
+ "headline": [
+  {
+   "slot": "ny_pit_pilot_adjusted_gross_income",
+   "entity": "TaxUnit",
+   "label": "Adjusted gross income"
+  }
+ ],
+ "outputs": {
+  "ny_pit_pilot_income_tax_liability": "us-ny:policies/income_tax/pilot_liability_pipeline#ny_pit_pilot_income_tax_liability",
+  "ny_pit_pilot_main_tax": "us-ny:policies/income_tax/pilot_liability_pipeline#ny_pit_pilot_main_tax",
+  "ny_pit_pilot_taxable_income": "us-ny:policies/income_tax/pilot_liability_pipeline#ny_pit_pilot_taxable_income"
+ },
+ "default_period": "2026-01",
+ "example": {
+  "household": {
+   "ny_pit_pilot_adjusted_gross_income": "50000"
+  },
+  "people": {}
+ },
+ "defaults": {
+  "us-ny:policies/income_tax/pilot_liability_pipeline#input.ny_pit_pilot_adjusted_gross_income": {
+   "name": "ny_pit_pilot_adjusted_gross_income",
+   "entity": "TaxUnit",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-ny:policies/income_tax/pilot_liability_pipeline#input.ny_pit_pilot_supplied_standard_deduction": {
+   "name": "ny_pit_pilot_supplied_standard_deduction",
+   "entity": "TaxUnit",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-ny:policies/income_tax/pilot_liability_pipeline#input.ny_pit_pilot_supplied_bracket_floor_2": {
+   "name": "ny_pit_pilot_supplied_bracket_floor_2",
+   "entity": "TaxUnit",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-ny:policies/income_tax/pilot_liability_pipeline#input.ny_pit_pilot_supplied_bracket_floor_1": {
+   "name": "ny_pit_pilot_supplied_bracket_floor_1",
+   "entity": "TaxUnit",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-ny:policies/income_tax/pilot_liability_pipeline#input.ny_pit_pilot_supplied_bracket_rate_1": {
+   "name": "ny_pit_pilot_supplied_bracket_rate_1",
+   "entity": "TaxUnit",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-ny:policies/income_tax/pilot_liability_pipeline#input.ny_pit_pilot_supplied_bracket_floor_3": {
+   "name": "ny_pit_pilot_supplied_bracket_floor_3",
+   "entity": "TaxUnit",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-ny:policies/income_tax/pilot_liability_pipeline#input.ny_pit_pilot_supplied_bracket_rate_2": {
+   "name": "ny_pit_pilot_supplied_bracket_rate_2",
+   "entity": "TaxUnit",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-ny:policies/income_tax/pilot_liability_pipeline#input.ny_pit_pilot_supplied_bracket_floor_4": {
+   "name": "ny_pit_pilot_supplied_bracket_floor_4",
+   "entity": "TaxUnit",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-ny:policies/income_tax/pilot_liability_pipeline#input.ny_pit_pilot_supplied_bracket_rate_3": {
+   "name": "ny_pit_pilot_supplied_bracket_rate_3",
+   "entity": "TaxUnit",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-ny:policies/income_tax/pilot_liability_pipeline#input.ny_pit_pilot_supplied_bracket_floor_5": {
+   "name": "ny_pit_pilot_supplied_bracket_floor_5",
+   "entity": "TaxUnit",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-ny:policies/income_tax/pilot_liability_pipeline#input.ny_pit_pilot_supplied_bracket_rate_4": {
+   "name": "ny_pit_pilot_supplied_bracket_rate_4",
+   "entity": "TaxUnit",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-ny:policies/income_tax/pilot_liability_pipeline#input.ny_pit_pilot_supplied_bracket_floor_6": {
+   "name": "ny_pit_pilot_supplied_bracket_floor_6",
+   "entity": "TaxUnit",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-ny:policies/income_tax/pilot_liability_pipeline#input.ny_pit_pilot_supplied_bracket_rate_5": {
+   "name": "ny_pit_pilot_supplied_bracket_rate_5",
+   "entity": "TaxUnit",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-ny:policies/income_tax/pilot_liability_pipeline#input.ny_pit_pilot_supplied_bracket_rate_6": {
+   "name": "ny_pit_pilot_supplied_bracket_rate_6",
+   "entity": "TaxUnit",
+   "dtype": "decimal",
+   "value": "0"
+  },
+  "us-ny:policies/income_tax/pilot_liability_pipeline#input.ny_pit_pilot_supplied_supplemental_recapture": {
+   "name": "ny_pit_pilot_supplied_supplemental_recapture",
+   "entity": "TaxUnit",
+   "dtype": "decimal",
+   "value": "0"
+  }
+ }
+}

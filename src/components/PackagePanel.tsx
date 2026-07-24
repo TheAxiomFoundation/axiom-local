@@ -3,12 +3,15 @@
 import { IconFileUpload, IconFlask, IconRestore, IconSearch } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
 import type { GoldenPackage } from "@/lib/goldenPath";
+import type { ProgramIndexEntry } from "@/lib/programSource";
 import { prettifyName } from "@/lib/format";
 import { PanelHeading } from "./PanelHeading";
 
 interface PackagePanelProps {
   pkg: GoldenPackage;
   fetchedSha256: string;
+  programs: ProgramIndexEntry[];
+  onSelectProgram: (programId: string) => void;
   whatIfActive: boolean;
   whatIfPreviousValue: string | null;
   onToggleWhatIf: () => void;
@@ -25,6 +28,8 @@ const PAGE_SIZE = 40;
 export function PackagePanel({
   pkg,
   fetchedSha256,
+  programs,
+  onSelectProgram,
   whatIfActive,
   whatIfPreviousValue,
   onToggleWhatIf,
@@ -52,13 +57,35 @@ export function PackagePanel({
       <PanelHeading
         section="1"
         title="The program"
-        aside={`composed artifact · ${entries.length} inputs · developer preview`}
+        aside={`${pkg.jurisdiction} · composed artifact · ${entries.length} inputs · developer preview`}
       />
 
+      {programs.length > 1 ? (
+        <div className="mb-4 mt-1">
+          <label
+            className="smallcaps mb-1.5 block text-[0.65rem] text-ink-secondary"
+            htmlFor="program-select"
+          >
+            Program
+          </label>
+          <select
+            id="program-select"
+            className="field"
+            value={pkg.program_id}
+            onChange={(event) => onSelectProgram(event.target.value)}
+          >
+            {programs.map((program) => (
+              <option key={program.id} value={program.id}>
+                {program.title} · {program.rules} rules
+              </option>
+            ))}
+          </select>
+        </div>
+      ) : null}
+
       <p className="mb-4 mt-1 text-[0.95rem] font-light text-ink-secondary">
-        {pkg.title}: the full composed program — federal statute, federal regulation, and state
-        rule — compiled to one versioned artifact. This is the same release unit the hosted API
-        executes; here it is delivered to the page once and executed in this tab.
+        The full composed program, compiled to one versioned artifact — the same release unit
+        the hosted engine executes. It is delivered to the page once and executed in this tab.
       </p>
 
       <div className="panel">
@@ -101,34 +128,39 @@ export function PackagePanel({
         </dl>
       </div>
 
-      <div className="mt-4 border border-rule bg-paper-elevated p-4" id="what-if">
-        <p className="smallcaps text-[0.62rem] text-accent">What if the law changed?</p>
-        <p className="mt-1.5 text-[0.88rem] font-light text-ink-secondary">
-          The earned-income deduction rate — 7 USC 2014(e)(2), currently{" "}
-          <span className="font-mono text-[0.8rem] text-ink">
-            {whatIfPreviousValue ?? "0.2"}
-          </span>{" "}
-          — is one JSON entry in the artifact. Amend it to{" "}
-          <span className="font-mono text-[0.8rem] text-ink">0.3</span> and re-run: the same
-          household, under amended law, in this tab.
-        </p>
-        <div className="mt-3 flex items-center gap-3">
-          <button
-            type="button"
-            className={`${whatIfActive ? "btn-accent" : "btn-quiet"} flex items-center gap-2 px-3 py-1.5 font-mono text-[0.72rem] tracking-wide`}
-            onClick={onToggleWhatIf}
-            aria-pressed={whatIfActive}
-          >
-            <IconFlask size={14} aria-hidden="true" />
-            {whatIfActive ? "Amended law in force — restore current law" : "Amend the deduction rate"}
-          </button>
-          {whatIfActive ? (
-            <span className="smallcaps text-[0.62rem] text-warning">
-              hypothetical — not current law
-            </span>
-          ) : null}
+      {pkg.what_if ? (
+        <div className="mt-4 border border-rule bg-paper-elevated p-4" id="what-if">
+          <p className="smallcaps text-[0.62rem] text-accent">What if the law changed?</p>
+          <p className="mt-1.5 text-[0.88rem] font-light text-ink-secondary">
+            {pkg.what_if.label}
+            {whatIfPreviousValue ? (
+              <>
+                , currently{" "}
+                <span className="font-mono text-[0.8rem] text-ink">{whatIfPreviousValue}</span>,
+              </>
+            ) : null}{" "}
+            is one JSON entry in the artifact. Amend it to{" "}
+            <span className="font-mono text-[0.8rem] text-ink">{pkg.what_if.value}</span> and
+            re-run: the same case, under amended law, in this tab.
+          </p>
+          <div className="mt-3 flex items-center gap-3">
+            <button
+              type="button"
+              className={`${whatIfActive ? "btn-accent" : "btn-quiet"} flex items-center gap-2 px-3 py-1.5 font-mono text-[0.72rem] tracking-wide`}
+              onClick={onToggleWhatIf}
+              aria-pressed={whatIfActive}
+            >
+              <IconFlask size={14} aria-hidden="true" />
+              {whatIfActive ? "Amended law in force — restore current law" : "Amend the parameter"}
+            </button>
+            {whatIfActive ? (
+              <span className="smallcaps text-[0.62rem] text-warning">
+                hypothetical — not current law
+              </span>
+            ) : null}
+          </div>
         </div>
-      </div>
+      ) : null}
 
       <div className="mt-4">
         <div className="flex flex-wrap items-center gap-3">

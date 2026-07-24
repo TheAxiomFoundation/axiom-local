@@ -22,11 +22,35 @@ export interface LoadedPackage {
   fetchedSha256: string;
 }
 
-let packagePromise: Promise<LoadedPackage> | null = null;
+export interface ProgramIndexEntry {
+  id: string;
+  title: string;
+  jurisdiction: string;
+  inputs: number;
+  rules: number;
+  parameters: number;
+}
+
+const packagePromises = new Map<string, Promise<LoadedPackage>>();
+let indexPromise: Promise<ProgramIndexEntry[]> | null = null;
 
 export function loadGoldenPackage(programId: string): Promise<LoadedPackage> {
-  packagePromise ??= load(programId);
-  return packagePromise;
+  let promise = packagePromises.get(programId);
+  if (!promise) {
+    promise = load(programId);
+    packagePromises.set(programId, promise);
+  }
+  return promise;
+}
+
+export function loadProgramsIndex(): Promise<ProgramIndexEntry[]> {
+  indexPromise ??= fetch("/programs/index.json")
+    .then((response) => {
+      if (!response.ok) throw new Error(`Fetching the program index failed: HTTP ${response.status}`);
+      return response.json();
+    })
+    .then((body: { programs: ProgramIndexEntry[] }) => body.programs);
+  return indexPromise;
 }
 
 async function load(programId: string): Promise<LoadedPackage> {
