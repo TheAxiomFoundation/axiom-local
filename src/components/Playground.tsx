@@ -17,6 +17,7 @@ import { DeterminationPanel, type RunRecord } from "./DeterminationPanel";
 import { GoldenHouseholdPanel } from "./GoldenHouseholdPanel";
 import { PackagePanel } from "./PackagePanel";
 import { ProvenanceFooter } from "./ProvenanceFooter";
+import { RunItLocally } from "./RunItLocally";
 import { StatusStrip } from "./StatusStrip";
 import { TakeItWithYou } from "./TakeItWithYou";
 import { Tour } from "./Tour";
@@ -256,6 +257,7 @@ export function Playground() {
               </p>
             </section>
           )}
+          <RunItLocally />
         </div>
         <div className="space-y-14 lg:col-span-7">
           {ready && loadedPackage ? (

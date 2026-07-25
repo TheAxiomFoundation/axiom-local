@@ -43,7 +43,6 @@ export function DeterminationPanel({
   return (
     <section className="rise rise-4" aria-label="The determination" id="determination-panel">
       <PanelHeading
-        section="3"
         title="The determination"
         aside={
           run

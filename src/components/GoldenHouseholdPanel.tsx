@@ -96,7 +96,6 @@ export function GoldenHouseholdPanel({
   return (
     <section className="rise rise-3" aria-label="The case" id="household-panel">
       <PanelHeading
-        section="2"
         title="The case"
         aside={`${questionCount} question${questionCount === 1 ? "" : "s"} · ${presumedCount} answers presumed · kept on-device`}
       />

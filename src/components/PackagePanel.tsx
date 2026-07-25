@@ -51,7 +51,6 @@ export function PackagePanel({
   return (
     <section className="rise rise-2" aria-label="The program" id="program-panel">
       <PanelHeading
-        section="1"
         title="The program"
         aside={`${pkg.jurisdiction} · composed artifact · ${entries.length} inputs · developer preview`}
       />
