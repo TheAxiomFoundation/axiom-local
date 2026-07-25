@@ -13,8 +13,8 @@ export default function Home() {
           Axiom playground
         </h1>
         <p className="mx-auto mt-5 max-w-2xl font-body text-lg font-light italic text-ink-secondary">
-          Statutes compiled to WebAssembly, determinations rendered on your machine. Clone it,
-          run it, build on it — the law never needs a server.
+          Statutes compiled to WebAssembly, determinations rendered on your machine — the law
+          never needs a server.
         </p>
         <div className="double-rule mx-auto mt-9 w-40" aria-hidden="true" />
       </header>
