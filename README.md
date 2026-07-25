@@ -1,9 +1,10 @@
 # Axiom playground
 
-Law that runs in your browser. A single page where RuleSpec statutes are
-compiled to a program and executed against a household — entirely on-device,
-through the [Axiom rules engine](https://github.com/TheAxiomFoundation/axiom-rules-engine)'s
-WebAssembly build. Nothing about the household ever leaves the page.
+Law that runs on your machine. This repo is the local Axiom distribution —
+the [Axiom rules engine](https://github.com/TheAxiomFoundation/axiom-rules-engine)'s
+WebAssembly build and full composed statutory programs, hash-pinned and
+checked in — plus the page that tells you how to use it. Exploring the rules
+themselves is the Axiom app's job; running them on your end is this repo's.
 
 ## Why this exists
 

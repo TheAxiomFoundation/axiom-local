@@ -13,8 +13,8 @@ export function TakeItWithYou() {
       <PanelHeading title="Take it with you" aside="the same rules, where you work" />
 
       <p className="mb-6 mt-1 text-[0.95rem] font-light text-ink-secondary">
-        Everything this page just did — the rules, the determination, the cited trace — is
-        available outside it. Pick your door.
+        The rules behind every determination — readable beside their source law, and open to
+        challenge. Pick your door.
       </p>
 
       <div className="grid gap-5 md:grid-cols-2">
@@ -24,7 +24,7 @@ export function TakeItWithYou() {
             Read the law behind this
           </h3>
           <p className="mt-2 flex-1 text-[0.88rem] font-light text-ink-secondary">
-            Every rule this page executed is browsable: the RuleSpec encoding side-by-side with
+            Every rule in these programs is browsable: the RuleSpec encoding side-by-side with
             the statute or regulation it encodes, searchable, with the citation graph — no
             sign-in, nothing to install.
           </p>
