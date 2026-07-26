@@ -46,6 +46,12 @@ describe("bun scripts/determine.mjs", () => {
     expect(JSON.parse(fl).outputs.fl_tca_eligible).toBe("holds");
   });
 
+  it("tolerates shell-split assignments (--set slot = value)", () => {
+    const spaced = run("--set", "household_size", "=", "4", "--json");
+    const compact = run("--set", "household_size=4", "--json");
+    expect(JSON.parse(spaced).outputs).toEqual(JSON.parse(compact).outputs);
+  });
+
   it("lists programs with --programs", () => {
     const out = run("--programs");
     expect(out).toContain("co-snap");

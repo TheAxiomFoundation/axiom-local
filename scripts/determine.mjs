@@ -34,7 +34,31 @@ const programsDir = join(here, "..", "public", "programs");
 
 // --- arguments --------------------------------------------------------------
 
-const args = process.argv.slice(2);
+// Tolerate shell-split assignments: `--set slot = 4`, `--set slot= 4`,
+// and `--set slot =4` all normalize to `--set slot=4`.
+const rawArgs = process.argv.slice(2);
+const args = [];
+for (let i = 0; i < rawArgs.length; i += 1) {
+  const token = rawArgs[i];
+  if (["--set", "--people", "--what-if"].includes(token)) {
+    let assignment = rawArgs[i + 1] ?? "";
+    let consumed = 1;
+    if (!assignment.includes("=") && rawArgs[i + 2] === "=") {
+      assignment = `${assignment}=${rawArgs[i + 3] ?? ""}`;
+      consumed = 3;
+    } else if (!assignment.includes("=") && rawArgs[i + 2]?.startsWith("=")) {
+      assignment = `${assignment}${rawArgs[i + 2]}`;
+      consumed = 2;
+    } else if (assignment.endsWith("=") && rawArgs[i + 2] !== undefined) {
+      assignment = `${assignment}${rawArgs[i + 2]}`;
+      consumed = 2;
+    }
+    args.push(token, assignment);
+    i += consumed;
+    continue;
+  }
+  args.push(token);
+}
 const flag = (name) => {
   const index = args.indexOf(`--${name}`);
   return index === -1 ? undefined : args[index + 1];
