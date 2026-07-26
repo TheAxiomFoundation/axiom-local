@@ -65,7 +65,7 @@ export default function Docs() {
                 <FlagRow
                   flag="--people"
                   args="<slot>=<v1,v2,…>"
-                  desc="Per-person values for indexed entities (e.g. member_age=42,9,70). The list length sets the entity count — three ages make a household of three."
+                  desc="Per-person values, position = person: member_age=42,9 sets person 1 to 42 and person 2 to 9. Works for any person-level slot (see --slots); there is no single-person shorthand — give the full list. The list length sets the unit size."
                 />
                 <FlagRow
                   flag="--what-if"
@@ -80,7 +80,7 @@ export default function Docs() {
                 <FlagRow
                   flag="--output"
                   args="<name>"
-                  desc="Which output the trace roots at (default: the program's first output)."
+                  desc="Which output the result and trace focus on (default: the program's first output). Outputs are unit-level; person-level rules cannot be queried directly — their values appear inside the trace (--trace --depth 5 shows each member's chain)."
                 />
                 <FlagRow flag="--trace" desc="Print the chain of citation — every figure with the durable legal id of the rule that produced it." />
                 <FlagRow flag="--depth" args="<n>" desc="Trace depth (default 3)." />
@@ -148,9 +148,10 @@ export default function Docs() {
             position, not a hidden default: list them with{" "}
             <code className="font-mono text-[0.8rem] text-ink">--slots</code>, override any
             with <code className="font-mono text-[0.8rem] text-ink">--set</code>. Inputs
-            belong to entities (Household, Person, TaxUnit, …); per-person inputs take lists
-            via <code className="font-mono text-[0.8rem] text-ink">--people</code>, and each
-            person is bound to the household by the program&apos;s declared relations.
+            belong to entities (Household, Person, TaxUnit, …); per-person inputs take positional
+            lists via <code className="font-mono text-[0.8rem] text-ink">--people</code>, and
+            each person is bound to the unit by the program&apos;s declared relations. Person-level
+            <em> outputs</em> are not directly queryable — read them off the trace.
           </p>
           <Record>
             <Cmd>bun scripts/determine.mjs --slots | grep -i student</Cmd>
