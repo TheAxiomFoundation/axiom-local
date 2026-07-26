@@ -5,6 +5,7 @@
  */
 
 import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -99,16 +100,17 @@ describe("bun scripts/determine.mjs", () => {
     expect(stderr).toMatch(/default period \(2026-01\)/);
   });
 
-  it("tells Node users to use Bun", () => {
-    try {
-      execFileSync("node", [script], { encoding: "utf8", timeout: 60_000, stdio: "pipe" });
-      throw new Error("expected failure");
-    } catch (error) {
-      // The spawn-error shape differs between runtimes; the message is
-      // what matters.
-      const spawn = error as { stderr?: string; message: string };
-      expect(spawn.stderr ?? spawn.message).toContain("bun scripts/determine.mjs");
-    }
+  it("guards Node users before the TypeScript imports load", () => {
+    // Real Node prints the use-Bun message and exits 1 (verified by hand);
+    // it cannot be spawned from inside `bun run`, which shims `node` to
+    // Bun itself — so assert the source ordering the guard depends on: the
+    // versions check must precede every .ts import.
+    const source = readFileSync(script, "utf8");
+    const guardAt = source.indexOf("process.versions.bun");
+    const firstTsImport = source.indexOf('import("../src/lib/');
+    expect(guardAt).toBeGreaterThan(-1);
+    expect(firstTsImport).toBeGreaterThan(guardAt);
+    expect(source.slice(0, firstTsImport)).toContain("bun scripts/determine.mjs");
   });
 
   it("prints the chain of citation with --trace", () => {
