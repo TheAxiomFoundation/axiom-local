@@ -1,6 +1,5 @@
 import { GetStarted } from "@/components/GetStarted";
 import { ProvenanceFooter } from "@/components/ProvenanceFooter";
-import { TakeItWithYou } from "@/components/TakeItWithYou";
 
 export default function Home() {
   return (
@@ -20,7 +19,6 @@ export default function Home() {
       </header>
 
       <GetStarted />
-      <TakeItWithYou />
       <ProvenanceFooter />
     </div>
   );
