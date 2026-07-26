@@ -259,10 +259,16 @@ export function GetStarted() {
         </div>
         <p className="mt-2 font-mono text-[0.65rem] text-ink-muted">
           each: one versioned compiled artifact, sha-256 pinned, screening presumptions declared
-          — the same release units the hosted engine executes ·{" "}
+          ·{" "}
           <span className="text-ink-secondary">
             bun scripts/determine.mjs --program &lt;id&gt;
           </span>
+        </p>
+        <p className="mt-3 max-w-3xl text-[0.85rem] font-light text-ink-secondary">
+          Seventeen more compiled programs exist in the pipeline — seven further state SNAPs,
+          five TANFs, UK Universal Credit, Illinois SCRETD, and federal OASDI — in the
+          pre-provenance artifact format. They join this table as they are re-cut with
+          provenance envelopes.
         </p>
       </div>
     </section>
