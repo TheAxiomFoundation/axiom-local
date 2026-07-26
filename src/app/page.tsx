@@ -78,7 +78,7 @@ export default function Home() {
             style={{ textDecoration: "none" }}
             className="panel block p-5 transition-colors hover:border-accent"
           >
-            <p className="smallcaps text-[0.62rem] text-accent">reference →</p>
+            <p className="smallcaps text-[0.62rem] text-accent">references →</p>
             <p className="mt-2 text-[0.92rem] font-light text-ink-secondary">
               Every flag, every program, presumption semantics, JSON shapes, and embedding
               the engine in your own software.
@@ -89,7 +89,7 @@ export default function Home() {
             style={{ textDecoration: "none" }}
             className="panel block p-5 transition-colors hover:border-accent"
           >
-            <p className="smallcaps text-[0.62rem] text-accent">working example →</p>
+            <p className="smallcaps text-[0.62rem] text-accent">example →</p>
             <p className="mt-2 text-[0.92rem] font-light text-ink-secondary">
               One household, start to finish: change the facts, amend the law, follow every
               citation, switch programs, integrate the JSON.

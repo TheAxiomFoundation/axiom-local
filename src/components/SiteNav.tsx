@@ -20,8 +20,8 @@ export function SiteNav({ current }: { current: "start" | "example" | "docs" }) 
       aria-label="Pages"
     >
       {link("/", "Get started", "start")}
-      {link("/docs/", "Reference", "docs")}
-      {link("/example/", "Working example", "example")}
+      {link("/docs/", "References", "docs")}
+      {link("/example/", "Example", "example")}
       <a
         href="https://github.com/TheAxiomFoundation/axiom-playground"
         target="_blank"

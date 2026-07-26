@@ -6,7 +6,7 @@ import { ProvenanceFooter } from "@/components/ProvenanceFooter";
 import { Cmd, L, Record, dim, id } from "@/components/terminal";
 
 export const metadata: Metadata = {
-  title: "Reference — Axiom playground",
+  title: "References — Axiom playground",
   description:
     "Every command and flag, every program, presumption semantics, the JSON shapes, and embedding the Axiom rules engine in your own software.",
 };
