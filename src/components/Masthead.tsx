@@ -14,12 +14,15 @@ export function Masthead({
 }) {
   return (
     <header className="rise mx-auto max-w-4xl pt-10">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-rule pb-4">
-        <div>
-          <p className="smallcaps text-[0.6rem] text-accent">The Axiom Foundation</p>
-          <p className="font-display text-xl font-semibold tracking-tight text-ink">
-            Axiom playground
-          </p>
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-b border-rule pb-4">
+        <div className="flex items-center gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logos/axiom-foundation.svg"
+            alt="The Axiom Foundation"
+            className="block h-[30px] w-auto"
+          />
+          <span className="smallcaps text-[0.65rem] text-ink-muted">playground</span>
         </div>
         <SiteNav current={page} />
       </div>
