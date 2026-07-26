@@ -99,6 +99,57 @@
   transform: translateY(-0.3em);
 }
 
+/* ----- the record --------------------------------------------------------
+   Terminal output set like a court transcript: numbered lines in a
+   gutter, a thin caption bar. The page's signature element. */
+
+.record {
+  counter-reset: rec;
+  background: var(--color-code-bg);
+  color: var(--color-code-text);
+}
+
+.record-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.45rem 1rem 0.45rem 3.1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-code-comment) 30%, transparent);
+  color: var(--color-code-comment);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.rec-line {
+  counter-increment: rec;
+  position: relative;
+  padding-left: 3.1rem;
+  padding-right: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.rec-line::before {
+  content: counter(rec);
+  position: absolute;
+  left: 0;
+  width: 2.1rem;
+  text-align: right;
+  color: var(--color-code-comment);
+  opacity: 0.55;
+  font-size: 0.65rem;
+  user-select: none;
+}
+
+.record-body {
+  padding: 0.7rem 0 0.85rem;
+}
+
 /* ----- controls ---------------------------------------------------------- */
 
 .field {

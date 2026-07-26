@@ -1,64 +1,72 @@
 import Link from "next/link";
 import index from "../../public/programs/index.json";
+import { Masthead } from "@/components/Masthead";
 import { ProvenanceFooter } from "@/components/ProvenanceFooter";
-import { SiteNav } from "@/components/SiteNav";
-import { Cmd, Term, dim, num, ok } from "@/components/terminal";
+import { Cmd, L, Record, dim, num, ok, pin } from "@/components/terminal";
 
-/** The main page: the fastest path from landing to a first run. */
+/** Get started: from landing to a first run, transcript first. */
 export default function Home() {
   return (
     <div className="relative mx-auto max-w-6xl px-5 pb-16 sm:px-8">
       <div className="lamplight" aria-hidden="true" />
 
-      <header className="rise pt-14 text-center sm:pt-20">
-        <p className="smallcaps text-accent">The Axiom Foundation · executable law</p>
-        <h1 className="mt-5 font-display text-6xl font-semibold tracking-tight text-ink sm:text-7xl">
-          Axiom playground
-        </h1>
-        <p className="mx-auto mt-5 max-w-2xl font-body text-lg font-light italic text-ink-secondary">
-          Statutes compiled to WebAssembly, determinations rendered on your machine — the law
-          never needs a server.
-        </p>
-        <SiteNav current="start" />
-        <div className="double-rule mx-auto mt-9 w-40" aria-hidden="true" />
-      </header>
+      <Masthead
+        page="start"
+        thesis="Statutes compiled to WebAssembly, determinations rendered on your machine — the law never needs a server."
+      />
 
-      <section className="rise rise-2 mx-auto mt-12 max-w-3xl" aria-label="Get started">
-        <p className="smallcaps mb-2 text-[0.62rem] text-accent">
-          get started · no rust toolchain · no api key · offline
-        </p>
-        <Term>
+      {/* The hero is the thesis, demonstrated: law executing in a terminal. */}
+      <section className="rise rise-2 mx-auto mt-10 max-w-3xl" aria-label="Get started">
+        <Record caption="three commands, offline" aside="the record">
           <Cmd>git clone https://github.com/TheAxiomFoundation/axiom-playground</Cmd>
           <Cmd>cd axiom-playground && bun install</Cmd>
           <Cmd>bun scripts/determine.mjs</Cmd>
-          {"\n"}
-          {dim("Colorado SNAP — monthly allotment (us-co)\n")}
-          {"  snap_allotment    "}
-          <span className="border-b-2 border-code-keyword text-code-keyword">478</span>
-          {"\n  snap_net_income   "}
-          {num("226.5")}
-          {"\n  snap_eligible     "}
-          {ok("holds")}
-        </Term>
+          <L />
+          <L>{dim("Colorado SNAP — monthly allotment (us-co)")}</L>
+          <L>
+            {"  snap_allotment    "}
+            {pin("478")}
+          </L>
+          <L>
+            {"  snap_net_income   "}
+            {num("226.5")}
+          </L>
+          <L>
+            {"  snap_eligible     "}
+            {ok("holds")}
+          </L>
+        </Record>
         <p className="mt-2 font-mono text-[0.68rem] text-ink-muted">
-          └─ a real determination through 319 rules of 7 USC, 7 CFR 273, and 10 CCR 2506-1 —
-          $478 is pinned by this repo&apos;s tests and axiom-api&apos;s parity suite
+          └─ 319 rules of 7 USC, 7 CFR 273, and 10 CCR 2506-1, executed locally — $478 is
+          pinned by this repo&apos;s tests and axiom-api&apos;s parity suite
         </p>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          <Term>
-            <Cmd>bun scripts/determine.mjs --what-if \</Cmd>
-            {"    snap_earned_income_deduction_rate_for_net_income=0.3\n"}
-            {dim("AMENDED LAW — hypothetical\n")}
-            {"  snap_allotment    "}
-            {num("532")}
-          </Term>
-          <Term>
-            <Cmd>bun scripts/determine.mjs --program fiit \</Cmd>
-            {"    --set taxable_income=60000\n"}
-            {"  regular_tax_before_credits  "}
-            {num("7912")}
-          </Term>
+        <p className="mt-8 max-w-2xl text-[0.95rem] font-light text-ink-secondary">
+          The repo is the distribution: the engine and every program artifact are checked in,
+          hash-pinned. No Rust toolchain, no API key, nothing else to fetch. From here:
+        </p>
+
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          <Record caption="amend the law">
+            <Cmd>bun scripts/determine.mjs \</Cmd>
+            <L>{"    --what-if snap_earned_income_deduction_rate_for_net_income=0.3"}</L>
+            <L>
+              {dim("AMENDED LAW — hypothetical")}
+            </L>
+            <L>
+              {"  snap_allotment    "}
+              {num("532")}
+            </L>
+          </Record>
+          <Record caption="switch programs">
+            <Cmd>bun scripts/determine.mjs \</Cmd>
+            <L>{"    --program fiit --set taxable_income=60000"}</L>
+            <L />
+            <L>
+              {"  regular_tax_before_credits  "}
+              {num("7912")}
+            </L>
+          </Record>
         </div>
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2">
@@ -80,8 +88,8 @@ export default function Home() {
           >
             <p className="smallcaps text-[0.62rem] text-accent">reference →</p>
             <p className="mt-2 text-[0.92rem] font-light text-ink-secondary">
-              Every command and flag, every program, presumption semantics, the JSON shapes,
-              and embedding the engine in your own software.
+              Every flag, every program, presumption semantics, JSON shapes, and embedding
+              the engine in your own software.
             </p>
           </Link>
         </div>
@@ -89,7 +97,7 @@ export default function Home() {
 
       <section className="rise rise-3 mx-auto mt-14 max-w-3xl" aria-label="What ships">
         <div className="double-rule pt-4" />
-        <p className="smallcaps mb-3 mt-3 text-[0.62rem] text-ink-secondary">
+        <p className="smallcaps mb-3 mt-2 text-[0.62rem] text-ink-secondary">
           What ships in the clone
         </p>
         <div className="panel overflow-x-auto">
@@ -108,8 +116,7 @@ export default function Home() {
           </table>
         </div>
         <p className="mt-2 font-mono text-[0.65rem] text-ink-muted">
-          full composed programs — one versioned artifact each, sha-256 pinned · seventeen more
-          are in the pipeline in the pre-provenance format
+          full composed programs, one versioned artifact each · seventeen more in the pipeline
         </p>
       </section>
 
