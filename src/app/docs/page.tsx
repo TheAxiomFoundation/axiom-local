@@ -1,0 +1,228 @@
+import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import index from "../../../public/programs/index.json";
+import { ProvenanceFooter } from "@/components/ProvenanceFooter";
+import { SiteNav } from "@/components/SiteNav";
+import { Cmd, Term, dim, id } from "@/components/terminal";
+
+export const metadata: Metadata = {
+  title: "Reference — Axiom playground",
+  description:
+    "Every command and flag, every program, presumption semantics, the JSON shapes, and embedding the Axiom rules engine in your own software.",
+};
+
+function Section({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <section className="mx-auto mt-12 max-w-4xl">
+      <div className="double-rule pt-4" />
+      <h2 className="smallcaps mb-4 mt-2 text-[0.7rem] text-ink-secondary">{title}</h2>
+      {children}
+    </section>
+  );
+}
+
+function FlagRow({ flag, args, desc }: { flag: string; args?: string; desc: string }) {
+  return (
+    <tr className="border-b border-rule-subtle align-top last:border-0">
+      <td className="whitespace-nowrap px-3 py-2.5 font-mono text-[0.75rem] text-ink">
+        {flag}
+        {args ? <span className="text-ink-muted"> {args}</span> : null}
+      </td>
+      <td className="px-3 py-2.5 text-[0.85rem] font-light text-ink-secondary">{desc}</td>
+    </tr>
+  );
+}
+
+export default function Docs() {
+  return (
+    <div className="relative mx-auto max-w-6xl px-5 pb-16 sm:px-8">
+      <div className="lamplight" aria-hidden="true" />
+
+      <header className="rise pt-14 text-center sm:pt-16">
+        <p className="smallcaps text-accent">Axiom playground · reference</p>
+        <h1 className="mt-4 font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+          Every option
+        </h1>
+        <p className="mx-auto mt-4 max-w-2xl font-body text-lg font-light italic text-ink-secondary">
+          The CLI, the programs, the presumption model, the JSON shapes, and embedding the
+          engine in your own software.
+        </p>
+        <SiteNav current="docs" />
+        <div className="double-rule mx-auto mt-8 w-40" aria-hidden="true" />
+      </header>
+
+      <div className="rise rise-2">
+        <Section title="The command">
+          <Term>
+            <Cmd>bun scripts/determine.mjs [--program &lt;id&gt;] [options]</Cmd>
+          </Term>
+          <div className="panel mt-4 overflow-x-auto">
+            <table className="w-full">
+              <tbody>
+                <FlagRow flag="--programs" desc="List every vendored program with its rule and input counts." />
+                <FlagRow
+                  flag="--program"
+                  args="<id>"
+                  desc="Which program to run (default co-snap). Each starts from its descriptor's example case."
+                />
+                <FlagRow
+                  flag="--set"
+                  args="<slot>=<value>"
+                  desc="Set any input by slot name — headline facts and presumptions alike. Repeatable. Unknown slots error with a pointer to --slots."
+                />
+                <FlagRow
+                  flag="--people"
+                  args="<slot>=<v1,v2,…>"
+                  desc="Per-person values for indexed entities (e.g. member_age=42,9,70). The list length sets the entity count — three ages make a household of three."
+                />
+                <FlagRow
+                  flag="--what-if"
+                  args="<parameter>=<value>"
+                  desc="Amend a statutory parameter inside the compiled artifact before running. Output is labeled AMENDED LAW with the current-law value; the artifact on disk is never touched."
+                />
+                <FlagRow
+                  flag="--month"
+                  args="<YYYY-MM>"
+                  desc="The determination period (default: the program's, usually 2026-01)."
+                />
+                <FlagRow
+                  flag="--output"
+                  args="<name>"
+                  desc="Which output the trace roots at (default: the program's first output)."
+                />
+                <FlagRow flag="--trace" desc="Print the chain of citation — every figure with the durable legal id of the rule that produced it." />
+                <FlagRow flag="--depth" args="<n>" desc="Trace depth (default 3)." />
+                <FlagRow flag="--slots" desc="List every input the program can consider: entity, type, and slot name." />
+                <FlagRow flag="--json" desc="Machine-readable result: program, period, answers, amendment, and all outputs." />
+                <FlagRow flag="--help" desc="Usage with examples." />
+              </tbody>
+            </table>
+          </div>
+        </Section>
+
+        <Section title="The programs">
+          <div className="panel overflow-x-auto">
+            <table className="w-full font-mono text-[0.72rem]">
+              <thead>
+                <tr className="border-b border-rule text-left text-ink-muted">
+                  <th className="px-3 py-2 font-normal">id</th>
+                  <th className="px-3 py-2 font-normal">program</th>
+                  <th className="px-3 py-2 text-right font-normal">rules</th>
+                  <th className="px-3 py-2 text-right font-normal">inputs</th>
+                </tr>
+              </thead>
+              <tbody>
+                {index.programs.map((program) => (
+                  <tr key={program.id} className="border-b border-rule-subtle last:border-0">
+                    <td className="px-3 py-2 text-ink">{program.id}</td>
+                    <td className="px-3 py-2 text-ink-secondary">
+                      {program.title} <span className="text-ink-muted">({program.jurisdiction})</span>
+                    </td>
+                    <td className="px-3 py-2 text-right text-ink-secondary">{program.rules}</td>
+                    <td className="px-3 py-2 text-right text-ink-secondary">{program.inputs}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-3 max-w-3xl text-[0.88rem] font-light text-ink-secondary">
+            Each program is one versioned compiled artifact (
+            <code className="font-mono text-[0.8rem] text-ink">public/programs/&lt;id&gt;/artifact.json</code>
+            ) plus a descriptor (
+            <code className="font-mono text-[0.8rem] text-ink">package.json</code>) declaring
+            its inputs, screening presumptions, entities and relations, example case, and
+            sha-256 pin. Only Colorado SNAP carries an end-to-end parity pin today; seventeen
+            more compiled programs exist in the pre-provenance format and are admitted by
+            adding one entry to{" "}
+            <code className="font-mono text-[0.8rem] text-ink">scripts/build-packages.mjs</code>{" "}
+            once re-cut with envelopes.
+          </p>
+        </Section>
+
+        <Section title="Inputs and presumptions">
+          <p className="max-w-3xl text-[0.88rem] font-light text-ink-secondary">
+            A program can consider hundreds of inputs — Colorado SNAP has 585. The handful you
+            set are the facts of the case; every other input takes its declared{" "}
+            <em>screening presumption</em> from the descriptor. A presumption is a legal
+            position, not a hidden default: list them with{" "}
+            <code className="font-mono text-[0.8rem] text-ink">--slots</code>, override any
+            with <code className="font-mono text-[0.8rem] text-ink">--set</code>. Inputs
+            belong to entities (Household, Person, TaxUnit, …); per-person inputs take lists
+            via <code className="font-mono text-[0.8rem] text-ink">--people</code>, and each
+            person is bound to the household by the program&apos;s declared relations.
+          </p>
+          <Term>
+            <Cmd>bun scripts/determine.mjs --slots | grep -i student</Cmd>
+            {dim("person    decimal  student_school_term_has_begun\nperson    decimal  enrolled_at_least_half_time\nperson    integer  student_age\n…")}
+          </Term>
+        </Section>
+
+        <Section title="JSON output">
+          <Term>
+            <Cmd>bun scripts/determine.mjs --json</Cmd>
+            {dim(
+              '{\n  "program": "co-snap",\n  "period": { "period_kind": "month", "start": "2026-01-01", "end": "2026-02-01" },\n  "amendment": null,\n  "answers": { "household": { … }, "people": { … }, "refOverrides": { } },\n  "outputs": { "snap_allotment": "478", "snap_net_income": "226.5", "snap_eligible": "holds" }\n}',
+            )}
+          </Term>
+          <p className="mt-3 max-w-3xl text-[0.88rem] font-light text-ink-secondary">
+            Judgment outputs come through as{" "}
+            <code className="font-mono text-[0.8rem] text-ink">holds</code> /{" "}
+            <code className="font-mono text-[0.8rem] text-ink">not_holds</code>; money and
+            rates as exact decimal strings — the engine does exact decimal arithmetic, never
+            floats.
+          </p>
+        </Section>
+
+        <Section title="Use it in your own software">
+          <p className="max-w-3xl text-[0.88rem] font-light text-ink-secondary">
+            The engine ships to npm as{" "}
+            <code className="font-mono text-[0.8rem] text-ink">
+              @axiom-foundation/rules-engine-wasm
+            </code>{" "}
+            — the same WebAssembly build this repo vendors, browser and Node targets in one
+            package. Ship an artifact from{" "}
+            <code className="font-mono text-[0.8rem] text-ink">public/programs/</code> with
+            your app (verify its sha-256 against the descriptor pin), build a request, execute
+            in-process. No server, no data leaving your product.
+          </p>
+          <Term>
+            <Cmd>npm install @axiom-foundation/rules-engine-wasm</Cmd>
+            {"\n"}
+            {dim("// browsers and bundlers (ESM)\n")}
+            {"import init, { execute } from "}
+            {id('"@axiom-foundation/rules-engine-wasm"')}
+            {";\nawait init();\nconst response = JSON.parse(execute(artifactJson, JSON.stringify(request)));\n\n"}
+            {dim("// node (CommonJS)\n")}
+            {"const engine = require("}
+            {id('"@axiom-foundation/rules-engine-wasm/node"')}
+            {");\nconst response = JSON.parse(engine.execute(artifactJson, JSON.stringify(request)));"}
+          </Term>
+          <p className="mt-3 max-w-3xl text-[0.88rem] font-light text-ink-secondary">
+            The request/response shapes are mirrored in{" "}
+            <code className="font-mono text-[0.8rem] text-ink">src/lib/engine/types.ts</code>;{" "}
+            <code className="font-mono text-[0.8rem] text-ink">src/lib/goldenPath.ts</code>{" "}
+            builds a request from a descriptor plus answers, and{" "}
+            <code className="font-mono text-[0.8rem] text-ink">src/lib/trace.ts</code> turns
+            the explain trace into a citation tree —{" "}
+            <code className="font-mono text-[0.8rem] text-ink">scripts/determine.mjs</code> is
+            a complete worked integration in ~180 lines. The engine also compiles RuleSpec
+            YAML directly (<code className="font-mono text-[0.8rem] text-ink">compile</code>)
+            if you want to go deeper than the shipped artifacts.
+          </p>
+        </Section>
+
+        <Section title="Verify what you run">
+          <Term>
+            <Cmd>shasum -a 256 public/programs/co-snap/artifact.json</Cmd>
+            {dim("# compare against source.artifact_sha256 in public/programs/co-snap/package.json\n")}
+            {"\n"}
+            <Cmd>bun run test</Cmd>
+            {dim("# 51 tests: packaging invariants, the $478 parity pin, relation semantics, the CLI itself")}
+          </Term>
+        </Section>
+      </div>
+
+      <ProvenanceFooter />
+    </div>
+  );
+}
