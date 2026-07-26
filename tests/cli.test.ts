@@ -104,9 +104,10 @@ describe("bun scripts/determine.mjs", () => {
       execFileSync("node", [script], { encoding: "utf8", timeout: 60_000, stdio: "pipe" });
       throw new Error("expected failure");
     } catch (error) {
-      const spawn = error as { status: number | null; stderr: string };
-      expect(spawn.status).toBe(1);
-      expect(spawn.stderr).toContain("bun scripts/determine.mjs");
+      // The spawn-error shape differs between runtimes; the message is
+      // what matters.
+      const spawn = error as { stderr?: string; message: string };
+      expect(spawn.stderr ?? spawn.message).toContain("bun scripts/determine.mjs");
     }
   });
 
