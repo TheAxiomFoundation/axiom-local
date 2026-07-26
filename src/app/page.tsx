@@ -125,10 +125,6 @@ export default function Home() {
             </tbody>
           </table>
         </div>
-        <p className="mt-2 font-mono text-[0.65rem] text-ink-muted">
-          all sha-256 pinned · envelope = engine-stamped provenance · legacy = pre-envelope,
-          re-cut in the pipeline · tanf/us-ny excluded until its artifact is repaired
-        </p>
       </section>
 
       <ProvenanceFooter />
