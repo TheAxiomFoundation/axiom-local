@@ -12,6 +12,18 @@ const script = join(__dirname, "..", "scripts", "determine.mjs");
 const run = (...args: string[]) =>
   execFileSync("bun", [script, ...args], { encoding: "utf8", timeout: 60_000 });
 
+/** Run expecting failure; returns stderr. */
+const runFail = (...args: string[]): string => {
+  try {
+    execFileSync("bun", [script, ...args], { encoding: "utf8", timeout: 60_000, stdio: "pipe" });
+  } catch (error) {
+    const spawn = error as { status: number | null; stderr: string };
+    expect(spawn.status).toBe(1);
+    return spawn.stderr;
+  }
+  throw new Error(`expected failure: ${args.join(" ")}`);
+};
+
 describe("bun scripts/determine.mjs", () => {
   it("computes the pinned $478 for the canonical household", () => {
     const out = run();
@@ -56,6 +68,46 @@ describe("bun scripts/determine.mjs", () => {
     const out = run("--programs");
     expect(out).toContain("co-snap");
     expect(out).toContain("fiit");
+  });
+
+  it("accepts currency formatting in values", () => {
+    const out = run("--set", "snap_countable_earned_income=$1,200", "--json");
+    expect(JSON.parse(out).outputs.snap_allotment).toBe("478");
+  });
+
+  it("rejects user mistakes with one-line errors, no stack traces", () => {
+    const cases: [string[], RegExp][] = [
+      [["--set", "household_size=four"], /not a whole number for household_size/],
+      [["--set", "no_such_slot=1"], /No input slot named "no_such_slot"/],
+      [["--people", "no_such_slot=1,2"], /No input slot named "no_such_slot"/],
+      [["--month", "2026-13"], /--month expects a calendar month/],
+      [["--trace", "--depth", "abc"], /--depth expects a positive number/],
+      [["--trace", "--output", "nope"], /No output named "nope".*snap_allotment/],
+      [["--what-if", "not_a_param=0.5"], /No parameter named "not_a_param"/],
+      [["--program", "nope"], /Unknown program "nope"/],
+    ];
+    for (const [flags, pattern] of cases) {
+      const stderr = runFail(...flags);
+      expect(stderr, flags.join(" ")).toMatch(pattern);
+      expect(stderr, flags.join(" ")).not.toMatch(/at .*\.ts:/);
+    }
+  });
+
+  it("explains out-of-period months instead of dumping a wasm stack", () => {
+    const stderr = runFail("--month", "2020-01");
+    expect(stderr).toMatch(/has no value/);
+    expect(stderr).toMatch(/default period \(2026-01\)/);
+  });
+
+  it("tells Node users to use Bun", () => {
+    try {
+      execFileSync("node", [script], { encoding: "utf8", timeout: 60_000, stdio: "pipe" });
+      throw new Error("expected failure");
+    } catch (error) {
+      const spawn = error as { status: number | null; stderr: string };
+      expect(spawn.status).toBe(1);
+      expect(spawn.stderr).toContain("bun scripts/determine.mjs");
+    }
   });
 
   it("prints the chain of citation with --trace", () => {
