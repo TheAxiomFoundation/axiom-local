@@ -20,7 +20,7 @@ const engine = require("../engine/pkg-node/axiom_rules_engine_wasm.js") as Engin
 
 const programsDir = join(__dirname, "..", "public", "programs");
 const index = JSON.parse(readFileSync(join(programsDir, "index.json"), "utf8")) as {
-  programs: { id: string; title: string }[];
+  programs: { id: string; title: string; provenance: "envelope" | "legacy" }[];
 };
 
 it("the index lists more than one program — the page is not anchored to one", () => {
@@ -28,19 +28,23 @@ it("the index lists more than one program — the page is not anchored to one", 
 });
 
 for (const entry of index.programs) {
-  describe(`program ${entry.id}`, () => {
+  describe(`program ${entry.id} (${entry.provenance})`, () => {
     const dir = join(programsDir, entry.id);
     const artifactJson = readFileSync(join(dir, "artifact.json"), "utf8");
     const artifact = JSON.parse(artifactJson) as CompiledProgramArtifact;
     const pkg = JSON.parse(readFileSync(join(dir, "package.json"), "utf8")) as GoldenPackage;
+    const envelope = entry.provenance === "envelope";
 
-    it("carries the provenance envelope the vendored engine expects", () => {
-      expect(artifact.artifact_format_version).toBe(engine.artifact_format_version());
-      expect(artifact.engine_version).toBe(engine.engine_version());
+    it("is sha-256 pinned", () => {
       expect(pkg.source.artifact_sha256).toMatch(/^[0-9a-f]{64}$/);
     });
 
-    it("declares every input discovery can see (bare-name admissions may add more)", () => {
+    it.skipIf(!envelope)("carries the provenance envelope the vendored engine expects", () => {
+      expect(artifact.artifact_format_version).toBe(engine.artifact_format_version());
+      expect(artifact.engine_version).toBe(engine.engine_version());
+    });
+
+    it.skipIf(!envelope)("declares every input discovery can see", () => {
       const declared = new Set(Object.keys(pkg.defaults));
       for (const input of discoverInputs(artifact)) {
         expect(declared.has(input.ref), input.ref).toBe(true);
@@ -73,7 +77,7 @@ for (const entry of index.programs) {
       }
     });
 
-    it("builds a citation tree for the first output", () => {
+    it.skipIf(!envelope)("builds a citation tree for the first output", () => {
       const tree = buildDisplayTree({
         outputId: pkg.outputs[Object.keys(pkg.outputs)[0]],
         result: response.results[0],

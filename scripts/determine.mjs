@@ -51,7 +51,7 @@ const index = JSON.parse(readFileSync(join(programsDir, "index.json"), "utf8")).
 if (has("programs")) {
   for (const program of index) {
     console.log(
-      `${program.id.padEnd(14)} ${program.title} — ${program.rules} rules, ${program.inputs} inputs (${program.jurisdiction})`,
+      `${program.id.padEnd(20)} ${(program.provenance ?? "envelope").padEnd(9)} ${program.title} — ${program.rules} rules (${program.jurisdiction})`,
     );
   }
   process.exit(0);

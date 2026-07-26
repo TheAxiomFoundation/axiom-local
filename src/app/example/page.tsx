@@ -5,7 +5,7 @@ import { ProvenanceFooter } from "@/components/ProvenanceFooter";
 import { Cmd, L, Record, dim, id, kw, no, num, ok, pin } from "@/components/terminal";
 
 export const metadata: Metadata = {
-  title: "Worked example — Axiom playground",
+  title: "Working example — Axiom playground",
   description:
     "One household, start to finish: run a statutory determination locally, change the facts, amend the law, follow the citations, switch programs, integrate the JSON.",
 };

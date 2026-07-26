@@ -1,0 +1,101 @@
+{
+ "program_id": "tx-tanf",
+ "jurisdiction": "us-tx",
+ "title": "Texas TANF",
+ "provenance": "legacy",
+ "source": {
+  "repo": "TheAxiomFoundation/axiom-api",
+  "artifact_path": "data/runtime-artifacts/us-tx-tanf.compiled.json",
+  "artifact_sha256": "fa8ea206f348a8e27b8e12bda495e68d7e3f8d168d2c9eac8b36dab61d4df9f1",
+  "engine_version": "0.1.0",
+  "artifact_format_version": 1
+ },
+ "query": {
+  "entity_id": "household:1"
+ },
+ "entities": [
+  {
+   "entity": "Household",
+   "id_template": "household:1",
+   "count": 1
+  },
+  {
+   "entity": "TanfUnit",
+   "id_template": "tanf_unit:1:{index}",
+   "count": 1
+  }
+ ],
+ "headline": [],
+ "outputs": {
+  "tx_tanf": "us-tx:policies/hhs/texas-works-handbook/a-1340-income-limits/block-16#tx_tanf",
+  "tx_tanf_payment_standard": "us-tx:policies/hhs/texas-works-handbook/c-110-tanf/block-2#tx_tanf_payment_standard",
+  "recommended_tanf_grant_amount": "us-tx:policies/hhs/texas-works-handbook/a-1340-income-limits/block-16#recommended_tanf_grant_amount"
+ },
+ "default_period": "2026-01",
+ "example": {
+  "household": {},
+  "people": {}
+ },
+ "defaults": {
+  "axiom:us-tx-tanf-fy-2026#input.household_adjusted_gross_income": {
+   "name": "household_adjusted_gross_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-tx-tanf-fy-2026#input.household_passes_recognizable_needs_test": {
+   "name": "household_passes_recognizable_needs_test",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-tx-tanf-fy-2026#input.payment_is_supplemental": {
+   "name": "payment_is_supplemental",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-tx-tanf-fy-2026#input.payment_made_after_processing_recoupment": {
+   "name": "payment_made_after_processing_recoupment",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-tx-tanf-fy-2026#input.date_financial_eligibility_begins_day": {
+   "name": "date_financial_eligibility_begins_day",
+   "entity": "TanfUnit",
+   "dtype": "integer",
+   "value": 0
+  },
+  "axiom:us-tx-tanf-fy-2026#input.tanf_case_is_caretaker_with_second_parent": {
+   "name": "tanf_case_is_caretaker_with_second_parent",
+   "entity": "TanfUnit",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-tx-tanf-fy-2026#input.tanf_case_is_caretaker_without_second_parent": {
+   "name": "tanf_case_is_caretaker_without_second_parent",
+   "entity": "TanfUnit",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-tx-tanf-fy-2026#input.tanf_case_is_non_caretaker": {
+   "name": "tanf_case_is_non_caretaker",
+   "entity": "TanfUnit",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-tx-tanf-fy-2026#input.tanf_family_size": {
+   "name": "tanf_family_size",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-tx-tanf-fy-2026#input.tanf_payment_is_one_time_tanf_or_one_time_tanf_for_relatives_payment": {
+   "name": "tanf_payment_is_one_time_tanf_or_one_time_tanf_for_relatives_payment",
+   "entity": "TanfUnit",
+   "dtype": "bool",
+   "value": false
+  }
+ }
+}

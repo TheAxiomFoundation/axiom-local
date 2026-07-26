@@ -1,6 +1,10 @@
 import { SiteNav } from "./SiteNav";
 
-/** Compact shared masthead: eyebrow, name, thesis, nav. */
+/**
+ * Editorial masthead: a quiet top bar (wordmark left, streams right), then
+ * the page's thesis as the display headline — left-aligned, like a filing's
+ * caption, not a centered marketing block.
+ */
 export function Masthead({
   page,
   thesis,
@@ -9,16 +13,19 @@ export function Masthead({
   thesis: string;
 }) {
   return (
-    <header className="rise pt-12 text-center sm:pt-16">
-      <p className="smallcaps text-accent">The Axiom Foundation · executable law</p>
-      <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-        Axiom playground
-      </h1>
-      <p className="mx-auto mt-3 max-w-2xl font-body text-[1.05rem] font-light italic text-ink-secondary">
+    <header className="rise mx-auto max-w-4xl pt-10">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-rule pb-4">
+        <div>
+          <p className="smallcaps text-[0.6rem] text-accent">The Axiom Foundation</p>
+          <p className="font-display text-xl font-semibold tracking-tight text-ink">
+            Axiom playground
+          </p>
+        </div>
+        <SiteNav current={page} />
+      </div>
+      <h1 className="mt-10 max-w-3xl font-display text-4xl font-semibold leading-[1.08] tracking-tight text-ink sm:text-5xl">
         {thesis}
-      </p>
-      <SiteNav current={page} />
-      <div className="double-rule mx-auto mt-7 w-40" aria-hidden="true" />
+      </h1>
     </header>
   );
 }

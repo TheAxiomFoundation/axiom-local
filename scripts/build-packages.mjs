@@ -207,6 +207,34 @@ const registry = JSON.parse(
   readFileSync(join(apiCheckout, "data", "compiled-packages.current.json"), "utf8"),
 );
 
+/**
+ * Legacy-format programs: the axiom-api registry carries a full descriptor
+ * for each (entities, slots with dtypes and screening defaults, relations,
+ * outputs), but the artifacts pre-date the provenance envelope. Admitted
+ * with provenance: "legacy" — executable and hash-pinned, not yet
+ * engine-stamped. A program that fails its probe is excluded from the
+ * index with the reason logged, never shipped broken.
+ *
+ * tanf/us-ny is known-broken upstream (a parameter schedule with no value
+ * for the period) and stays out until the artifact is re-cut.
+ */
+const LEGACY_PROGRAMS = [
+  { registry: ["universal-credit", "uk"], id: "uk-universal-credit", title: "UK Universal Credit" },
+  { registry: ["snap", "us-al"], id: "al-snap", title: "Alabama SNAP" },
+  { registry: ["snap", "us-az"], id: "az-snap", title: "Arizona SNAP" },
+  { registry: ["snap", "us-ca"], id: "ca-snap", title: "California SNAP" },
+  { registry: ["snap", "us-nc"], id: "nc-snap", title: "North Carolina SNAP" },
+  { registry: ["snap", "us-ny"], id: "ny-snap", title: "New York SNAP" },
+  { registry: ["snap", "us-sc"], id: "sc-snap", title: "South Carolina SNAP" },
+  { registry: ["snap", "us-tn"], id: "tn-snap", title: "Tennessee SNAP" },
+  { registry: ["tanf", "us-co"], id: "co-tanf", title: "Colorado TANF" },
+  { registry: ["tanf", "us-ak"], id: "ak-tanf", title: "Alaska ATAP" },
+  { registry: ["tanf", "us-ks"], id: "ks-tanf", title: "Kansas TANF" },
+  { registry: ["tanf", "us-tx"], id: "tx-tanf", title: "Texas TANF" },
+  { registry: ["scretd", "us-il"], id: "il-scretd", title: "Illinois SCRETD" },
+  { registry: ["oasdi-wage-tax", "us"], id: "us-oasdi", title: "Federal OASDI wage tax" },
+];
+
 function buildProgram(config) {
   const artifactRaw = readFileSync(join(apiCheckout, config.artifact));
   const artifact = JSON.parse(artifactRaw.toString("utf8"));
@@ -420,6 +448,151 @@ function buildProgram(config) {
   };
 }
 
-const index = PROGRAMS.map(buildProgram);
+function buildLegacyProgram(config) {
+  const entry = registry.find(
+    (item) => item.program_id === config.registry[0] && item.jurisdiction === config.registry[1],
+  );
+  if (!entry) throw new Error(`${config.id}: not in registry`);
+  const artifactRaw = readFileSync(join(apiCheckout, entry.artifact_path));
+  const artifact = JSON.parse(artifactRaw.toString("utf8"));
+  console.log(`\n== ${config.id} (legacy)`);
+
+  const queryId = entry.query.entity_id.replaceAll("{index}", "1");
+  const prefix = entry.input_legal_id_prefix ?? "";
+  const defaults = {};
+  const entities = [];
+  let countFrom = null;
+  for (const entityBlock of entry.entities) {
+    for (const slot of entityBlock.inputs) {
+      const ref = slot.legal_id ?? `${prefix}${slot.name}`;
+      defaults[ref] = {
+        name: slot.name,
+        entity: entityBlock.entity,
+        dtype: slot.dtype,
+        value: slot.default,
+      };
+    }
+    if (entityBlock.count_from) countFrom = entityBlock.count_from;
+    entities.push({
+      entity: entityBlock.entity,
+      id_template: entityBlock.id_template,
+      ...(typeof entityBlock.count === "number" ? { count: entityBlock.count } : {}),
+      ...(entityBlock.count_from ? { count_from: entityBlock.count_from } : {}),
+      ...(entityBlock.relations
+        ? {
+            relations: entityBlock.relations.map((relation) => ({
+              name: relation.name,
+              tuple: relation.tuple.map((part) =>
+                part.replaceAll("{query_entity_id}", queryId),
+              ),
+            })),
+          }
+        : {}),
+    });
+  }
+
+  const outputs = {};
+  for (const name of entry.default_outputs) {
+    const resolved = entry.output_aliases?.[name] ?? name;
+    const oid = entry.outputs_by_name?.[resolved] ?? entry.outputs_by_name?.[name];
+    if (oid) outputs[name] = oid;
+  }
+  if (Object.keys(outputs).length === 0) throw new Error(`${config.id}: no resolvable outputs`);
+
+  const example = { household: {}, people: {} };
+  if (countFrom) example.household[countFrom] = "2";
+
+  const pkg = {
+    program_id: config.id,
+    jurisdiction: entry.jurisdiction,
+    title: config.title,
+    provenance: "legacy",
+    source: {
+      repo: "TheAxiomFoundation/axiom-api",
+      artifact_path: entry.artifact_path,
+      artifact_sha256: createHash("sha256").update(artifactRaw).digest("hex"),
+      engine_version: artifact.engine_version ?? null,
+      artifact_format_version: artifact.artifact_format_version ?? null,
+    },
+    query: { entity_id: queryId },
+    entities,
+    headline: [],
+    outputs,
+    default_period: entry.default_period ?? "2026-01",
+    example,
+    defaults,
+  };
+
+  // The same engine-guided fixpoint as enveloped programs: admit inputs the
+  // descriptor is missing, trying the legacy prefix namespace first.
+  const answers = { ...example, refOverrides: {} };
+  let admitted = 0;
+  for (let round = 0; round < 2000; round += 1) {
+    const request = buildPackageRequest({ pkg, answers });
+    try {
+      engine.execute(artifactRaw.toString("utf8"), JSON.stringify(request));
+      break;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      const missing = /missing input `([^`]+)` for entity `([^`]+)`/.exec(message);
+      if (!missing) throw new Error(`${config.id}: ${message}`);
+      const [, name, entityId] = missing;
+      const wantKind = entities.find((e) =>
+        entityId.startsWith(e.id_template.split(":")[0]),
+      )?.entity;
+      if (!wantKind) throw new Error(`${config.id}: unknown entity id ${entityId}`);
+      let progressed = false;
+      for (const slot of Object.values(pkg.defaults)) {
+        if (slot.name === name && slot.entity !== wantKind) {
+          slot.entity = wantKind;
+          progressed = true;
+        }
+      }
+      if (!progressed) {
+        const candidate = `${prefix}${name}`;
+        if (!pkg.defaults[candidate]) {
+          pkg.defaults[candidate] = { name, entity: wantKind, dtype: "decimal", value: "0" };
+          admitted += 1;
+          progressed = true;
+        }
+      }
+      if (!progressed) throw new Error(`${config.id}: no progress on: ${message}`);
+    }
+  }
+
+  const request = buildPackageRequest({ pkg, answers });
+  const response = JSON.parse(engine.execute(artifactRaw.toString("utf8"), JSON.stringify(request)));
+  const result = response.results[0];
+  for (const [name, oid] of Object.entries(outputs)) {
+    const output = result.outputs[oid];
+    if (!output) throw new Error(`${config.id}: output ${name} missing from response`);
+    const value = output.kind === "scalar" ? output.value.value : output.outcome;
+    console.log(`   ${name} = ${value}`);
+  }
+  if (admitted) console.log(`   ${admitted} inputs admitted by probe`);
+
+  const dir = join(outRoot, config.id);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, "artifact.json"), artifactRaw);
+  writeFileSync(join(dir, "package.json"), JSON.stringify(pkg, null, 1));
+  return {
+    id: config.id,
+    title: config.title,
+    jurisdiction: entry.jurisdiction,
+    provenance: "legacy",
+    inputs: Object.keys(pkg.defaults).length,
+    rules: artifact.program.derived.length,
+    parameters: artifact.program.parameters.length,
+  };
+}
+
+const index = PROGRAMS.map(buildProgram).map((item) => ({ ...item, provenance: "envelope" }));
+for (const config of LEGACY_PROGRAMS) {
+  try {
+    index.push(buildLegacyProgram(config));
+  } catch (error) {
+    console.log(`   EXCLUDED ${config.id}: ${String(error).slice(0, 120)}`);
+  }
+}
 writeFileSync(join(outRoot, "index.json"), JSON.stringify({ programs: index }, null, 1));
 console.log(`\nwrote ${outRoot}/index.json with ${index.length} programs`);

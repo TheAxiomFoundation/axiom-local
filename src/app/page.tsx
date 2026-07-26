@@ -12,7 +12,7 @@ export default function Home() {
 
       <Masthead
         page="start"
-        thesis="Statutes compiled to WebAssembly, determinations rendered on your machine — the law never needs a server."
+        thesis="Statutes compiled to WebAssembly, determinations rendered on your machine."
       />
 
       {/* The hero is the thesis, demonstrated: law executing in a terminal. */}
@@ -41,46 +41,38 @@ export default function Home() {
           pinned by this repo&apos;s tests and axiom-api&apos;s parity suite
         </p>
 
-        <p className="mt-8 max-w-2xl text-[0.95rem] font-light text-ink-secondary">
+        <p className="mt-9 max-w-2xl text-[0.95rem] font-light leading-relaxed text-ink-secondary">
           The repo is the distribution: the engine and every program artifact are checked in,
-          hash-pinned. No Rust toolchain, no API key, nothing else to fetch. From here:
+          hash-pinned. No Rust toolchain, no API key, nothing else to fetch. From here, the
+          same command does everything:
         </p>
 
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
-          <Record caption="amend the law">
-            <Cmd>bun scripts/determine.mjs \</Cmd>
-            <L>{"    --what-if snap_earned_income_deduction_rate_for_net_income=0.3"}</L>
-            <L>
-              {dim("AMENDED LAW — hypothetical")}
-            </L>
-            <L>
-              {"  snap_allotment    "}
-              {num("532")}
-            </L>
-          </Record>
-          <Record caption="switch programs">
-            <Cmd>bun scripts/determine.mjs \</Cmd>
-            <L>{"    --program fiit --set taxable_income=60000"}</L>
-            <L />
-            <L>
-              {"  regular_tax_before_credits  "}
-              {num("7912")}
-            </L>
+        <div className="mt-4">
+          <Record caption="from here">
+            <Cmd>
+              bun scripts/determine.mjs --set assistance_payments=500
+              {dim("   # change the facts")}
+            </Cmd>
+            <Cmd>
+              bun scripts/determine.mjs --what-if {"<parameter>"}={"<value>"}
+              {dim("  # amend the law")}
+            </Cmd>
+            <Cmd>
+              bun scripts/determine.mjs --trace
+              {dim("                        # follow the citations")}
+            </Cmd>
+            <Cmd>
+              bun scripts/determine.mjs --program fiit
+              {dim("                # switch programs")}
+            </Cmd>
+            <Cmd>
+              bun scripts/determine.mjs --json
+              {dim("                         # integrate")}
+            </Cmd>
           </Record>
         </div>
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2">
-          <Link
-            href="/example/"
-            style={{ textDecoration: "none" }}
-            className="panel block p-5 transition-colors hover:border-accent"
-          >
-            <p className="smallcaps text-[0.62rem] text-accent">worked example →</p>
-            <p className="mt-2 text-[0.92rem] font-light text-ink-secondary">
-              One household, start to finish: change the facts, amend the law, follow every
-              citation, switch programs, integrate the JSON.
-            </p>
-          </Link>
           <Link
             href="/docs/"
             style={{ textDecoration: "none" }}
@@ -90,6 +82,17 @@ export default function Home() {
             <p className="mt-2 text-[0.92rem] font-light text-ink-secondary">
               Every flag, every program, presumption semantics, JSON shapes, and embedding
               the engine in your own software.
+            </p>
+          </Link>
+          <Link
+            href="/example/"
+            style={{ textDecoration: "none" }}
+            className="panel block p-5 transition-colors hover:border-accent"
+          >
+            <p className="smallcaps text-[0.62rem] text-accent">working example →</p>
+            <p className="mt-2 text-[0.92rem] font-light text-ink-secondary">
+              One household, start to finish: change the facts, amend the law, follow every
+              citation, switch programs, integrate the JSON.
             </p>
           </Link>
         </div>
@@ -107,6 +110,13 @@ export default function Home() {
                 <tr key={program.id} className="border-b border-rule-subtle last:border-0">
                   <td className="px-3 py-2 text-ink">{program.id}</td>
                   <td className="px-3 py-2 text-ink-muted">{program.jurisdiction}</td>
+                  <td className="px-3 py-2 text-ink-muted">
+                    {program.provenance === "envelope" ? (
+                      <span className="text-success">envelope</span>
+                    ) : (
+                      "legacy"
+                    )}
+                  </td>
                   <td className="px-3 py-2 text-right text-ink-secondary">
                     {program.rules} rules · {program.inputs} inputs
                   </td>
@@ -116,7 +126,8 @@ export default function Home() {
           </table>
         </div>
         <p className="mt-2 font-mono text-[0.65rem] text-ink-muted">
-          full composed programs, one versioned artifact each · seventeen more in the pipeline
+          all sha-256 pinned · envelope = engine-stamped provenance · legacy = pre-envelope,
+          re-cut in the pipeline · tanf/us-ny excluded until its artifact is repaired
         </p>
       </section>
 

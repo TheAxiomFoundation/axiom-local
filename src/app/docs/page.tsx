@@ -99,6 +99,7 @@ export default function Docs() {
                 <tr className="border-b border-rule text-left text-ink-muted">
                   <th className="px-3 py-2 font-normal">id</th>
                   <th className="px-3 py-2 font-normal">program</th>
+                  <th className="px-3 py-2 font-normal">provenance</th>
                   <th className="px-3 py-2 text-right font-normal">rules</th>
                   <th className="px-3 py-2 text-right font-normal">inputs</th>
                 </tr>
@@ -109,6 +110,13 @@ export default function Docs() {
                     <td className="px-3 py-2 text-ink">{program.id}</td>
                     <td className="px-3 py-2 text-ink-secondary">
                       {program.title} <span className="text-ink-muted">({program.jurisdiction})</span>
+                    </td>
+                    <td className="px-3 py-2">
+                      {program.provenance === "envelope" ? (
+                        <span className="text-success">envelope</span>
+                      ) : (
+                        <span className="text-ink-muted">legacy</span>
+                      )}
                     </td>
                     <td className="px-3 py-2 text-right text-ink-secondary">{program.rules}</td>
                     <td className="px-3 py-2 text-right text-ink-secondary">{program.inputs}</td>
@@ -123,11 +131,12 @@ export default function Docs() {
             ) plus a descriptor (
             <code className="font-mono text-[0.8rem] text-ink">package.json</code>) declaring
             its inputs, screening presumptions, entities and relations, example case, and
-            sha-256 pin. Only Colorado SNAP carries an end-to-end parity pin today; seventeen
-            more compiled programs exist in the pre-provenance format and are admitted by
-            adding one entry to{" "}
-            <code className="font-mono text-[0.8rem] text-ink">scripts/build-packages.mjs</code>{" "}
-            once re-cut with envelopes.
+            sha-256 pin. Two provenance tiers: <em>envelope</em> artifacts carry the compiling
+            engine&apos;s version stamp; <em>legacy</em> artifacts pre-date the envelope and are
+            hash-pinned only, re-cut in the pipeline. Colorado SNAP additionally carries an
+            end-to-end parity pin ($478). One registered program is excluded:
+            tanf/us-ny&apos;s artifact has a parameter schedule with no value for the period —
+            it ships when repaired, not before.
           </p>
         </Section>
 

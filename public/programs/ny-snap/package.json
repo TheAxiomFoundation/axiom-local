@@ -1,0 +1,1127 @@
+{
+ "program_id": "ny-snap",
+ "jurisdiction": "us-ny",
+ "title": "New York SNAP",
+ "provenance": "legacy",
+ "source": {
+  "repo": "TheAxiomFoundation/axiom-api",
+  "artifact_path": "data/runtime-artifacts/us-ny-snap.compiled.json",
+  "artifact_sha256": "b395a81e382f67c4c1e878f9e72e6b8e3de69015f5ad57a7a7f39b1db4ad2607",
+  "engine_version": null,
+  "artifact_format_version": null
+ },
+ "query": {
+  "entity_id": "household:1"
+ },
+ "entities": [
+  {
+   "entity": "Household",
+   "id_template": "household:1",
+   "count": 1
+  },
+  {
+   "entity": "Person",
+   "id_template": "person:1:{index}",
+   "count_from": "people",
+   "relations": [
+    {
+     "name": "member_of_household",
+     "tuple": [
+      "person:1:{index}",
+      "household:1"
+     ]
+    },
+    {
+     "name": "us:statutes/7/2012/j#relation.member_of_household",
+     "tuple": [
+      "person:1:{index}",
+      "household:1"
+     ]
+    },
+    {
+     "name": "us-ny:regulations/18-nycrr/387/14/a/5#relation.ny_snap_categorical_member_of_household",
+     "tuple": [
+      "person:1:{index}",
+      "household:1"
+     ]
+    }
+   ]
+  },
+  {
+   "entity": "Asset",
+   "id_template": "asset:1:{index}",
+   "count_from": "asset_count"
+  },
+  {
+   "entity": "SnapUnit",
+   "id_template": "snap_unit:1",
+   "count": 1
+  }
+ ],
+ "headline": [],
+ "outputs": {
+  "snap_benefit_amount": "snap_benefit",
+  "snap_net_income": "us:statutes/7/2014/e/6/A#snap_net_income",
+  "snap_gross_monthly_income": "snap_gross_monthly_income",
+  "snap_eligible": "snap_eligible"
+ },
+ "default_period": "2026-01",
+ "example": {
+  "household": {
+   "asset_count": "2"
+  },
+  "people": {}
+ },
+ "defaults": {
+  "axiom:us-ny-snap-fy-2026#input.all_household_members_experiencing_homelessness": {
+   "name": "all_household_members_experiencing_homelessness",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.child_support_deduction": {
+   "name": "child_support_deduction",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.consumer_price_index_change_for_12_month_period_ending_preceding_june": {
+   "name": "consumer_price_index_change_for_12_month_period_ending_preceding_june",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.dependent_care_deduction": {
+   "name": "dependent_care_deduction",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.first_full_month_benefit_level": {
+   "name": "first_full_month_benefit_level",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.homeless_household_free_shelter_all_month": {
+   "name": "homeless_household_free_shelter_all_month",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.homeless_household_has_shelter_costs": {
+   "name": "homeless_household_has_shelter_costs",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_applies_following_more_than_30_days_not_certified": {
+   "name": "household_applies_following_more_than_30_days_not_certified",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_billed_separately_for_non_telephone_standard_utility": {
+   "name": "household_billed_separately_for_non_telephone_standard_utility",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_certified_for_participation_in_food_stamp_program": {
+   "name": "household_certified_for_participation_in_food_stamp_program",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_contains_individual_participating_in_more_than_one_household_or_project_area": {
+   "name": "household_contains_individual_participating_in_more_than_one_household_or_project_area",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_entitled_to_excess_medical_deduction": {
+   "name": "household_entitled_to_excess_medical_deduction",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_entitled_to_heap_or_liheaa_payment": {
+   "name": "household_entitled_to_heap_or_liheaa_payment",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_has_earned_income_budgeted_for_snap": {
+   "name": "household_has_earned_income_budgeted_for_snap",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_has_out_of_pocket_dependent_care_expenses": {
+   "name": "household_has_out_of_pocket_dependent_care_expenses",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_in_central_meter_housing_charged_only_for_excess_heating_or_cooling": {
+   "name": "household_in_central_meter_housing_charged_only_for_excess_heating_or_cooling",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_in_project_area_solely_for_vacation": {
+   "name": "household_in_project_area_solely_for_vacation",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_in_public_housing_unit_with_central_utility_meters_charged_only_for_excess_heating_or_cooling_costs": {
+   "name": "household_in_public_housing_unit_with_central_utility_meters_charged_only_for_excess_heating_or_cooling_costs",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_in_rental_housing_billed_by_landlord_based_on_individual_usage_or_flat_rate_separately_from_rent": {
+   "name": "household_in_rental_housing_billed_by_landlord_based_on_individual_usage_or_flat_rate_separately_from_rent",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_includes_elderly_or_disabled_member": {
+   "name": "household_includes_elderly_or_disabled_member",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_incurred_or_anticipated_basic_service_cost_for_one_telephone": {
+   "name": "household_incurred_or_anticipated_basic_service_cost_for_one_telephone",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_incurred_or_anticipated_heating_or_cooling_costs_separate_from_rent_or_mortgage": {
+   "name": "household_incurred_or_anticipated_heating_or_cooling_costs_separate_from_rent_or_mortgage",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_incurs_heating_or_cooling_expenses_separately_from_rent_or_mortgage": {
+   "name": "household_incurs_heating_or_cooling_expenses_separately_from_rent_or_mortgage",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_initial_month": {
+   "name": "household_initial_month",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_is_migrant_or_seasonal_farmworker_household": {
+   "name": "household_is_migrant_or_seasonal_farmworker_household",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_lives_in_application_state": {
+   "name": "household_lives_in_application_state",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": true
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_member_disqualified_for_failure_to_comply_with_periodic_reporting_requirements": {
+   "name": "household_member_disqualified_for_failure_to_comply_with_periodic_reporting_requirements",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_member_disqualified_for_failure_to_comply_with_work_requirements": {
+   "name": "household_member_disqualified_for_failure_to_comply_with_work_requirements",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_member_disqualified_for_intentional_program_violation": {
+   "name": "household_member_disqualified_for_intentional_program_violation",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_member_ineligible_to_participate_in_snap": {
+   "name": "household_member_ineligible_to_participate_in_snap",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_resides_in_nassau_or_suffolk_county": {
+   "name": "household_resides_in_nassau_or_suffolk_county",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_resides_in_new_york_city": {
+   "name": "household_resides_in_new_york_city",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_shelter_costs_incurred": {
+   "name": "household_shelter_costs_incurred",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_size": {
+   "name": "household_size",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 1
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_was_not_certified_for_participation_during_prior_period": {
+   "name": "household_was_not_certified_for_participation_during_prior_period",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.income_received_too_infrequently_or_irregularly_to_be_reasonably_anticipated": {
+   "name": "income_received_too_infrequently_or_irregularly_to_be_reasonably_anticipated",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.irregular_income_amount_in_certification_period": {
+   "name": "irregular_income_amount_in_certification_period",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.liheaa_or_similar_energy_assistance_annual_payment_amount": {
+   "name": "liheaa_or_similar_energy_assistance_annual_payment_amount",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.liheaa_or_similar_energy_assistance_payment_received_or_made_on_household_behalf_in_current_month_or_immediately_preceding_twelve_months": {
+   "name": "liheaa_or_similar_energy_assistance_payment_received_or_made_on_household_behalf_in_current_month_or_immediately_preceding_twelve_months",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.limited_utility_allowance_utility_count": {
+   "name": "limited_utility_allowance_utility_count",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.medical_deduction": {
+   "name": "medical_deduction",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.prior_unrounded_household_resource_limit_amount": {
+   "name": "prior_unrounded_household_resource_limit_amount",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.proration_factor_from_application_day_to_end_of_initial_month": {
+   "name": "proration_factor_from_application_day_to_end_of_initial_month",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.proration_factor_from_release_day_to_end_of_month": {
+   "name": "proration_factor_from_release_day_to_end_of_month",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.public_institution_prerelease_joint_ssi_food_stamp_applicant": {
+   "name": "public_institution_prerelease_joint_ssi_food_stamp_applicant",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.resident_of_battered_women_and_children_shelter_and_prior_abusive_household_member": {
+   "name": "resident_of_battered_women_and_children_shelter_and_prior_abusive_household_member",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.shelter_costs": {
+   "name": "shelter_costs",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.snap_allowable_monthly_child_support_payments": {
+   "name": "snap_allowable_monthly_child_support_payments",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.snap_allowable_monthly_dependent_care_expenses": {
+   "name": "snap_allowable_monthly_dependent_care_expenses",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.snap_claimed_homeless_shelter_deduction": {
+   "name": "snap_claimed_homeless_shelter_deduction",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.snap_countable_financial_resources": {
+   "name": "snap_countable_financial_resources",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.snap_gross_monthly_earned_income": {
+   "name": "snap_gross_monthly_earned_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.snap_income_exclusions": {
+   "name": "snap_income_exclusions",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.snap_member_is_elderly_or_disabled": {
+   "name": "snap_member_is_elderly_or_disabled",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.snap_total_medical_expenses": {
+   "name": "snap_total_medical_expenses",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.snap_total_monthly_unearned_income": {
+   "name": "snap_total_monthly_unearned_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.state_agency_mandates_use_of_standard_utility_allowances_under_paragraph_g": {
+   "name": "state_agency_mandates_use_of_standard_utility_allowances_under_paragraph_g",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.state_agency_rounds_thirty_percent_net_income_up": {
+   "name": "state_agency_rounds_thirty_percent_net_income_up",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.verified_higher_homeless_shelter_costs": {
+   "name": "verified_higher_homeless_shelter_costs",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.work_supplementation_earned_income": {
+   "name": "work_supplementation_earned_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.adequate_child_care_unavailable_to_attend_class_and_meet_student_work_requirement": {
+   "name": "adequate_child_care_unavailable_to_attend_class_and_meet_student_work_requirement",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.alaska_subsistence_hunts_or_fishes_30_hours_weekly": {
+   "name": "alaska_subsistence_hunts_or_fishes_30_hours_weekly",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.alien_status_documentation_missing_or_unwilling": {
+   "name": "alien_status_documentation_missing_or_unwilling",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.assigned_or_placed_in_higher_education_through_qualifying_employment_training_program": {
+   "name": "assigned_or_placed_in_higher_education_through_qualifying_employment_training_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.child_earned_income_amount": {
+   "name": "child_earned_income_amount",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.each_household_member_receives_aid_to_aged_blind_or_disabled_under_title_i_x_xiv_or_xvi_social_security_act": {
+   "name": "each_household_member_receives_aid_to_aged_blind_or_disabled_under_title_i_x_xiv_or_xvi_social_security_act",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.each_household_member_receives_benefits_under_state_or_local_general_assistance_program": {
+   "name": "each_household_member_receives_benefits_under_state_or_local_general_assistance_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.each_household_member_receives_benefits_under_state_program_funded_under_part_a_title_iv_social_security_act": {
+   "name": "each_household_member_receives_benefits_under_state_program_funded_under_part_a_title_iv_social_security_act",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.each_household_member_receives_supplemental_security_income_benefits_under_title_xvi_social_security_act": {
+   "name": "each_household_member_receives_supplemental_security_income_benefits_under_title_xvi_social_security_act",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.enrolled_at_least_half_time": {
+   "name": "enrolled_at_least_half_time",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.enrolled_in_business_technical_trade_or_vocational_school_requiring_high_school_diploma": {
+   "name": "enrolled_in_business_technical_trade_or_vocational_school_requiring_high_school_diploma",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.enrolled_in_college_or_university_degree_program": {
+   "name": "enrolled_in_college_or_university_degree_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.enrolled_through_jobs_or_successor_program": {
+   "name": "enrolled_through_jobs_or_successor_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.federal_minimum_wage": {
+   "name": "federal_minimum_wage",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 7.25
+  },
+  "axiom:us-ny-snap-fy-2026#input.federal_or_state_minimum_wage": {
+   "name": "federal_or_state_minimum_wage",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 7.25
+  },
+  "axiom:us-ny-snap-fy-2026#input.household_income_and_other_financial_resources_are_substantial_limiting_factor_in_permitting_more_nutritious_diet": {
+   "name": "household_income_and_other_financial_resources_are_substantial_limiting_factor_in_permitting_more_nutritious_diet",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.known_student_refused_work_study_assignment": {
+   "name": "known_student_refused_work_study_assignment",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_abawd_monthly_work_hours": {
+   "name": "member_abawd_monthly_work_hours",
+   "entity": "Person",
+   "dtype": "integer",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_abawd_weekly_work_hours": {
+   "name": "member_abawd_weekly_work_hours",
+   "entity": "Person",
+   "dtype": "integer",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_accepted_bona_fide_suitable_employment_offer_if_offered": {
+   "name": "member_accepted_bona_fide_suitable_employment_offer_if_offered",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_age": {
+   "name": "member_age",
+   "entity": "Person",
+   "dtype": "integer",
+   "value": 30
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_age_16_or_17_is_not_household_head_or_attends_school_or_training_half_time": {
+   "name": "member_age_16_or_17_is_not_household_head_or_attends_school_or_training_half_time",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_age_24_or_younger_and_was_in_foster_care_on_attaining_age_18": {
+   "name": "member_age_24_or_younger_and_was_in_foster_care_on_attaining_age_18",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_authorized_to_receive_family_assistance_nonemergency_safety_net_or_ssi_benefits_but_not_yet_paid": {
+   "name": "member_authorized_to_receive_family_assistance_nonemergency_safety_net_or_ssi_benefits_but_not_yet_paid",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_combines_work_and_work_program_20_hours_weekly": {
+   "name": "member_combines_work_and_work_program_20_hours_weekly",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_covered_by_abawd_time_limit_waiver": {
+   "name": "member_covered_by_abawd_time_limit_waiver",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_determined_eligible_for_family_assistance_or_nonemergency_safety_net_benefits": {
+   "name": "member_determined_eligible_for_family_assistance_or_nonemergency_safety_net_benefits",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_family_assistance_nonemergency_safety_net_or_ssi_benefits_suspended_or_being_recouped": {
+   "name": "member_family_assistance_nonemergency_safety_net_or_ssi_benefits_suspended_or_being_recouped",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_family_assistance_or_nonemergency_safety_net_grant_amount": {
+   "name": "member_family_assistance_or_nonemergency_safety_net_grant_amount",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_has_additional_three_month_abawd_eligibility": {
+   "name": "member_has_additional_three_month_abawd_eligibility",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_has_deportation_or_removal_withheld": {
+   "name": "member_has_deportation_or_removal_withheld",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_has_documentary_or_collateral_evidence_of_ssn_application_or_every_effort": {
+   "name": "member_has_documentary_or_collateral_evidence_of_ssn_application_or_every_effort",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": true
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_has_eligible_military_connection": {
+   "name": "member_has_eligible_military_connection",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_is_amerasian_immigrant": {
+   "name": "member_is_amerasian_immigrant",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_is_american_indian_born_in_canada_or_recognized_indian_tribe_member": {
+   "name": "member_is_american_indian_born_in_canada_or_recognized_indian_tribe_member",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_is_asylee": {
+   "name": "member_is_asylee",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_is_cuban_or_haitian_entrant": {
+   "name": "member_is_cuban_or_haitian_entrant",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_is_hmong_or_highland_laotian_qualifying_person_or_family_member": {
+   "name": "member_is_hmong_or_highland_laotian_qualifying_person_or_family_member",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_is_homeless": {
+   "name": "member_is_homeless",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_is_parent_of_household_member_under_age_eighteen": {
+   "name": "member_is_parent_of_household_member_under_age_eighteen",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_is_pregnant": {
+   "name": "member_is_pregnant",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_is_qualified_alien_subject_to_five_year_wait": {
+   "name": "member_is_qualified_alien_subject_to_five_year_wait",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_is_qualified_alien_with_forty_qualifying_quarters": {
+   "name": "member_is_qualified_alien_with_forty_qualifying_quarters",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_is_refugee": {
+   "name": "member_is_refugee",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_is_trafficking_victim_or_qualifying_family_member": {
+   "name": "member_is_trafficking_victim_or_qualifying_family_member",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_is_under_age_eighteen": {
+   "name": "member_is_under_age_eighteen",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_is_us_citizen": {
+   "name": "member_is_us_citizen",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": true
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_is_us_noncitizen_national": {
+   "name": "member_is_us_noncitizen_national",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_is_veteran": {
+   "name": "member_is_veteran",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_later_provided_ssn_ending_disqualification": {
+   "name": "member_later_provided_ssn_ending_disqualification",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_medically_certified_physically_or_mentally_unfit_for_employment": {
+   "name": "member_medically_certified_physically_or_mentally_unfit_for_employment",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_paid_family_assistance_or_nonemergency_safety_net_benefits": {
+   "name": "member_paid_family_assistance_or_nonemergency_safety_net_benefits",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_participated_in_snap_et_if_assigned": {
+   "name": "member_participated_in_snap_et_if_assigned",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_participated_in_workfare_if_assigned": {
+   "name": "member_participated_in_workfare_if_assigned",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_participates_in_abawd_work_program_20_hours_weekly": {
+   "name": "member_participates_in_abawd_work_program_20_hours_weekly",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_participates_in_abawd_workfare_program": {
+   "name": "member_participates_in_abawd_workfare_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_physically_or_mentally_unfit_for_employment": {
+   "name": "member_physically_or_mentally_unfit_for_employment",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_provided_employment_status_or_availability_information": {
+   "name": "member_provided_employment_status_or_availability_information",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_receives_blindness_or_disability_benefits": {
+   "name": "member_receives_blindness_or_disability_benefits",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_receives_family_assistance_nonemergency_safety_net_or_ssi_benefits": {
+   "name": "member_receives_family_assistance_nonemergency_safety_net_or_ssi_benefits",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_receiving_or_applying_for_unemployment_compensation_and_complying": {
+   "name": "member_receiving_or_applying_for_unemployment_compensation_and_complying",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_refused_or_failed_to_provide_or_apply_for_ssn": {
+   "name": "member_refused_or_failed_to_provide_or_apply_for_ssn",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_regained_abawd_eligibility": {
+   "name": "member_regained_abawd_eligibility",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_registered_for_work_or_registered_by_state": {
+   "name": "member_registered_for_work_or_registered_by_state",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_regular_participant_in_drug_or_alcohol_treatment": {
+   "name": "member_regular_participant_in_drug_or_alcohol_treatment",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_reported_to_referred_suitable_employer_if_referred": {
+   "name": "member_reported_to_referred_suitable_employer_if_referred",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_resides_with_household_member_under_age_eighteen": {
+   "name": "member_resides_with_household_member_under_age_eighteen",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_responsible_for_dependent_child_under_six_or_incapacitated_person": {
+   "name": "member_responsible_for_dependent_child_under_six_or_incapacitated_person",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_snap_work_requirements_waived_due_to_pending_ssi_joint_application": {
+   "name": "member_snap_work_requirements_waived_due_to_pending_ssi_joint_application",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_ssn_application_filed_pending_state_agency_notification": {
+   "name": "member_ssn_application_filed_pending_state_agency_notification",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_student_enrolled_at_least_half_time_and_student_eligible": {
+   "name": "member_student_enrolled_at_least_half_time_and_student_eligible",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_subject_to_and_complying_with_title_iv_work_requirement": {
+   "name": "member_subject_to_and_complying_with_title_iv_work_requirement",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_unable_to_obtain_documents_required_for_ssn_application_with_caseworker_assistance_needed": {
+   "name": "member_unable_to_obtain_documents_required_for_ssn_application_with_caseworker_assistance_needed",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_voluntarily_quit_or_reduced_work_below_30_hours_without_good_cause": {
+   "name": "member_voluntarily_quit_or_reduced_work_below_30_hours_without_good_cause",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_was_lawfully_residing_on_1996_08_22_and_born_on_or_before_1931_08_22": {
+   "name": "member_was_lawfully_residing_on_1996_08_22_and_born_on_or_before_1931_08_22",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_weekly_wages": {
+   "name": "member_weekly_wages",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.member_weekly_work_hours": {
+   "name": "member_weekly_work_hours",
+   "entity": "Person",
+   "dtype": "integer",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.migrant_or_seasonal_farmworker_under_contract_to_begin_employment_within_30_days": {
+   "name": "migrant_or_seasonal_farmworker_under_contract_to_begin_employment_within_30_days",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.person_age": {
+   "name": "person_age",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.person_is_child_member_of_household": {
+   "name": "person_is_child_member_of_household",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.person_is_elementary_or_secondary_school_student": {
+   "name": "person_is_elementary_or_secondary_school_student",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.qualified_alien_five_year_status_period_met": {
+   "name": "qualified_alien_five_year_status_period_met",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.responsible_for_care_of_dependent_child_under_twelve": {
+   "name": "responsible_for_care_of_dependent_child_under_twelve",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.responsible_for_care_of_dependent_household_member_age_six_to_under_twelve": {
+   "name": "responsible_for_care_of_dependent_household_member_age_six_to_under_twelve",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.responsible_for_care_of_dependent_household_member_under_age_six": {
+   "name": "responsible_for_care_of_dependent_household_member_under_age_six",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.single_parent_enrolled_full_time_in_higher_education": {
+   "name": "single_parent_enrolled_full_time_in_higher_education",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.single_parent_household_condition_satisfied": {
+   "name": "single_parent_household_condition_satisfied",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.snap_abawd_countable_months_in_three_year_period": {
+   "name": "snap_abawd_countable_months_in_three_year_period",
+   "entity": "Person",
+   "dtype": "integer",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.state_agency_averaged_student_work_hours_meet_twenty_per_week": {
+   "name": "state_agency_averaged_student_work_hours_meet_twenty_per_week",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.state_agency_fault_in_ssn_application_processing": {
+   "name": "state_agency_fault_in_ssn_application_processing",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.state_or_local_general_assistance_program_is_not_limited_to_one_time_emergency_payments_unavailable_for_more_than_one_consecutive_month": {
+   "name": "state_or_local_general_assistance_program_is_not_limited_to_one_time_emergency_payments_unavailable_for_more_than_one_consecutive_month",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.state_or_local_general_assistance_program_uses_income_criteria_comparable_to_or_more_restrictive_than_subsection_c_2": {
+   "name": "state_or_local_general_assistance_program_uses_income_criteria_comparable_to_or_more_restrictive_than_subsection_c_2",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.student_age": {
+   "name": "student_age",
+   "entity": "Person",
+   "dtype": "integer",
+   "value": 30
+  },
+  "axiom:us-ny-snap-fy-2026#input.student_anticipates_working_in_work_study": {
+   "name": "student_anticipates_working_in_work_study",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.student_currently_being_trained_by_employer": {
+   "name": "student_currently_being_trained_by_employer",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.student_enrollment_status_ending_event_occurred": {
+   "name": "student_enrollment_status_ending_event_occurred",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.student_paid_employment_hours_per_week": {
+   "name": "student_paid_employment_hours_per_week",
+   "entity": "Person",
+   "dtype": "integer",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.student_participating_in_on_the_job_training_program": {
+   "name": "student_participating_in_on_the_job_training_program",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.student_participating_in_state_or_federally_financed_work_study": {
+   "name": "student_participating_in_state_or_federally_financed_work_study",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.student_physically_or_mentally_unfit": {
+   "name": "student_physically_or_mentally_unfit",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.student_receives_tanf": {
+   "name": "student_receives_tanf",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.student_school_term_has_begun": {
+   "name": "student_school_term_has_begun",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.student_self_employment_hours_per_week": {
+   "name": "student_self_employment_hours_per_week",
+   "entity": "Person",
+   "dtype": "integer",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.student_self_employment_weekly_earnings": {
+   "name": "student_self_employment_weekly_earnings",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.work_study_approved_at_snap_application": {
+   "name": "work_study_approved_at_snap_application",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.work_study_approved_for_school_term": {
+   "name": "work_study_approved_for_school_term",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.work_study_exemption_period_active": {
+   "name": "work_study_exemption_period_active",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.asset_fair_market_value": {
+   "name": "asset_fair_market_value",
+   "entity": "Asset",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ny-snap-fy-2026#input.asset_is_licensed_vehicle": {
+   "name": "asset_is_licensed_vehicle",
+   "entity": "Asset",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.asset_is_used_for_household_transportation_or_to_obtain_or_continue_employment": {
+   "name": "asset_is_used_for_household_transportation_or_to_obtain_or_continue_employment",
+   "entity": "Asset",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.state_vehicle_allowance_standards_apply_in_lieu_of_default_vehicle_rule": {
+   "name": "state_vehicle_allowance_standards_apply_in_lieu_of_default_vehicle_rule",
+   "entity": "Asset",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.vehicle_depended_on_to_carry_household_fuel_or_water": {
+   "name": "vehicle_depended_on_to_carry_household_fuel_or_water",
+   "entity": "Asset",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.vehicle_necessary_for_transport_of_physically_disabled_household_member": {
+   "name": "vehicle_necessary_for_transport_of_physically_disabled_household_member",
+   "entity": "Asset",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.vehicle_provides_household_primary_source_of_fuel_or_water": {
+   "name": "vehicle_provides_household_primary_source_of_fuel_or_water",
+   "entity": "Asset",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ny-snap-fy-2026#input.vehicle_used_to_produce_earned_income": {
+   "name": "vehicle_used_to_produce_earned_income",
+   "entity": "Asset",
+   "dtype": "bool",
+   "value": false
+  }
+ }
+}

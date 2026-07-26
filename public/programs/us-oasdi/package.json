@@ -1,0 +1,40 @@
+{
+ "program_id": "us-oasdi",
+ "jurisdiction": "us",
+ "title": "Federal OASDI wage tax",
+ "provenance": "legacy",
+ "source": {
+  "repo": "TheAxiomFoundation/axiom-api",
+  "artifact_path": "data/runtime-artifacts/us-oasdi-wage-tax.compiled.json",
+  "artifact_sha256": "59c8c135ff43effd4a970dce2ed04f5d33083cb32bd6303e84f81bc97ac735c8",
+  "engine_version": "0.1.0",
+  "artifact_format_version": 1
+ },
+ "query": {
+  "entity_id": "person:1"
+ },
+ "entities": [
+  {
+   "entity": "Person",
+   "id_template": "person:1",
+   "count": 1
+  }
+ ],
+ "headline": [],
+ "outputs": {
+  "oasdi_wage_tax": "us:statutes/26/3101/a#oasdi_wage_tax"
+ },
+ "default_period": "2026-01",
+ "example": {
+  "household": {},
+  "people": {}
+ },
+ "defaults": {
+  "axiom:us-oasdi-wage-tax-fy-2026#input.wages": {
+   "name": "wages",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  }
+ }
+}

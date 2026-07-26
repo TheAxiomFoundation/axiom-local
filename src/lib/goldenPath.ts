@@ -62,12 +62,14 @@ export interface GoldenPackage {
   program_id: string;
   jurisdiction: string;
   title: string;
+  /** "envelope": engine-stamped artifact; "legacy": pre-envelope, hash-pinned only. */
+  provenance?: "envelope" | "legacy";
   source: {
     repo: string;
     artifact_path: string;
     artifact_sha256: string;
-    engine_version: string;
-    artifact_format_version: number;
+    engine_version: string | null;
+    artifact_format_version: number | null;
   };
   query: { entity_id: string };
   entities: PackageEntityConfig[];
