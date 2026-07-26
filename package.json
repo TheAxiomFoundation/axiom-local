@@ -12,6 +12,7 @@
     "engine:setup": "bash scripts/engine-setup.sh"
   },
   "dependencies": {
+    "@axiom-foundation/ui": "^0.2.0",
     "@tabler/icons-react": "^3.31.0",
     "next": "^15.3.3",
     "react": "^19.1.0",

@@ -42,7 +42,7 @@ export interface InputRecord {
 
 export interface RelationRecord {
   name: string;
-  entity_ids: string[];
+  tuple: string[];
   interval: Interval;
 }
 

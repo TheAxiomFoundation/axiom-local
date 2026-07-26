@@ -1,31 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Courier_Prime, Fraunces, Spectral } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-// All three families are downloaded at build time and self-hosted from the
+// Both families are downloaded at build time and self-hosted from the
 // static export — a visitor's browser talks to no font CDN. That matters
-// here: the page's claim is that nothing leaves it.
-const fraunces = Fraunces({
+// here: the page's claim is that nothing leaves it. The variable names are
+// the ones @axiom-foundation/ui's tokens expect.
+const geistSans = Geist({
   subsets: ["latin"],
-  style: ["normal", "italic"],
-  axes: ["opsz", "WONK"],
-  variable: "--font-fraunces",
+  variable: "--font-geist-sans",
   display: "swap",
 });
 
-const spectral = Spectral({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-spectral",
-  display: "swap",
-});
-
-const courierPrime = Courier_Prime({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-courier",
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -36,19 +25,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#161108",
+  themeColor: "#faf9f6",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${fraunces.variable} ${spectral.variable} ${courierPrime.variable}`}
-    >
-      <body>
-        <div className="grain" aria-hidden="true" />
-        {children}
-      </body>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body>{children}</body>
     </html>
   );
 }

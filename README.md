@@ -1,9 +1,10 @@
 # Axiom playground
 
-Law that runs in your browser. A single page where RuleSpec statutes are
-compiled to a program and executed against a household — entirely on-device,
-through the [Axiom rules engine](https://github.com/TheAxiomFoundation/axiom-rules-engine)'s
-WebAssembly build. Nothing about the household ever leaves the page.
+Law that runs on your machine. This repo is the local Axiom distribution —
+the [Axiom rules engine](https://github.com/TheAxiomFoundation/axiom-rules-engine)'s
+WebAssembly build and full composed statutory programs, hash-pinned and
+checked in — plus the page that tells you how to use it. Exploring the rules
+themselves is the Axiom app's job; running them on your end is this repo's.
 
 ## Why this exists
 
@@ -30,23 +31,45 @@ of citation. The explain-mode trace renders as an expandable tree where every
 derived value, every statutory parameter, and every answer you gave is shown with
 the id it came from.
 
-## The preloaded example
+## The programs: full composed artifacts, not demos
 
-The page loads with the same federal + state SNAP module pair the engine's own
-test suite (`wasm/test/smoke.mjs`, `tests/module_source.rs`) runs:
+The page ships a library of **composed compiled artifacts** — the same
+versioned release units the hosted engine executes, provenance and sha-256
+shown on the page — selectable from the program panel:
 
-- a **federal** module publishing the FY-2026 SNAP maximum-allotment table, and
-- a **state** rule that imports it and computes the monthly allotment as
-  `floor(maximum allotment − 30% of net income)`.
+| Program | Rules | Inputs | Law |
+|---|---|---|---|
+| Colorado SNAP (the golden path) | 319 | 585 | 7 USC 2011–2036 · 7 CFR 273 · 10 CCR 2506-1 |
+| Massachusetts SNAP | 372 | 719 | 7 USC · 7 CFR 273 · 106 CMR 360–366 |
+| Federal individual income tax | 137 | 184 | 26 USC 1, 24, 32, 55, 63, 151… |
+| Florida Temporary Cash Assistance | 831 | 2,113 | 45 CFR · FL 65A-4 |
 
-For a household of one with $100 of monthly net income, this computes **$268** —
-the value the engine asserts in CI. The page runs this determination on load, so
-it lands already alive.
+The page lands on Colorado SNAP: for the canonical two-person household —
+$1,200 monthly earned income, $900 shelter costs — it computes a **$478
+monthly allotment** and **$226.50 net income**, the exact values axiom-api's
+parity suite pins. The determination runs on load, so the page lands already
+alive; switching programs lands on that program's example case, computed.
+`scripts/build-packages.mjs` admits new artifacts (descriptor generation is
+engine-probed; see the PROGRAMS config).
 
-You can also paste (or upload) your own program: a JSON object mapping canonical
-targets to RuleSpec YAML text, the exact `{canonical_target: yaml}` shape the
-engine's `compile` boundary receives. It is compiled in the tab like everything
-else.
+A handful of headline questions carry each determination; the program's
+remaining inputs take **screening presumptions**, every one inspectable and overridable
+from the program panel — a presumption is a legal position, so the page treats
+it as one. A one-click **what-if** amends the earned-income deduction rate
+(7 USC 2014(e)(2), 20% → 30%) inside the artifact and re-runs the same
+household under amended law, in the tab. See
+[docs/golden-path.md](docs/golden-path.md) for the full walkthrough.
+
+A **guided tour** (`?tour=landed` … `?tour=exit`, dismissable, deep-linkable)
+walks a first-time visitor from the landed verdict to the exit ramps: the
+Axiom app to read every rule beside its source law, the local run for
+engineers, the parity suite for domain experts who want to challenge the
+encoding. (The hosted API and MCP are deliberately not surfaced — they are
+not launch entry points.)
+
+The page is deliberately lean: reading and dissecting rule text is the Axiom
+app's job, and compile-your-own-RuleSpec belongs to this repo's engine tests
+and the npm package — the page carries the execution story only.
 
 ## Architecture
 
@@ -55,7 +78,14 @@ else.
   this product — every byte is served as-is and the calculation runs client-side.
 - **Vendored wasm engine.** Both wasm-pack targets are checked into the repo:
   - `public/engine/` — the `--target web` build, fetched and instantiated by the
-    browser at load time (two requests, both at startup).
+    browser at load time.
+  - `public/programs/<id>/` — the vendored compiled artifacts plus their
+    descriptors (defaults, headline questions, provenance), emitted by
+    `scripts/build-packages.mjs` and pinned by the test suite;
+    `public/programs/index.json` is the registry the page and CLI read.
+    Four startup requests per program (engine js + wasm once, then package
+    descriptor + artifact); the network sentinel re-arms after each program
+    loads, and determinations never fetch.
   - `engine/pkg-node/` — the `--target nodejs` build, loaded by the test suite.
 
   Checking the built packages in means **CI and any host need no Rust toolchain**;
@@ -88,15 +118,36 @@ engine/
 public/engine/         vendored web wasm build (served to the browser)
 ```
 
-## Development
+## Run it locally
 
-Requires [Bun](https://bun.sh). No Rust toolchain is needed for normal
-development — the wasm packages are vendored.
+This repo is the local distribution: the wasm engine and the composed,
+hash-pinned artifacts are checked in, so a clone runs the whole thing
+offline with no Rust toolchain. Requires [Bun](https://bun.sh) only.
 
 ```sh
-bun install
+git clone https://github.com/TheAxiomFoundation/axiom-playground
+cd axiom-playground && bun install
+
+# The page, with hot reload:
 bun run dev          # http://localhost:3000
+
+# Or the same determination straight from your terminal:
+bun scripts/determine.mjs --programs                        # list the programs
+bun scripts/determine.mjs                                   # $478, the pinned case
+bun scripts/determine.mjs --program fiit --set taxable_income=120000
+bun scripts/determine.mjs --set snap_countable_earned_income=2400   # ineligible
+bun scripts/determine.mjs --people member_age=42,9,70
+bun scripts/determine.mjs --what-if snap_earned_income_deduction_rate_for_net_income=0.3
+bun scripts/determine.mjs --set assistance_payments=500     # override a presumption
+bun scripts/determine.mjs --trace                           # chain of citation
+bun scripts/determine.mjs --slots                           # list all 585 inputs
+bun scripts/determine.mjs --json                            # machine-readable
 ```
+
+Native engine binaries (no bun, no clone) arrive with the engine's first
+tagged release; until then the clone is the supported local path.
+
+## Development
 
 Other scripts:
 

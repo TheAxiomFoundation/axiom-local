@@ -1,0 +1,147 @@
+name: Deploy Production
+
+# The gated production path — the ONLY production path. The Vercel git
+# integration is for PR previews; git-triggered production builds should be
+# skipped via the project's Ignored Build Step, and nobody runs
+# `vercel deploy --prod` from a laptop.
+#
+# Shape (axiom-api's build-once-promote, sized for a static export): the gate
+# job re-runs the full CI surface; the deploy job builds once, stages a
+# production-env deployment without touching the domain, smokes that exact
+# deployment (page present, engine wasm present, golden-path package intact),
+# and only then promotes it. Failure before promote leaves production
+# untouched; rollback is `vercel rollback`.
+#
+# Required repo secrets (one-time setup): VERCEL_TOKEN (durable API token —
+# ephemeral CLI tokens expire in hours), VERCEL_ORG_ID, VERCEL_PROJECT_ID.
+# Optional: VERCEL_AUTOMATION_BYPASS_SECRET if deployment protection is on.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    name: gate · typecheck · test · build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Test (vitest, against the vendored nodejs wasm build)
+        run: bun run test
+
+      - name: Build (static export)
+        run: bun run build
+
+      - name: Confirm the static export emitted
+        run: |
+          test -f out/index.html
+          test -f out/engine/axiom_rules_engine_wasm_bg.wasm
+          test -f out/programs/co-snap/artifact.json
+          test -f out/programs/co-snap/package.json
+
+  deploy:
+    name: stage · smoke · promote
+    needs: gate
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Refuse to run without deploy credentials
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ] || [ -z "$VERCEL_ORG_ID" ] || [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "::error::VERCEL_TOKEN / VERCEL_ORG_ID / VERCEL_PROJECT_ID repo secrets are not set — production deploy cannot run. See the header of this workflow."
+            exit 1
+          fi
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Pull Vercel project settings
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: bunx vercel pull --yes --environment=production --token "$VERCEL_TOKEN"
+
+      - name: Build once
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: bunx vercel build --prod --token "$VERCEL_TOKEN"
+
+      - name: Stage the production deployment (domain untouched)
+        id: stage
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          url=$(bunx vercel deploy --prebuilt --prod --skip-domain --token "$VERCEL_TOKEN")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Staged: $url"
+
+      - name: Smoke the staged deployment
+        env:
+          BYPASS: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: |
+          url="${{ steps.stage.outputs.url }}"
+          hdr=()
+          if [ -n "$BYPASS" ]; then hdr=(-H "x-vercel-protection-bypass: $BYPASS"); fi
+          curl -fsS "${hdr[@]}" "$url/" | grep -q "Axiom playground"
+          curl -fsS "${hdr[@]}" -o /dev/null "$url/engine/axiom_rules_engine_wasm_bg.wasm"
+          # The golden-path package must arrive intact: same sha-256 the
+          # descriptor pins, so the page's provenance line shows "= pinned".
+          pinned=$(python3 -c "import json;print(json.load(open('public/programs/co-snap/package.json'))['source']['artifact_sha256'])")
+          served=$(curl -fsS "${hdr[@]}" "$url/programs/co-snap/artifact.json" | shasum -a 256 | cut -d' ' -f1)
+          if [ "$pinned" != "$served" ]; then
+            echo "::error::Served artifact sha-256 ($served) does not match the descriptor pin ($pinned)"
+            exit 1
+          fi
+
+      - name: Promote
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: bunx vercel promote "${{ steps.stage.outputs.url }}" --token "$VERCEL_TOKEN"
+
+      - name: Smoke production
+        env:
+          BYPASS: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: |
+          hdr=()
+          if [ -n "$BYPASS" ]; then hdr=(-H "x-vercel-protection-bypass: $BYPASS"); fi
+          curl -fsS "${hdr[@]}" "https://axiom-playground.vercel.app/" | grep -q "Axiom playground"

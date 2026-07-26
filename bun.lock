@@ -5,6 +5,7 @@
     "": {
       "name": "axiom-playground",
       "dependencies": {
+        "@axiom-foundation/ui": "^0.2.0",
         "@tabler/icons-react": "^3.31.0",
         "next": "^15.3.3",
         "react": "^19.1.0",
@@ -24,6 +25,8 @@
   },
   "packages": {
     "@alloc/quick-lru": ["@alloc/quick-lru@5.2.0", "", {}, "sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw=="],
+
+    "@axiom-foundation/ui": ["@axiom-foundation/ui@0.2.0", "", { "peerDependencies": { "react": ">=18", "react-dom": ">=18" } }, "sha512-wh6rxqg1HpXkjXvoLNVeykRv24+S4+92u0NxZfQjGx48dBNlljWErXb3ngD4Xko28VS32m6+P78/xD2ibn8AVw=="],
 
     "@emnapi/runtime": ["@emnapi/runtime@1.11.0", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-55coeOFKHv1ywEcUXJtWU5f+Jr/W5tZDvZig8DLKSwUN1JpROQ4rk/SNOQiFWmaR/VKF4zuFyW1B8JduOSv6Pg=="],
 
