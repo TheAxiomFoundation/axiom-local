@@ -19,7 +19,7 @@ function formatMoneyNumber(raw: string): string {
 
 /**
  * Render a scalar value for display. Money units get their symbol; everything
- * else is shown exactly as the engine reported it — the playground never
+ * else is shown exactly as the engine reported it — the app never
  * rounds a value the statute didn't.
  */
 export function formatScalarValue(value: ScalarValue, unit?: string | null): string {

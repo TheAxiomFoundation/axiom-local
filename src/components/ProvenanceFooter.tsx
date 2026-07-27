@@ -45,11 +45,11 @@ export function ProvenanceFooter() {
           <p className="mt-5 text-[0.85rem] font-light text-ink-secondary">
             Source:{" "}
             <a
-              href="https://github.com/TheAxiomFoundation/axiom-playground"
+              href="https://github.com/TheAxiomFoundation/axiom-local"
               target="_blank"
               rel="noreferrer"
             >
-              TheAxiomFoundation/axiom-playground
+              TheAxiomFoundation/axiom-local
             </a>{" "}
             · engine:{" "}
             <a href={upstream.repo} target="_blank" rel="noreferrer">

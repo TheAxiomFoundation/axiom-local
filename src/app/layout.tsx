@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Axiom playground — law that runs in your browser",
+  title: "Axiom local — law that runs in your browser",
   description:
     "RuleSpec law encodings compiled and executed entirely in your browser by the Axiom rules engine's WebAssembly build. Your answers never leave this page.",
 };

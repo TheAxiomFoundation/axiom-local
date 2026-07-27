@@ -54,7 +54,7 @@ export function entityIdFor(entity: string): string {
 
 /**
  * One input record per discovered input, named by its durable reference.
- * The playground models a single household (one entity id per entity kind,
+ * The app models a single household (one entity id per entity kind,
  * no relations) — datasets with related entities are a CLI affair for now.
  */
 export function buildDataset(
