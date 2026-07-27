@@ -2,6 +2,7 @@ import Link from "next/link";
 import index from "../../public/programs/index.json";
 import { Masthead } from "@/components/Masthead";
 import { ProvenanceFooter } from "@/components/ProvenanceFooter";
+import { Runner } from "@/components/Runner";
 import { Cmd, L, Record, dim, num, ok, pin } from "@/components/terminal";
 
 /** Get started: from landing to a first run, transcript first. */
@@ -15,11 +16,39 @@ export default function Home() {
         thesis="Statutes compiled to WebAssembly, determinations rendered on your machine."
       />
 
-      {/* The hero is the thesis, demonstrated: law executing in a terminal. */}
-      <section className="rise rise-2 mx-auto mt-10 max-w-3xl" aria-label="Get started">
+      {/* The hero IS the product: the runner, executing in this tab. The
+          terminal path and the catalog come after. */}
+      <section className="rise rise-2 mx-auto mt-10 max-w-4xl" aria-label="Run a determination">
+        <p className="max-w-2xl text-[0.95rem] font-light leading-relaxed text-ink-secondary">
+          The engine is WebAssembly on this page. Pick a program, state the facts, run — the
+          determination is computed in your tab and your answers never leave it. Every input
+          the program reads is visible below the headline questions, presumed and editable.
+        </p>
+        <div className="mt-6">
+          <Runner />
+        </div>
+        <Link
+          href="/run/"
+          style={{ textDecoration: "none" }}
+          className="panel mt-6 block p-5 transition-colors hover:border-accent"
+        >
+          <p className="smallcaps text-[0.62rem] text-accent">slice the whole graph →</p>
+          <p className="mt-2 max-w-2xl text-[0.92rem] font-light text-ink-secondary">
+            Beyond the cataloged programs: search every encoded rule — Colorado&apos;s ABAWD
+            clock, New York&apos;s work requirements — and compile any citation into a
+            runnable slice, in this tab.
+          </p>
+        </Link>
+      </section>
+
+      <section className="rise rise-2 mx-auto mt-14 max-w-4xl" aria-label="In your terminal">
+        <div className="double-rule pt-4" />
+        <p className="smallcaps mb-3 mt-2 text-[0.62rem] text-ink-secondary">
+          Or in your terminal
+        </p>
         <Record caption="three commands, offline" aside="the record">
-          <Cmd>git clone https://github.com/TheAxiomFoundation/axiom-playground</Cmd>
-          <Cmd>cd axiom-playground && bun install</Cmd>
+          <Cmd>git clone https://github.com/TheAxiomFoundation/axiom-local</Cmd>
+          <Cmd>cd axiom-local && bun install</Cmd>
           <Cmd>bun scripts/determine.mjs</Cmd>
           <L />
           <L>{dim("Colorado SNAP — monthly allotment (us-co)")}</L>
@@ -98,7 +127,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="rise rise-3 mx-auto mt-14 max-w-3xl" aria-label="What ships">
+      <section className="rise rise-3 mx-auto mt-14 max-w-4xl" aria-label="What ships">
         <div className="double-rule pt-4" />
         <p className="smallcaps mb-3 mt-2 text-[0.62rem] text-ink-secondary">
           What ships in the clone
