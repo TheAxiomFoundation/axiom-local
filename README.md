@@ -60,7 +60,7 @@ statutory parameter inside the artifact and re-runs the same household under
 amended law. See [docs/golden-path.md](docs/golden-path.md) for the full
 walkthrough.
 
-Beyond the catalog, `/run` carries the **corpus explorer**: search every
+Beyond the catalog, the landing page carries the **corpus explorer**: search every
 encoded rule across the served RuleSpec corpus, slice at any target
 (a statute section, a regulation paragraph), and the import closure is
 fetched, compiled in the tab, and run — no bundle required. Slices are

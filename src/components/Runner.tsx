@@ -38,7 +38,7 @@ interface Determination {
 
 export function Runner() {
   const [programs, setPrograms] = useState<ProgramIndexEntry[]>([]);
-  const [programId, setProgramId] = useState("co-snap");
+  const [programId, setProgramId] = useState("ny-snap");
   const [pkg, setPkg] = useState<GoldenPackage | null>(null);
   const artifactRef = useRef<string | null>(null);
   // Bumped on every program switch: a run that started under an older value

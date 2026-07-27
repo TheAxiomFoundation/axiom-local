@@ -89,7 +89,7 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Generate the corpus from the locked commit
-        # public/corpus/ is gitignored (32MB of YAML), but the /run explorer
+        # public/corpus/ is gitignored (32MB of YAML), but the graph explorer
         # is advertised on the landing page — production must serve it. The
         # lock file pins exactly which corpus commit ships.
         run: |

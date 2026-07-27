@@ -1,5 +1,6 @@
 import Link from "next/link";
 import index from "../../public/programs/index.json";
+import { CorpusExplorer } from "@/components/CorpusExplorer";
 import { Masthead } from "@/components/Masthead";
 import { ProvenanceFooter } from "@/components/ProvenanceFooter";
 import { Runner } from "@/components/Runner";
@@ -27,18 +28,24 @@ export default function Home() {
         <div className="mt-6">
           <Runner />
         </div>
-        <Link
-          href="/run/"
-          style={{ textDecoration: "none" }}
-          className="panel mt-6 block p-5 transition-colors hover:border-accent"
-        >
-          <p className="smallcaps text-[0.62rem] text-accent">explore the graph →</p>
-          <p className="mt-2 max-w-2xl text-[0.92rem] font-light text-ink-secondary">
-            Beyond the cataloged programs: search every encoded rule — Colorado&apos;s ABAWD
-            clock, New York&apos;s work requirements — and compile any citation into a
-            runnable slice, in this tab.
-          </p>
-        </Link>
+      </section>
+
+      <section className="rise rise-2 mx-auto mt-14 max-w-4xl" aria-label="Explore the graph">
+        <div className="double-rule pt-4" />
+        <p className="smallcaps mb-3 mt-2 text-[0.62rem] text-ink-secondary">
+          Explore the graph — beyond the catalog
+        </p>
+        <p className="max-w-2xl text-[0.95rem] font-light leading-relaxed text-ink-secondary">
+          Underneath the cataloged programs is the whole encoded corpus: every statute,
+          regulation, and manual section is a target you can slice at directly. Search by
+          rule name or citation and the import closure is fetched, compiled to an artifact
+          in this tab, and run — Colorado&apos;s ABAWD clock, New York&apos;s work
+          requirements, a single deduction table. Slices are valid and cited but not
+          parity-pinned; the provenance line says which corpus commit they came from.
+        </p>
+        <div className="mt-6">
+          <CorpusExplorer />
+        </div>
       </section>
 
       <section className="rise rise-2 mx-auto mt-14 max-w-4xl" aria-label="In your terminal">

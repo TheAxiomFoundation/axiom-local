@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 /** The three streams, always one click apart. */
-export function SiteNav({ current }: { current: "start" | "example" | "docs" | "run" }) {
+export function SiteNav({ current }: { current: "start" | "example" | "docs" }) {
   const link = (href: string, label: string, key: string) =>
     current === key ? (
       <span className="border-b border-accent pb-0.5 text-accent">{label}</span>
@@ -20,7 +20,6 @@ export function SiteNav({ current }: { current: "start" | "example" | "docs" | "
       aria-label="Pages"
     >
       {link("/", "Run", "start")}
-      {link("/run/", "Explore the graph", "run")}
       {link("/example/", "Example", "example")}
       {link("/docs/", "References", "docs")}
       <a

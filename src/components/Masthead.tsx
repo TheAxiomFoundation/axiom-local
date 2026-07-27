@@ -9,7 +9,7 @@ export function Masthead({
   page,
   thesis,
 }: {
-  page: "start" | "example" | "docs" | "run";
+  page: "start" | "example" | "docs";
   thesis: string;
 }) {
   return (

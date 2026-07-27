@@ -90,7 +90,7 @@ times), and any rule becomes a queryable root, not just curated programs.
 and writes `corpus.lock.json` (tracked) pinning the corpus commit; the
 deploy workflow regenerates the corpus from that lock and smoke-checks
 `/corpus/manifest.json` on the staged deployment before promoting. The
-CorpusExplorer on /run searches ~22k rule names, slices at any target,
+CorpusExplorer on the landing page searches ~22k rule names, slices at any target,
 compiles in-tab, synthesizes the descriptor (structural dtype inference +
 engine-probe fixpoint, `src/lib/corpus.ts`), and runs it.
 `tests/corpus.test.ts` proves the thesis end to end: corpus slice + curation
