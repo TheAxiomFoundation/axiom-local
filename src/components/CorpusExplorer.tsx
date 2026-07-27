@@ -121,7 +121,7 @@ export function CorpusExplorer() {
       });
     }
     scored.sort((a, b) => b.score - a.score || b.ruleCount - a.ruleCount);
-    return { hits: scored.slice(0, 30), totalHits: scored.length };
+    return { hits: scored.slice(0, 12), totalHits: scored.length };
   }, [manifestState, query]);
 
   const sliceAt = useCallback(

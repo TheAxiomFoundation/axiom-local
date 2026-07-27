@@ -21,9 +21,10 @@ export default function Home() {
           terminal path and the catalog come after. */}
       <section className="rise rise-2 mx-auto mt-10 max-w-4xl" aria-label="Run a determination">
         <p className="max-w-2xl text-[0.95rem] font-light leading-relaxed text-ink-secondary">
-          The engine is WebAssembly on this page. Pick a program, state the facts, run — the
-          determination is computed in your tab and your answers never leave it. Every input
-          the program reads is visible below the headline questions, presumed and editable.
+          The engine is WebAssembly on this page. Pick a program, state the facts you know —
+          the determination computes live in your tab, and moves as you type. Everything you
+          don&apos;t state is a presumption you can open and correct. Your answers never
+          leave the page.
         </p>
         <div className="mt-6">
           <Runner />

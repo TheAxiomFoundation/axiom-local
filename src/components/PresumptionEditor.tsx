@@ -135,7 +135,7 @@ export function PresumptionEditor({
     <div>
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <span className="smallcaps text-[0.62rem] text-ink-secondary">
-          The facts — {total} inputs, every presumption editable
+          Presumed answers — search, then correct what you know
         </span>
         {edited.length > 0 ? (
           <span className="font-mono text-[0.65rem] text-accent">

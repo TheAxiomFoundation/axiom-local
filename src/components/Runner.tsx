@@ -9,14 +9,17 @@ import {
   findInvalidNumericAnswers,
   type GoldenAnswers,
   type GoldenPackage,
+  type PackageDefault,
+  type PackageHeadline,
 } from "@/lib/goldenPath";
 
 /**
- * The in-browser runner: the same web-target wasm engine served from
- * /engine/, the same vendored artifacts served from /programs/, the same
- * buildPackageRequest the CLI and the golden-path test use. Nothing leaves
- * the page; the determination is downloadable as the JSON the CLI's --json
- * flag prints.
+ * The runner, shaped like the thing it produces: a filing. Three acts —
+ * the matter (which law, where), the facts (the handful a person actually
+ * knows; everything else is a presumption behind one quiet door), and the
+ * determination, computed live in the tab. There is no run button: state a
+ * fact and the order re-stamps itself. That immediacy IS the product —
+ * law as a calculation you can push on, with nothing leaving the page.
  */
 
 interface ProgramIndexEntry {
@@ -36,13 +39,99 @@ interface Determination {
   outputs: Record<string, string | number | boolean | null>;
 }
 
+const JURISDICTIONS: Record<string, string> = {
+  us: "Federal",
+  uk: "United Kingdom",
+  "us-ak": "Alaska",
+  "us-al": "Alabama",
+  "us-az": "Arizona",
+  "us-ca": "California",
+  "us-co": "Colorado",
+  "us-fl": "Florida",
+  "us-il": "Illinois",
+  "us-ks": "Kansas",
+  "us-ma": "Massachusetts",
+  "us-nc": "North Carolina",
+  "us-ny": "New York",
+  "us-sc": "South Carolina",
+  "us-tn": "Tennessee",
+  "us-tx": "Texas",
+};
+
+const ACRONYMS = /\b(snap|tanf|eitc|ssn|ssi|abawd|oasdi|fpl|usda|tca|atap|scretd|uc)\b/g;
+
+function humanize(name: string): string {
+  return name.replaceAll("_", " ").replace(ACRONYMS, (word) => word.toUpperCase());
+}
+
+const MONEYISH = /allotment|benefit|income|tax|credit|amount|payment|deduction|standard/;
+
+function formatValue(
+  value: string | number | boolean | null,
+  name: string,
+  jurisdiction: string,
+): string {
+  if (value === "holds") return "yes";
+  if (value === "not_holds") return "no";
+  const numeric = Number(value);
+  if (value !== null && value !== "" && Number.isFinite(numeric) && MONEYISH.test(name)) {
+    const symbol = jurisdiction.startsWith("uk") ? "£" : "$";
+    return `${symbol}${numeric.toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
+  }
+  return String(value);
+}
+
+/**
+ * The facts worth asking for. Curated programs carry a headline; for the
+ * rest, pull the questions a person can actually answer out of the
+ * descriptor: how many people, the incomes, the rent, the ages.
+ */
+function keyFacts(pkg: GoldenPackage): PackageHeadline[] {
+  if (pkg.headline.length > 0) return pkg.headline;
+  const slots = Object.values(pkg.defaults);
+  const picks: PackageHeadline[] = [];
+  const taken = new Set<string>();
+  const take = (slot: PackageDefault | undefined, label: string, per_person?: boolean) => {
+    if (!slot || taken.has(slot.name) || picks.length >= 6) return;
+    taken.add(slot.name);
+    picks.push({ slot: slot.name, entity: slot.entity, label, ...(per_person ? { per_person } : {}) });
+  };
+
+  const sizeName = pkg.entities.find((entity) => entity.count_from)?.count_from;
+  if (sizeName) {
+    take(slots.find((slot) => slot.name === sizeName), "People in the household");
+  }
+  for (const slot of slots) {
+    if (picks.length >= 4) break;
+    if (
+      /income/.test(slot.name) &&
+      /(gross|earned|countable|monthly|total|household|net)/.test(slot.name) &&
+      (slot.dtype === "decimal" || slot.dtype === "integer")
+    ) {
+      take(slot, humanize(slot.name));
+    }
+  }
+  take(
+    slots.find(
+      (slot) =>
+        /(shelter|housing|rent)/.test(slot.name) &&
+        !/rental_income/.test(slot.name) &&
+        slot.dtype !== "bool",
+    ),
+    "Monthly shelter costs",
+  );
+  const age = slots.find((slot) => slot.name === "member_age");
+  if (age && pkg.entities.some((entity) => entity.count_from && entity.entity === age.entity)) {
+    take(age, "Ages", true);
+  }
+  return picks;
+}
+
 export function Runner() {
   const [programs, setPrograms] = useState<ProgramIndexEntry[]>([]);
   const [programId, setProgramId] = useState("ny-snap");
   const [pkg, setPkg] = useState<GoldenPackage | null>(null);
   const artifactRef = useRef<string | null>(null);
-  // Bumped on every program switch: a run that started under an older value
-  // must discard its result instead of rendering it under the new program.
   const loadSeq = useRef(0);
   const [engineVersion, setEngineVersion] = useState<string | null>(null);
 
@@ -54,6 +143,8 @@ export function Runner() {
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [determination, setDetermination] = useState<Determination | null>(null);
+  const [runStamp, setRunStamp] = useState(0);
+  const [elapsedMs, setElapsedMs] = useState<number | null>(null);
 
   useEffect(() => {
     fetch("/programs/index.json")
@@ -65,13 +156,14 @@ export function Runner() {
       .catch((cause) => setError(`Engine failed to load: ${String(cause)}`));
   }, []);
 
-  // Load a program's artifact + descriptor, seeding the form from its example.
+  // Load a program's artifact + descriptor, seeding the facts from its example.
   useEffect(() => {
     let cancelled = false;
     loadSeq.current += 1;
     setPkg(null);
     setDetermination(null);
     setError(null);
+    setElapsedMs(null);
     artifactRef.current = null;
     const mustOk = (response: Response) => {
       if (!response.ok) throw new Error(`fetch failed (${response.status}): ${response.url}`);
@@ -114,7 +206,6 @@ export function Runner() {
     const seq = loadSeq.current;
     if (!pkg || !artifactJson) return;
     setRunning(true);
-    setError(null);
     try {
       const answers: GoldenAnswers = {
         household: { ...household },
@@ -130,9 +221,8 @@ export function Runner() {
         refOverrides: { ...refOverrides },
       };
       // Growing a per-person list grows the counted entity, as the CLI does —
-      // but never below the size the visitor typed: a stated 5-person
-      // household with two ages listed stays a 5-person household (missing
-      // people take the slot presumptions).
+      // but never below the size the visitor typed: missing people take the
+      // slot presumptions.
       const sizeSlot = pkg.entities.find((entity) => entity.count_from)?.count_from;
       if (sizeSlot) {
         const lists = Object.values(answers.people ?? {}).filter((values) => values.length > 0);
@@ -151,6 +241,7 @@ export function Runner() {
       }
 
       const engine = await loadEngine();
+      const started = performance.now();
       const request = buildPackageRequest({ pkg, answers, month, mode: "explain" });
       const response = JSON.parse(
         engine.execute(artifactJson, JSON.stringify(request)),
@@ -166,6 +257,8 @@ export function Runner() {
         }),
       );
 
+      setElapsedMs(Math.max(1, Math.round(performance.now() - started)));
+      setError(null);
       setDetermination({
         program: pkg.program_id,
         period: request.queries[0].period,
@@ -173,13 +266,25 @@ export function Runner() {
         answers,
         outputs,
       });
+      setRunStamp((previous) => previous + 1);
     } catch (cause) {
       if (seq !== loadSeq.current) return; // stale run — its error is noise
-      setDetermination(null);
       setError(cause instanceof Error ? cause.message : String(cause));
     } finally {
       setRunning(false);
     }
+  }, [pkg, household, people, refOverrides, month]);
+
+  // The determination is live: it computes when the program lands and
+  // recomputes as facts change. A short debounce lets typing settle.
+  const runRef = useRef(run);
+  runRef.current = run;
+  useEffect(() => {
+    if (!pkg) return;
+    const delay = determination ? 500 : 0;
+    const timer = setTimeout(() => runRef.current(), delay);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pkg, household, people, refOverrides, month]);
 
   const download = useCallback(() => {
@@ -196,167 +301,235 @@ export function Runner() {
   }, [determination]);
 
   const fieldClass = "field text-[0.82rem]";
+  const entry = programs.find((program) => program.id === programId);
+  const facts = pkg ? keyFacts(pkg) : [];
+  const editedCount = Object.keys(refOverrides).length;
+
+  // Group the catalog for the picker: federal-level first, then states.
+  const groups = new Map<string, ProgramIndexEntry[]>();
+  for (const program of programs) {
+    const label = JURISDICTIONS[program.jurisdiction] ?? program.jurisdiction;
+    if (!groups.has(label)) groups.set(label, []);
+    groups.get(label)!.push(program);
+  }
+  const groupOrder = [...groups.keys()].sort((a, b) => {
+    const rank = (label: string) => (label === "Federal" ? 0 : label === "United Kingdom" ? 1 : 2);
+    return rank(a) - rank(b) || a.localeCompare(b);
+  });
+
+  // The order's decretal lines: the primary money line set large, the rest
+  // as ledger entries.
+  const outputEntries = determination ? Object.entries(determination.outputs) : [];
+  const primary =
+    outputEntries.find(
+      ([name, value]) => MONEYISH.test(name) && Number.isFinite(Number(value)),
+    ) ?? outputEntries[0];
+  const secondary = outputEntries.filter(([name]) => name !== primary?.[0]);
 
   return (
-    <div>
-      <div className="panel p-5">
-        <div className="grid gap-4 sm:grid-cols-2">
+    <div className="panel">
+      {/* ── The matter ─────────────────────────────────────────────── */}
+      <div className="border-b border-rule p-5">
+        <p className="smallcaps text-[0.62rem] text-ink-secondary">In the matter of</p>
+        <div className="mt-2 grid gap-4 sm:grid-cols-[2fr_1fr]">
           <label className="block">
-            <span className="smallcaps text-[0.62rem] text-ink-secondary">Program</span>
+            <span className="sr-only">Program</span>
             <select
-              className={`${fieldClass} mt-1`}
+              className={`${fieldClass} py-2`}
               value={programId}
               onChange={(event) => setProgramId(event.target.value)}
             >
-              {programs.map((program) => (
-                <option key={program.id} value={program.id}>
-                  {program.id} — {program.title}
-                </option>
+              {groupOrder.map((label) => (
+                <optgroup key={label} label={label}>
+                  {groups.get(label)!.map((program) => (
+                    <option key={program.id} value={program.id}>
+                      {program.title}
+                    </option>
+                  ))}
+                </optgroup>
               ))}
             </select>
           </label>
           <label className="block">
-            <span className="smallcaps text-[0.62rem] text-ink-secondary">Month</span>
+            <span className="sr-only">Month</span>
             <input
-              className={`${fieldClass} mt-1`}
+              className={`${fieldClass} py-2`}
               value={month}
               onChange={(event) => setMonth(event.target.value)}
-              placeholder="2026-01"
+              placeholder="month — 2026-01"
             />
           </label>
         </div>
-
-        {pkg ? (
-          <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            {pkg.headline.map((question) =>
-              question.per_person ? (
-                <label key={question.slot} className="block">
-                  <span className="smallcaps text-[0.62rem] text-ink-secondary">
-                    {question.label} <span className="normal-case">(one per person)</span>
-                  </span>
-                  <input
-                    className={`${fieldClass} mt-1`}
-                    value={people[question.slot] ?? ""}
-                    onChange={(event) =>
-                      setPeople((previous) => ({
-                        ...previous,
-                        [question.slot]: event.target.value,
-                      }))
-                    }
-                    placeholder="42, 9"
-                  />
-                </label>
-              ) : (
-                <label key={question.slot} className="block">
-                  <span className="smallcaps text-[0.62rem] text-ink-secondary">
-                    {question.label}
-                  </span>
-                  <input
-                    className={`${fieldClass} mt-1`}
-                    value={household[question.slot] ?? ""}
-                    onChange={(event) =>
-                      setHousehold((previous) => ({
-                        ...previous,
-                        [question.slot]: event.target.value,
-                      }))
-                    }
-                  />
-                </label>
-              ),
-            )}
-          </div>
-        ) : (
-          <p className="mt-5 font-mono text-[0.72rem] text-ink-muted">loading program…</p>
-        )}
-
-        {pkg ? (
-          <div className="mt-5">
-            {pkg.headline.length === 0 ? (
-              <p className="mb-2 font-mono text-[0.72rem] text-ink-muted">
-                No curated headline questions for this program yet — every input it reads is
-                below, presumed and editable.
-              </p>
-            ) : null}
-            <PresumptionEditor
-              defaults={pkg.defaults}
-              overrides={refOverrides}
-              onChange={(ref, value) =>
-                setRefOverrides((previous) => ({ ...previous, [ref]: value }))
-              }
-              onClear={(ref) =>
-                setRefOverrides((previous) => {
-                  const next = { ...previous };
-                  delete next[ref];
-                  return next;
-                })
-              }
-            />
-          </div>
+        {entry ? (
+          <p className="mt-2 font-mono text-[0.65rem] text-ink-muted">
+            {entry.rules} rules ·{" "}
+            {entry.provenance === "envelope" ? "engine-stamped provenance" : "hash-pinned"} ·
+            executes in this tab
+          </p>
         ) : null}
-
-        <div className="mt-5 flex flex-wrap items-center gap-4">
-          <button
-            type="button"
-            onClick={run}
-            disabled={!pkg || running}
-            className="btn-accent cursor-pointer px-4 py-1.5 font-mono text-[0.75rem]"
-          >
-            {running ? "running…" : "run determination"}
-          </button>
-          {determination ? (
-            <button
-              type="button"
-              onClick={download}
-              className="btn-quiet cursor-pointer px-4 py-1.5 font-mono text-[0.75rem]"
-            >
-              download JSON
-            </button>
-          ) : null}
-        </div>
       </div>
 
-      {error ? (
-        <p className="mt-4 border border-code-string/40 px-4 py-3 font-mono text-[0.72rem] text-code-string">
-          {error}
-        </p>
-      ) : null}
+      {/* ── The facts ──────────────────────────────────────────────── */}
+      <div className="border-b border-rule p-5">
+        <p className="smallcaps text-[0.62rem] text-ink-secondary">The facts as you state them</p>
+        {pkg ? (
+          <>
+            <div className="mt-3 grid gap-4 sm:grid-cols-2">
+              {facts.map((question) =>
+                question.per_person ? (
+                  <label key={question.slot} className="block">
+                    <span className="block text-[0.8rem] font-light text-ink-secondary">
+                      {question.label}{" "}
+                      <span className="font-mono text-[0.65rem] text-ink-muted">
+                        one per person
+                      </span>
+                    </span>
+                    <input
+                      className={`${fieldClass} mt-1 py-2`}
+                      value={people[question.slot] ?? ""}
+                      onChange={(event) =>
+                        setPeople((previous) => ({
+                          ...previous,
+                          [question.slot]: event.target.value,
+                        }))
+                      }
+                      placeholder="42, 9"
+                    />
+                  </label>
+                ) : (
+                  <label key={question.slot} className="block">
+                    <span className="block text-[0.8rem] font-light text-ink-secondary">
+                      {question.label}
+                    </span>
+                    <input
+                      className={`${fieldClass} mt-1 py-2`}
+                      value={household[question.slot] ?? ""}
+                      onChange={(event) =>
+                        setHousehold((previous) => ({
+                          ...previous,
+                          [question.slot]: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                ),
+              )}
+            </div>
 
-      {determination && pkg ? (
-        <div className="record mt-6">
-          <div className="record-caption">
-            <span>
-              {pkg.program_id} · {determination.period.start}
-            </span>
-            <span>determined locally</span>
-          </div>
-          <div className="record-body">
-            {Object.entries(determination.outputs).map(([name, value]) => (
-              <div key={name} className="rec-line">
-                {"  "}
-                {name.padEnd(
-                  Math.max(...Object.keys(determination.outputs).map((n) => n.length)) + 2,
-                )}
-                <span
-                  className={
-                    value === "holds"
-                      ? "text-code-function"
-                      : value === "not_holds"
-                        ? "text-code-string"
-                        : "text-code-number"
+            <details className="mt-4">
+              <summary className="cursor-pointer font-mono text-[0.7rem] text-ink-muted transition-colors hover:text-accent">
+                Everything else is presumed — review all {Object.keys(pkg.defaults).length}{" "}
+                answers{editedCount > 0 ? ` (${editedCount} corrected by you)` : ""} ›
+              </summary>
+              <div className="mt-3">
+                <PresumptionEditor
+                  defaults={pkg.defaults}
+                  overrides={refOverrides}
+                  onChange={(ref, value) =>
+                    setRefOverrides((previous) => ({ ...previous, [ref]: value }))
                   }
-                >
-                  {String(value)}
-                </span>
+                  onClear={(ref) =>
+                    setRefOverrides((previous) => {
+                      const next = { ...previous };
+                      delete next[ref];
+                      return next;
+                    })
+                  }
+                />
               </div>
-            ))}
-          </div>
-        </div>
-      ) : null}
+            </details>
+          </>
+        ) : (
+          <p className="mt-3 font-mono text-[0.72rem] text-ink-muted">loading the program…</p>
+        )}
+      </div>
 
-      <p className="mt-4 font-mono text-[0.68rem] text-ink-muted">
-        └─ engine {engineVersion ?? "…"} (wasm, running in this tab) — inputs beyond the
-        questions above carry the descriptor&apos;s screening presumptions
-      </p>
+      {/* ── The determination ──────────────────────────────────────── */}
+      <div className="p-5">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <p className="smallcaps text-[0.62rem] text-ink-secondary">The determination</p>
+          <span className="flex items-center gap-2 font-mono text-[0.65rem] text-ink-muted">
+            <span className={`lamp-dot ${error ? "lamp-dot--warn" : ""}`} aria-hidden="true" />
+            {error
+              ? "awaiting valid facts"
+              : running
+                ? "recomputing…"
+                : elapsedMs !== null
+                  ? `determined locally in ${elapsedMs}ms`
+                  : "computing…"}
+          </span>
+        </div>
+
+        {error ? (
+          <p className="mt-3 border border-code-string/40 px-4 py-3 font-mono text-[0.72rem] text-code-string">
+            {error}
+          </p>
+        ) : null}
+
+        {determination && pkg && primary ? (
+          <div className={error || running ? "opacity-50 transition-opacity" : "transition-opacity"}>
+            <div key={runStamp} className="stamp-in mt-4">
+              <p className="font-mono text-[0.7rem] text-ink-secondary">
+                {humanize(primary[0])}
+              </p>
+              <p className="mt-1 font-display text-5xl font-semibold tracking-tight text-ink sm:text-6xl">
+                {formatValue(primary[1], primary[0], pkg.jurisdiction)}
+                {MONEYISH.test(primary[0]) && Number.isFinite(Number(primary[1])) ? (
+                  <span className="ml-2 font-mono text-[0.75rem] font-normal text-ink-muted">
+                    / month
+                  </span>
+                ) : null}
+              </p>
+            </div>
+
+            {secondary.length > 0 ? (
+              <div className="mt-5 max-w-md">
+                {secondary.map(([name, value]) => (
+                  <div key={name} className="flex items-baseline gap-2 py-1">
+                    <span className="font-mono text-[0.72rem] text-ink-secondary">
+                      {humanize(name)}
+                    </span>
+                    <span className="leader min-w-8 flex-1" aria-hidden="true" />
+                    <span
+                      className={`font-mono text-[0.8rem] ${
+                        value === "holds"
+                          ? "text-success"
+                          : value === "not_holds"
+                            ? "text-code-string"
+                            : "text-ink"
+                      }`}
+                    >
+                      {formatValue(value, name, pkg.jurisdiction)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+
+            <div className="mt-5 flex flex-wrap items-center gap-4">
+              <button
+                type="button"
+                onClick={download}
+                className="btn-quiet cursor-pointer px-4 py-1.5 font-mono text-[0.72rem]"
+              >
+                download the record (JSON)
+              </button>
+              <span className="font-mono text-[0.65rem] text-ink-muted">
+                the exact shape <code>determine.mjs --json</code> prints
+              </span>
+            </div>
+          </div>
+        ) : !error ? (
+          <p className="mt-4 font-mono text-[0.72rem] text-ink-muted">
+            the first determination lands with the program…
+          </p>
+        ) : null}
+
+        <p className="mt-5 border-t border-rule-subtle pt-3 font-mono text-[0.65rem] text-ink-muted">
+          └─ engine {engineVersion ?? "…"} (wasm, this tab) — your answers never left the page;
+          inputs beyond the stated facts carry the descriptor&apos;s screening presumptions
+        </p>
+      </div>
     </div>
   );
 }
