@@ -6,7 +6,7 @@ import { ProvenanceFooter } from "@/components/ProvenanceFooter";
 import { Cmd, L, Record, dim, id } from "@/components/terminal";
 
 export const metadata: Metadata = {
-  title: "References — Axiom playground",
+  title: "References — Axiom local",
   description:
     "Every command and flag, every program, presumption semantics, the JSON shapes, and embedding the Axiom rules engine in your own software.",
 };
@@ -193,21 +193,22 @@ export default function Docs() {
             in-process. No server, no data leaving your product.
           </p>
           <Record>
-            <Cmd>npm install @axiom-foundation/rules-engine-wasm</Cmd>
+            <L>{dim("// the wasm builds are vendored in this repo — copy them into your app")}</L>
+            <L>{dim("// (an npm release is planned; nothing is published yet)")}</L>
             <L />
-            <L>{dim("// browsers and bundlers (ESM)")}</L>
+            <L>{dim("// browsers and bundlers (ESM) — from public/engine/")}</L>
             <L>
               {"import init, { execute } from "}
-              {id('"@axiom-foundation/rules-engine-wasm"')}
+              {id('"./engine/axiom_rules_engine_wasm.js"')}
               {";"}
             </L>
-            <L>{"await init();"}</L>
+            <L>{"await init({ module_or_path: \"./engine/axiom_rules_engine_wasm_bg.wasm\" });"}</L>
             <L>{"const response = JSON.parse(execute(artifactJson, JSON.stringify(request)));"}</L>
             <L />
-            <L>{dim("// node (CommonJS)")}</L>
+            <L>{dim("// node (CommonJS) — from engine/pkg-node/")}</L>
             <L>
               {"const engine = require("}
-              {id('"@axiom-foundation/rules-engine-wasm/node"')}
+              {id('"./engine/pkg-node/axiom_rules_engine_wasm.js"')}
               {");"}
             </L>
           </Record>
@@ -219,7 +220,7 @@ export default function Docs() {
             <code className="font-mono text-[0.8rem] text-ink">src/lib/trace.ts</code> turns
             the explain trace into a citation tree —{" "}
             <code className="font-mono text-[0.8rem] text-ink">scripts/determine.mjs</code> is
-            a complete worked integration in ~180 lines. The engine also compiles RuleSpec
+            a complete worked integration. The engine also compiles RuleSpec
             YAML directly (<code className="font-mono text-[0.8rem] text-ink">compile</code>)
             if you want to go deeper than the shipped artifacts.
           </p>
@@ -231,7 +232,7 @@ export default function Docs() {
             <L>{dim("# compare against source.artifact_sha256 in public/programs/co-snap/package.json")}</L>
             <L />
             <Cmd>bun run test</Cmd>
-            <L>{dim("# 51 tests: packaging invariants, the $478 parity pin, relation semantics, the CLI")}</L>
+            <L>{dim("# the suite: packaging invariants for all programs, the $478 parity pin, corpus slicing, the CLI")}</L>
           </Record>
         </Section>
       </div>
