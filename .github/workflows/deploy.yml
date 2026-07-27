@@ -168,4 +168,12 @@ jobs:
         run: |
           hdr=()
           if [ -n "$BYPASS" ]; then hdr=(-H "x-vercel-protection-bypass: $BYPASS"); fi
-          curl -fsS "${hdr[@]}" "$PROD_URL/" | grep -q "Axiom local"
+          # The domain alias can lag the promote by a few seconds — retry
+          # before declaring production broken.
+          for attempt in 1 2 3 4 5 6; do
+            if curl -fsS "${hdr[@]}" "$PROD_URL/" | grep -q "Axiom local"; then exit 0; fi
+            echo "attempt $attempt: production not serving yet, retrying in 10s"
+            sleep 10
+          done
+          echo "::error::$PROD_URL never served the promoted deployment"
+          exit 1
