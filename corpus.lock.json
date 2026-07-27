@@ -2,7 +2,11 @@
   "sources": [
     {
       "repo": "TheAxiomFoundation/rulespec-us",
-      "commit": "44aeb361553ab0cf25d1de2a759acc759707c3ce"
+      "commit": "5cc39ed6ebc1e1ea774db6d04aaa553407c3aea6"
     }
-  ]
+  ],
+  "ledger": {
+    "ledger_id": "fixture-us-ny-snap",
+    "certified_set_version": "38f528641fae55b7d795edd9"
+  }
 }

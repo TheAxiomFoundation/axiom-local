@@ -21,11 +21,30 @@ const engine = require("../engine/pkg-node/axiom_rules_engine_wasm.js") as Engin
 
 const programsDir = join(__dirname, "..", "public", "programs");
 const index = JSON.parse(readFileSync(join(programsDir, "index.json"), "utf8")) as {
-  programs: { id: string; title: string; provenance: "envelope" | "legacy" }[];
+  programs: {
+    id: string;
+    title: string;
+    provenance: "envelope" | "legacy";
+    certified?: { ledger_id: string; certified_set_version: string };
+  }[];
+};
+const lock = JSON.parse(readFileSync(join(__dirname, "..", "corpus.lock.json"), "utf8")) as {
+  ledger: { ledger_id: string; certified_set_version: string };
 };
 
-it("the index lists more than one program — the page is not anchored to one", () => {
-  expect(index.programs.length).toBeGreaterThan(1);
+it("the registry serves at least one certified program", () => {
+  // Under the certified gate the catalog is exactly what the ledger
+  // covers — currently the NY SNAP direct-compile closure. An empty
+  // registry would be a valid (honest) state, but this repo ships a
+  // ledger that certifies it, so an empty registry here means the vendor
+  // pipeline regressed.
+  expect(index.programs.length).toBeGreaterThanOrEqual(1);
+});
+
+it("every registry entry carries the vendored ledger's identity", () => {
+  for (const entry of index.programs) {
+    expect(entry.certified, entry.id).toEqual(lock.ledger);
+  }
 });
 
 for (const entry of index.programs) {
@@ -46,10 +65,18 @@ for (const entry of index.programs) {
     });
 
     it.skipIf(!envelope)("declares every input discovery can see", () => {
-      const declared = new Set(Object.keys(pkg.defaults));
+      // By NAME, not ref: certified descriptors collapse per-module input
+      // spellings to the package prefix the ledger vouches for, so the
+      // durable refs differ from discovery's while covering the same slots.
+      const declared = new Set(Object.values(pkg.defaults).map((slot) => slot.name));
       for (const input of discoverInputs(artifact)) {
-        expect(declared.has(input.ref), input.ref).toBe(true);
+        expect(declared.has(input.name), input.name).toBe(true);
       }
+    });
+
+    it("carries certificate provenance matching its registry entry", () => {
+      expect(pkg.certified?.ledger_id).toBe(entry.certified?.ledger_id);
+      expect(pkg.certified?.certified_set_version).toBe(entry.certified?.certified_set_version);
     });
 
     it("no division-denominator input carries a zero presumption", () => {

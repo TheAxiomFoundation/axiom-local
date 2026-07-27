@@ -1,6 +1,6 @@
 /**
  * The "change the law" step: amending the earned-income deduction rate
- * inside the compiled artifact must move the same household's allotment,
+ * inside the compiled artifact must move the same household's benefit,
  * and current law must survive untouched in the original string.
  */
 
@@ -15,30 +15,30 @@ import { applyWhatIf } from "@/lib/whatIf";
 const require = createRequire(import.meta.url);
 const engine = require("../engine/pkg-node/axiom_rules_engine_wasm.js") as EngineBindings;
 
-const programDir = join(__dirname, "..", "public", "programs", "co-snap");
+const programDir = join(__dirname, "..", "public", "programs", "ny-snap");
 const artifactJson = readFileSync(join(programDir, "artifact.json"), "utf8");
 const pkg = JSON.parse(readFileSync(join(programDir, "package.json"), "utf8")) as GoldenPackage;
 
 const ANSWERS = {
   household: {
     household_size: "2",
-    snap_countable_earned_income: "1200",
+    snap_gross_monthly_earned_income: "1200",
     household_shelter_costs_incurred: "900",
   },
   people: { member_age: ["42", "9"] },
 };
 
-function allotment(json: string): string {
+function benefit(json: string): string {
   const request = buildPackageRequest({ pkg, answers: ANSWERS });
   const response = JSON.parse(engine.execute(json, JSON.stringify(request))) as ExecutionResponse;
-  const output = response.results[0].outputs[pkg.outputs.snap_allotment];
+  const output = response.results[0].outputs[pkg.outputs.snap_benefit_amount];
   if (output.kind !== "scalar") throw new Error(`expected scalar, got ${output.kind}`);
   return String(output.value.value);
 }
 
 describe("amending a statutory parameter in the artifact", () => {
-  it("moves the allotment, and current law is untouched", () => {
-    const before = allotment(artifactJson);
+  it("moves the benefit, and current law is untouched", () => {
+    const before = benefit(artifactJson);
     expect(before).toBe("478");
 
     const amended = applyWhatIf(artifactJson, {
@@ -48,12 +48,12 @@ describe("amending a statutory parameter in the artifact", () => {
     expect(amended.previousValue).toBe("0.2");
     expect(amended.parameterId).toContain("#");
 
-    const after = allotment(amended.artifactJson);
+    const after = benefit(amended.artifactJson);
     expect(after).not.toBe(before);
     expect(Number(after)).toBeGreaterThan(Number(before));
 
     // The original string is untouched: current law still computes 478.
-    expect(allotment(artifactJson)).toBe("478");
+    expect(benefit(artifactJson)).toBe("478");
   });
 
   it("refuses to amend a parameter that does not exist", () => {
@@ -65,11 +65,11 @@ describe("amending a statutory parameter in the artifact", () => {
 
 describe("presumed-answer overrides by durable ref", () => {
   it("a ref override wins over the descriptor default", () => {
-    // Flag unearned income (assistance payments) via the ref directly.
+    // Flag unearned income via the durable ref directly.
     const ref = Object.entries(pkg.defaults).find(
-      ([, slot]) => slot.name === "assistance_payments",
+      ([, slot]) => slot.name === "snap_total_monthly_unearned_income",
     )?.[0];
-    if (!ref) throw new Error("assistance_payments not in descriptor");
+    if (!ref) throw new Error("snap_total_monthly_unearned_income not in descriptor");
     const request = buildPackageRequest({
       pkg,
       answers: { ...ANSWERS, refOverrides: { [ref]: "500" } },
@@ -77,7 +77,7 @@ describe("presumed-answer overrides by durable ref", () => {
     const response = JSON.parse(
       engine.execute(artifactJson, JSON.stringify(request)),
     ) as ExecutionResponse;
-    const output = response.results[0].outputs[pkg.outputs.snap_allotment];
+    const output = response.results[0].outputs[pkg.outputs.snap_benefit_amount];
     if (output.kind !== "scalar") throw new Error("expected scalar");
     expect(Number(output.value.value)).toBeLessThan(478);
   });

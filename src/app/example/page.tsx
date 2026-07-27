@@ -75,22 +75,24 @@ export default function Example() {
           title="Run a determination"
           note={
             <p>
-              Colorado SNAP for a family of two — 319 rules from 7&nbsp;USC,
-              7&nbsp;CFR&nbsp;273, and 10&nbsp;CCR&nbsp;2506-1.
+              New York SNAP for a family of two — 122 rules from 7&nbsp;USC,
+              7&nbsp;CFR&nbsp;273, and 18&nbsp;NYCRR&nbsp;385–387, every node certified by
+              the vendored ledger.
             </p>
           }
         >
-          <Record caption="determine.mjs" aside="co-snap · us-co">
+          <Record caption="determine.mjs" aside="ny-snap · us-ny">
             <Cmd>bun scripts/determine.mjs</Cmd>
             <L />
-            <L>{dim("Colorado SNAP — monthly allotment (us-co)")}</L>
+            <L>{dim("New York SNAP — monthly benefit (us-ny)")}</L>
             <L>{dim("period 2026-01-01")}</L>
+            <L>{dim("certified (ledger fixture-us-ny-snap)")}</L>
             <L>
               {"  household_size = "}
               {num("2")}
             </L>
             <L>
-              {"  snap_countable_earned_income = "}
+              {"  snap_gross_monthly_earned_income = "}
               {num("1200")}
             </L>
             <L>
@@ -103,21 +105,21 @@ export default function Example() {
             </L>
             <L />
             <L>
-              {"  snap_allotment    "}
+              {"  snap_benefit_amount   "}
               {pin("478")}
             </L>
             <L>
-              {"  snap_net_income   "}
+              {"  snap_net_income       "}
               {num("226.5")}
             </L>
             <L>
-              {"  snap_eligible     "}
+              {"  snap_eligible         "}
               {ok("holds")}
             </L>
           </Record>
           <p className="mt-2 font-mono text-[0.68rem] text-ink-muted">
-            └─ $478 is pinned here and by axiom-api&apos;s parity suite — if your machine
-            disagrees, that is a bug with a reproduction
+            └─ $478 is pinned here and matches axiom-api&apos;s parity suite for the same
+            facts — if your machine disagrees, that is a bug with a reproduction
           </p>
         </Step>
 
@@ -133,27 +135,27 @@ export default function Example() {
           }
         >
           <Record>
-            <Cmd>bun scripts/determine.mjs --set assistance_payments=500</Cmd>
+            <Cmd>bun scripts/determine.mjs --set snap_total_monthly_unearned_income=500</Cmd>
             <L>
-              {"  snap_allotment    "}
+              {"  snap_benefit_amount   "}
               {num("253")}
             </L>
             <L />
             <Cmd>bun scripts/determine.mjs --people member_age=42,9,70</Cmd>
             <L>
-              {"  snap_allotment    "}
+              {"  snap_benefit_amount   "}
               {num("717")}
               {"   "}
               {dim("# household of three")}
             </L>
             <L />
-            <Cmd>bun scripts/determine.mjs --set snap_countable_earned_income=2400</Cmd>
+            <Cmd>bun scripts/determine.mjs --set snap_gross_monthly_earned_income=2400</Cmd>
             <L>
-              {"  snap_allotment    "}
+              {"  snap_benefit_amount   "}
               {num("0")}
             </L>
             <L>
-              {"  snap_eligible     "}
+              {"  snap_eligible         "}
               {no("not_holds")}
               {"   "}
               {dim("# over the income limit")}
@@ -167,7 +169,7 @@ export default function Example() {
           note={
             <p>
               The program is data. Raise the earned-income deduction from 20% to 30% and the
-              same family&apos;s allotment moves — labeled hypothetical, current law untouched.
+              same family&apos;s benefit moves — labeled hypothetical, current law untouched.
             </p>
           }
         >
@@ -182,12 +184,8 @@ export default function Example() {
             </L>
             <L />
             <L>
-              {"  snap_allotment    "}
+              {"  snap_benefit_amount   "}
               {num("532")}
-            </L>
-            <L>
-              {"  snap_net_income   "}
-              {num("166.5")}
             </L>
           </Record>
         </Step>
@@ -206,61 +204,47 @@ export default function Example() {
           <Record>
             <Cmd>bun scripts/determine.mjs --trace</Cmd>
             <L>
-              {"  snap_allotment = "}
+              {"  snap_benefit = "}
               {num("$478")}
               {"  "}
-              {id("us-co:regulations/10-ccr-2506-1/4.207.2#snap_allotment")}
+              {id("us:policies/usda/snap/state-plan-composition#snap_benefit")}
             </L>
             <L>
               {"    snap_eligible = "}
               {ok("holds")}
               {"  "}
-              {id("us-co:policies/cdhs/snap/fy-2026-benefit-calculation#snap_eligible")}
+              {id("us-ny:policies/otda/snap/fy-2026-benefit-calculation#snap_eligible")}
             </L>
             <L>
-              {"    snap_monthly_allotment = "}
-              {num("$478")}
+              {"      snap_resource_eligible = "}
+              {ok("holds")}
               {"  "}
-              {id("us:regulations/7-cfr/273/10#snap_monthly_allotment")}
+              {id("us:regulations/7-cfr/273/8#snap_resource_eligible")}
             </L>
-            <L>{dim("      = if does not hold and $478 < $10 then 0 else …")}</L>
-            <L>{dim("    … 319 rules deep, every one cited")}</L>
+            <L>{dim("        = holds or snap_financial_resources_within_limit")}</L>
+            <L>{dim("    … 122 rules deep, every one cited and certified")}</L>
           </Record>
         </Step>
 
         <Step
           number="06"
-          title="Switch programs"
+          title="Only certified law serves"
           note={
             <p>
-              The same commands run every vendored program. Federal income tax doubles its
-              brackets for joint filers — the law behaves.
+              The catalog is exactly what the certification ledger vouches for — every
+              rule, parameter, and input in a program&apos;s closure carries a
+              verifier-issued certificate. Anything else is refused at vendor time and
+              again at load. No flag, no grace period.
             </p>
           }
         >
           <Record>
             <Cmd>bun scripts/determine.mjs --programs</Cmd>
-            <L>{dim("co-snap   Colorado SNAP — monthly allotment      (us-co)")}</L>
-            <L>{dim("ma-snap   Massachusetts SNAP — monthly benefit   (us-ma)")}</L>
-            <L>{dim("fiit      Federal individual income tax          (us)")}</L>
-            <L>{dim("fl-tca    Florida Temporary Cash Assistance      (us-fl)")}</L>
+            <L>{dim("ny-snap   envelope   New York SNAP — monthly benefit — 122 rules (us-ny)")}</L>
             <L />
-            <Cmd>bun scripts/determine.mjs --program fiit --set taxable_income=60000</Cmd>
-            <L>
-              {"  regular_tax_before_credits  "}
-              {num("7912")}
-            </L>
-            <L />
-            <Cmd>
-              bun scripts/determine.mjs --program fiit --set taxable_income=120000 --set
-              filing_status=1
-            </Cmd>
-            <L>
-              {"  regular_tax_before_credits  "}
-              {num("15824")}
-              {"   "}
-              {dim("# exactly 2× — joint brackets")}
-            </L>
+            <Cmd>bun scripts/determine.mjs --program co-snap</Cmd>
+            <L>{no('error: Unknown program "co-snap".')}</L>
+            <L>{dim("# dropped from the registry: its closure is not certified by the vendored ledger")}</L>
           </Record>
         </Step>
 
@@ -279,13 +263,18 @@ export default function Example() {
             <Cmd>bun scripts/determine.mjs --json | jq .outputs</Cmd>
             <L>{"{"}</L>
             <L>
-              {'  "snap_allotment": '}
+              {'  "snap_benefit_amount": '}
               {num('"478"')}
               {","}
             </L>
             <L>
               {'  "snap_net_income": '}
               {num('"226.5"')}
+              {","}
+            </L>
+            <L>
+              {'  "snap_gross_monthly_income": '}
+              {num('"1200"')}
               {","}
             </L>
             <L>

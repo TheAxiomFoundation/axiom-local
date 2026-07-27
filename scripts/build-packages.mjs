@@ -1,14 +1,23 @@
 /**
  * Vendors runtime packages into public/programs/ — one directory per
- * program, plus an index.json manifest the page and CLI read. Replaces the
- * co-snap-only generator; any compiled artifact with the provenance
- * envelope can be admitted by adding a PROGRAMS entry.
+ * program, plus an index.json manifest the page and CLI read.
  *
- * For each program this emits:
+ * Every candidate passes the CERTIFIED-NODE GATE before anything is
+ * written: the artifact's full node closure (derived rules, parameters,
+ * relations, and the input refs the descriptor addresses the dataset
+ * with) must be certified by the vendored ledger, or the program is
+ * refused and dropped from the registry — uncertified law is not
+ * servable, so it is not vendorable either. Admitted packages carry a
+ * `certified` provenance stamp the runtime loader re-checks against
+ * public/corpus/ledger.json. Build stderr may name uncertified ids;
+ * serving surfaces never do.
+ *
+ * For each admitted program this emits:
  *   public/programs/<id>/artifact.json   — the artifact, byte-identical
  *   public/programs/<id>/package.json    — descriptor: per-input screening
  *     defaults keyed by durable ref, entity/relation plan, headline
- *     questions, example household, optional what-if, output ids, sha-256.
+ *     questions, example household, optional what-if, output ids, sha-256,
+ *     certified provenance.
  *
  * The pipeline per program:
  *   1. discover inputs with the page's own discovery (src/lib/program.ts)
@@ -16,27 +25,76 @@
  *      text inputs also collect their enum options), else legacy registry
  *      dtype (dates), else discovery flavor
  *   3. entity attribution corrected by engine probes to a fixpoint
- *   4. a final clean execution with the example answers, asserted here
+ *   4. the certified-node gate, then a final clean execution with the
+ *      example answers, asserted here
  *
- * Usage: bun scripts/build-packages.mjs <axiom-api-checkout>
+ * Usage: bun scripts/build-packages.mjs [--ledger <path>] [<axiom-api-checkout>]
+ *
+ * --ledger defaults to data/certified-nodes.json (the synced ledger copy).
+ * Without an axiom-api checkout only the corpus-direct programs are
+ * evaluated — the api-sourced candidates cannot even be read, which under
+ * fail-closed rules means they do not vendor.
  */
 import { createHash } from "node:crypto";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { discoverInputs } from "../src/lib/program.ts";
 import { buildPackageRequest } from "../src/lib/goldenPath.ts";
+import { moduleUrl, probeFixpoint, resolveClosure, synthesizePackage } from "../src/lib/corpus.ts";
+import {
+  assertArtifactCertified,
+  certifiedStamp,
+  validateLedger,
+} from "../src/lib/certified.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const outRoot = join(here, "..", "public", "programs");
+const corpusRoot = join(here, "..", "public", "corpus");
 const requireCjs = createRequire(import.meta.url);
 const engine = requireCjs("../engine/pkg-node/axiom_rules_engine_wasm.js");
 
-const apiCheckout = process.argv[2];
-if (!apiCheckout) {
-  console.error("usage: build-packages.mjs <axiom-api-checkout>");
-  process.exit(1);
+let ledgerPath = join(here, "..", "data", "certified-nodes.json");
+let apiCheckout = null;
+{
+  const args = process.argv.slice(2);
+  for (let i = 0; i < args.length; i += 1) {
+    if (args[i] === "--ledger") {
+      ledgerPath = args[i + 1];
+      i += 1;
+    } else {
+      apiCheckout = args[i];
+    }
+  }
+}
+
+// The gate's authority: a ledger that does not validate wholesale vendors
+// nothing (validateLedger throws and the build dies before touching disk).
+const certified = await validateLedger(JSON.parse(readFileSync(ledgerPath, "utf8")));
+console.log(
+  `ledger ${certified.ledger.ledger_id}: ${certified.ledger.entries.length} certified nodes, ` +
+    `set ${certified.setVersion}${certified.ledger.fixture ? " (FIXTURE)" : ""}`,
+);
+
+/**
+ * The gate, applied to a finished descriptor: the closure is the artifact's
+ * nodes plus the dataset refs in pkg.defaults (that is how the artifact
+ * addresses its inputs — prefix or per-slot legal ids alike, they all end
+ * up as defaults keys). Throws naming the uncertified ids; the caller
+ * routes that to stderr and drops the program.
+ */
+function gateAndStamp(pkg, artifact) {
+  assertArtifactCertified(artifact, Object.keys(pkg.defaults), certified);
+  pkg.certified = certifiedStamp(certified, pkg.outputs);
+}
+
+/** The registry entry's certified identity — what index.json carries. */
+function certifiedIndexEntry() {
+  return {
+    ledger_id: certified.ledger.ledger_id,
+    certified_set_version: certified.setVersion,
+  };
 }
 
 /**
@@ -248,10 +306,210 @@ const PROGRAMS = [
   // artifact carries the section 601 schedule.
 ];
 
-// Legacy registry (per-slot defaults for programs that have one)
-const registry = JSON.parse(
-  readFileSync(join(apiCheckout, "data", "compiled-packages.current.json"), "utf8"),
-);
+// Legacy registry (per-slot defaults for programs that have one). Absent a
+// checkout there is no registry — and no way to admit api-sourced programs.
+const registry = apiCheckout
+  ? JSON.parse(readFileSync(join(apiCheckout, "data", "compiled-packages.current.json"), "utf8"))
+  : null;
+
+/**
+ * Corpus-direct programs: compiled at vendor time from public/corpus/ by
+ * the vendored engine itself — the same slice the explorer would cut,
+ * plus curation (entity plan with membership relations, screening
+ * presumptions that differ from the synthesized zero-state, headline
+ * questions, example household). These are the only candidates whose
+ * every node carries a durable legal id end to end, which is what the
+ * certified gate requires; the api-sourced NY artifact addresses inputs
+ * under a synthetic `axiom:` prefix and is uncertifiable by construction.
+ */
+const DIRECT_PROGRAMS = [
+  {
+    id: "ny-snap",
+    title: "New York SNAP — monthly benefit",
+    jurisdiction: "us-ny",
+    root: "us-ny:policies/otda/snap/fy-2026-benefit-calculation",
+    query_entity_id: "household:1",
+    entities: [
+      { entity: "Household", id_template: "household:1", count: 1 },
+      {
+        entity: "Person",
+        id_template: "person:1:{index}",
+        count_from: "household_size",
+        // The artifact aggregates over three membership relations: the
+        // statutory one, the state-plan composition bridge, and NY's
+        // categorical-eligibility membership. All must bind every member.
+        relations: [
+          {
+            name: "us:statutes/7/2012/j#relation.member_of_household",
+            tuple: ["person:1:{index}", "household:1"],
+          },
+          {
+            name: "us:policies/usda/snap/state-plan-composition#relation.member_of_household",
+            tuple: ["person:1:{index}", "household:1"],
+          },
+          {
+            name: "us-ny:regulations/18-nycrr/387/14/a/5#relation.ny_snap_categorical_member_of_household",
+            tuple: ["person:1:{index}", "household:1"],
+          },
+        ],
+      },
+      { entity: "Asset", id_template: "asset:1:{index}", count_from: "asset_count" },
+      { entity: "SnapUnit", id_template: "snap_unit:1", count: 1 },
+    ],
+    /**
+     * Screening presumptions that differ from the synthesized zero-state,
+     * carried by slot name. The first block mirrors the legacy registry
+     * descriptor (citizenship, residency, adult ages, the statutory
+     * minimum wage). The work-requirement block presumes procedural
+     * compliance — "registered, and did not refuse anything that was
+     * offered" — the same screening position the co-snap descriptor takes
+     * through its vacuous-comparison pass; every one stays visible and
+     * overridable in the presumption editor.
+     */
+    slotDefaultsByName: {
+      federal_minimum_wage: "7.25",
+      federal_or_state_minimum_wage: "7.25",
+      household_lives_in_application_state: true,
+      household_size: "1",
+      member_age: "30",
+      member_has_documentary_or_collateral_evidence_of_ssn_application_or_every_effort: true,
+      member_is_us_citizen: true,
+      student_age: "30",
+      member_registered_for_work_or_registered_by_state: true,
+      member_participated_in_snap_et_if_assigned: true,
+      member_participated_in_workfare_if_assigned: true,
+      member_provided_employment_status_or_availability_information: true,
+      member_reported_to_referred_suitable_employer_if_referred: true,
+      member_accepted_bona_fide_suitable_employment_offer_if_offered: true,
+    },
+    headline: [
+      { slot: "household_size", entity: "Household", label: "People in the household" },
+      { slot: "snap_gross_monthly_earned_income", entity: "Household", label: "Monthly earned income" },
+      { slot: "household_shelter_costs_incurred", entity: "Household", label: "Monthly shelter costs" },
+      { slot: "member_age", entity: "Person", label: "Age", per_person: true },
+    ],
+    outputs: {
+      snap_benefit_amount: "snap_benefit",
+      snap_net_income: "snap_net_income",
+      snap_gross_monthly_income: "snap_gross_monthly_income",
+      snap_eligible: "snap_eligible",
+    },
+    example: {
+      household: {
+        household_size: "2",
+        snap_gross_monthly_earned_income: "1200",
+        household_shelter_costs_incurred: "900",
+      },
+      people: { member_age: ["42", "9"] },
+    },
+    what_if: {
+      parameter: "snap_earned_income_deduction_rate_for_net_income",
+      value: "0.3",
+      label: "The earned-income deduction rate — 7 USC 2014(e)(2)",
+    },
+    // The federal arithmetic dominates this household, so the benefit and
+    // net income match the values axiom-api's parity suite pins for the
+    // same facts through the Colorado composition.
+    pin: { snap_benefit_amount: "478", snap_net_income: "226.5" },
+  },
+];
+
+function buildDirectProgram(config) {
+  const manifestPath = join(corpusRoot, "manifest.json");
+  if (!existsSync(manifestPath)) {
+    throw new Error(
+      "public/corpus/ is not generated — run: bun scripts/build-corpus.mjs <rulespec checkout>",
+    );
+  }
+  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  const closure = resolveClosure(manifest, config.root);
+  const modules = Object.fromEntries(
+    closure.map((target) => [
+      target,
+      readFileSync(join(corpusRoot, moduleUrl(target).replace("/corpus/", "")), "utf8"),
+    ]),
+  );
+  const artifactRaw = engine.compile(JSON.stringify(modules), config.root);
+  const artifact = JSON.parse(artifactRaw);
+  console.log(
+    `\n== ${config.id} (direct from corpus): ${closure.length} modules, ` +
+      `${artifact.program.derived.length} rules, ${artifact.program.parameters.length} parameters`,
+  );
+
+  const commit = manifest.sources[0]?.commit ?? "unknown";
+  const { pkg } = synthesizePackage(artifact, config.root, commit);
+  pkg.program_id = config.id;
+  pkg.jurisdiction = config.jurisdiction;
+  pkg.title = config.title;
+  pkg.provenance = "envelope";
+  pkg.source = {
+    repo: manifest.sources[0]?.repo ?? "corpus",
+    artifact_path: config.root,
+    artifact_sha256: createHash("sha256").update(artifactRaw).digest("hex"),
+    corpus_commit: commit,
+    engine_version: artifact.engine_version ?? null,
+    artifact_format_version: artifact.artifact_format_version ?? null,
+  };
+  pkg.entities = config.entities;
+  pkg.query = { entity_id: config.query_entity_id };
+  pkg.headline = config.headline;
+  pkg.example = config.example;
+  if (config.what_if) pkg.what_if = config.what_if;
+  let curated = 0;
+  for (const slot of Object.values(pkg.defaults)) {
+    const value = config.slotDefaultsByName[slot.name];
+    if (value !== undefined) {
+      slot.value = value;
+      curated += 1;
+    }
+  }
+
+  console.log(`   defaults: ${Object.keys(pkg.defaults).length} synthesized, ${curated} curated`);
+
+  const { corrected, admitted } = probeFixpoint(engine, artifactRaw, artifact, pkg);
+  console.log(`   entity attribution: ${corrected} corrected, ${admitted} admitted by probe`);
+
+  const derivedByName = new Map(artifact.program.derived.map((rule) => [rule.name, rule]));
+  pkg.outputs = {};
+  for (const [name, ruleName] of Object.entries(config.outputs)) {
+    const rule = derivedByName.get(ruleName);
+    if (!rule?.id) throw new Error(`${config.id}: output "${ruleName}" has no durable id`);
+    pkg.outputs[name] = rule.id;
+  }
+
+  // The gate — before anything executes as "the program" or reaches disk.
+  gateAndStamp(pkg, artifact);
+
+  // Final assertion: example executes clean; pins hold when configured.
+  const answers = { ...config.example, refOverrides: {} };
+  const request = buildPackageRequest({ pkg, answers });
+  const response = JSON.parse(engine.execute(artifactRaw, JSON.stringify(request)));
+  const result = response.results[0];
+  for (const [name, id] of Object.entries(pkg.outputs)) {
+    const output = result.outputs[id];
+    if (!output) throw new Error(`${config.id}: output ${name} missing from response`);
+    const value = output.kind === "scalar" ? output.value.value : output.outcome;
+    console.log(`   ${name} = ${value}`);
+    if (config.pin?.[name] !== undefined && String(value) !== config.pin[name]) {
+      throw new Error(`${config.id}: pin failed — ${name} = ${value}, expected ${config.pin[name]}`);
+    }
+  }
+
+  const dir = join(outRoot, config.id);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, "artifact.json"), artifactRaw);
+  writeFileSync(join(dir, "package.json"), JSON.stringify(pkg, null, 1));
+  return {
+    id: config.id,
+    title: config.title,
+    jurisdiction: config.jurisdiction,
+    provenance: "envelope",
+    certified: certifiedIndexEntry(),
+    inputs: Object.keys(pkg.defaults).length,
+    rules: artifact.program.derived.length,
+    parameters: artifact.program.parameters.length,
+  };
+}
 
 /**
  * Legacy-format programs: the axiom-api registry carries a full descriptor
@@ -270,7 +528,9 @@ const LEGACY_PROGRAMS = [
   { registry: ["snap", "us-az"], id: "az-snap", title: "Arizona SNAP" },
   { registry: ["snap", "us-ca"], id: "ca-snap", title: "California SNAP" },
   { registry: ["snap", "us-nc"], id: "nc-snap", title: "North Carolina SNAP" },
-  { registry: ["snap", "us-ny"], id: "ny-snap", title: "New York SNAP" },
+  // snap/us-ny is superseded by the corpus-direct ny-snap above: the api
+  // artifact addresses inputs under a synthetic `axiom:` prefix, which is
+  // uncertifiable — listing it here would only re-vendor the same id.
   { registry: ["snap", "us-sc"], id: "sc-snap", title: "South Carolina SNAP" },
   { registry: ["snap", "us-tn"], id: "tn-snap", title: "Tennessee SNAP" },
   { registry: ["tanf", "us-co"], id: "co-tanf", title: "Colorado TANF" },
@@ -481,6 +741,9 @@ function buildProgram(config) {
     }
   }
 
+  // The gate — nothing uncertified reaches disk or the registry.
+  gateAndStamp(pkg, artifact);
+
   const dir = join(outRoot, config.id);
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, "artifact.json"), artifactRaw);
@@ -489,6 +752,7 @@ function buildProgram(config) {
     id: config.id,
     title: config.title,
     jurisdiction: config.jurisdiction,
+    certified: certifiedIndexEntry(),
     inputs: discovered.length,
     rules: artifact.program.derived.length,
     parameters: artifact.program.parameters.length,
@@ -621,6 +885,11 @@ function buildLegacyProgram(config) {
   }
   if (admitted) console.log(`   ${admitted} inputs admitted by probe`);
 
+  // The gate — legacy artifacts address inputs under a synthetic `axiom:`
+  // prefix, which no ledger can certify; they fail here by construction
+  // until re-cut with durable input ids upstream.
+  gateAndStamp(pkg, artifact);
+
   const dir = join(outRoot, config.id);
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, "artifact.json"), artifactRaw);
@@ -630,19 +899,54 @@ function buildLegacyProgram(config) {
     title: config.title,
     jurisdiction: entry.jurisdiction,
     provenance: "legacy",
+    certified: certifiedIndexEntry(),
     inputs: Object.keys(pkg.defaults).length,
     rules: artifact.program.derived.length,
     parameters: artifact.program.parameters.length,
   };
 }
 
-const index = PROGRAMS.map(buildProgram).map((item) => ({ ...item, provenance: "envelope" }));
-for (const config of LEGACY_PROGRAMS) {
+// Fail closed on disk too: wipe the vendored tree so nothing stale (or
+// previously admitted under a different ledger) survives a re-vendor.
+rmSync(outRoot, { recursive: true, force: true });
+mkdirSync(outRoot, { recursive: true });
+
+/** Refusals go to stderr in full — build tooling may name uncertified ids. */
+function excluded(id, error) {
+  console.error(`EXCLUDED ${id}: ${error instanceof Error ? error.message : error}`);
+}
+
+const index = [];
+for (const config of DIRECT_PROGRAMS) {
   try {
-    index.push(buildLegacyProgram(config));
+    index.push(buildDirectProgram(config));
   } catch (error) {
-    console.log(`   EXCLUDED ${config.id}: ${String(error).slice(0, 120)}`);
+    excluded(config.id, error);
+  }
+}
+if (!apiCheckout) {
+  console.error(
+    `no axiom-api checkout supplied — ${PROGRAMS.length + LEGACY_PROGRAMS.length} api-sourced ` +
+      "candidates cannot be read and therefore do not vendor",
+  );
+} else {
+  for (const config of PROGRAMS) {
+    try {
+      index.push({ ...buildProgram(config), provenance: "envelope" });
+    } catch (error) {
+      excluded(config.id, error);
+    }
+  }
+  for (const config of LEGACY_PROGRAMS) {
+    try {
+      index.push(buildLegacyProgram(config));
+    } catch (error) {
+      excluded(config.id, error);
+    }
   }
 }
 writeFileSync(join(outRoot, "index.json"), JSON.stringify({ programs: index }, null, 1));
-console.log(`\nwrote ${outRoot}/index.json with ${index.length} programs`);
+console.log(
+  `\nwrote ${outRoot}/index.json with ${index.length} program(s) under ledger ` +
+    `${certified.ledger.ledger_id}`,
+);

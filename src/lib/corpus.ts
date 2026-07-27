@@ -15,6 +15,17 @@
  * A slice compiled here is VALID (well-formed, cited, from the pinned
  * corpus) but not parity-PINNED like the cataloged programs — callers must
  * keep that distinction visible (docs/artifact-distribution.md).
+ *
+ * CERTIFIED-NODE GATE: a slice is servable only if its full node closure
+ * is certified by the vendored ledger (public/corpus/ledger.json). The
+ * gate runs post-compile — assertArtifactCertified(artifact, defaults
+ * keys, ledger) in src/lib/certified.ts — because the manifest's rule
+ * names include provenance shells (`restates_*`, relation declarations)
+ * that never compile into nodes, so a name-level check here would refuse
+ * valid roots. Every slicing caller (the explorer, the vendor script, the
+ * tests) must apply it before rendering or executing anything; refusals
+ * list the uncertified ids, which is acceptable in this dev-tooling
+ * context and nowhere else.
  */
 
 import type { CompiledProgramArtifact } from "./engine/types";
@@ -259,7 +270,15 @@ export function synthesizePackage(
       entry.options = input.tableKeys;
       if (!input.tableKeys.includes(String(entry.value))) entry.value = input.tableKeys[0];
     }
-    defaults[input.ref] = entry;
+    // Key by the ROOT-prefix spelling `<root>#input.<name>`, not the
+    // per-module spelling discovery produces: the certification ledger
+    // vouches for the package-prefix spelling (mirroring axiom-api's
+    // input_legal_id_prefix), and the engine resolves bare-name reads
+    // against it from any module. The same bare name read from several
+    // modules collapses to ONE certified ref; the probe fixpoint
+    // re-corrects entity attribution where readers disagreed.
+    const ref = `${root}#input.${input.name}`;
+    if (!defaults[ref]) defaults[ref] = entry;
   }
 
   const kinds = [...new Set(Object.values(defaults).map((slot) => slot.entity))];

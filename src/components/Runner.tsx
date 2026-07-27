@@ -3,7 +3,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PresumptionEditor } from "@/components/PresumptionEditor";
 import { loadEngine } from "@/lib/engine/load";
-import type { ExecutionResponse, Period } from "@/lib/engine/types";
+import type { CompiledProgramArtifact, ExecutionResponse, Period } from "@/lib/engine/types";
+import {
+  assertPackageCertified,
+  collectClosureIds,
+  findUncertified,
+  validateLedger,
+  type CertifiedIndex,
+} from "@/lib/certified";
 import {
   buildPackageRequest,
   findInvalidNumericAnswers,
@@ -28,7 +35,18 @@ interface ProgramIndexEntry {
   jurisdiction: string;
   rules: number;
   provenance?: "envelope" | "legacy";
+  certified?: { ledger_id: string; certified_set_version: string };
 }
+
+/**
+ * The served certification ledger. Fail closed: until it loads and
+ * validates, no program does — and if it never does, the honest state is
+ * "nothing servable", not a crash and not the uncertified catalog.
+ */
+type LedgerState =
+  | { kind: "loading" }
+  | { kind: "refused"; reason: string }
+  | { kind: "ready"; index: CertifiedIndex };
 
 /** The downloadable determination: the exact shape `determine.mjs --json` prints. */
 interface Determination {
@@ -128,7 +146,9 @@ function keyFacts(pkg: GoldenPackage): PackageHeadline[] {
 }
 
 export function Runner() {
-  const [programs, setPrograms] = useState<ProgramIndexEntry[]>([]);
+  // null while loading; an empty array is the honest "nothing certified" state.
+  const [programs, setPrograms] = useState<ProgramIndexEntry[] | null>(null);
+  const [ledger, setLedger] = useState<LedgerState>({ kind: "loading" });
   const [programId, setProgramId] = useState("ny-snap");
   const [pkg, setPkg] = useState<GoldenPackage | null>(null);
   const artifactRef = useRef<string | null>(null);
@@ -149,14 +169,38 @@ export function Runner() {
   useEffect(() => {
     fetch("/programs/index.json")
       .then((response) => response.json())
-      .then((index: { programs: ProgramIndexEntry[] }) => setPrograms(index.programs))
+      .then((index: { programs: ProgramIndexEntry[] }) => {
+        setPrograms(index.programs);
+        // The default id may not exist (e.g. an empty certified registry):
+        // land on whatever IS served rather than 404ing the default.
+        if (index.programs.length > 0 && !index.programs.some((p) => p.id === "ny-snap")) {
+          setProgramId(index.programs[0].id);
+        }
+      })
       .catch((cause) => setError(String(cause)));
+    // The served ledger is the load gate for every program below.
+    fetch("/corpus/ledger.json")
+      .then((response) => {
+        if (!response.ok) throw new Error(`ledger not served (${response.status})`);
+        return response.json();
+      })
+      .then((raw) => validateLedger(raw))
+      .then((index) => setLedger({ kind: "ready", index }))
+      .catch((cause) =>
+        setLedger({
+          kind: "refused",
+          reason: cause instanceof Error ? cause.message : String(cause),
+        }),
+      );
     loadEngine()
       .then((engine) => setEngineVersion(engine.engine_version()))
       .catch((cause) => setError(`Engine failed to load: ${String(cause)}`));
   }, []);
 
-  // Load a program's artifact + descriptor, seeding the facts from its example.
+  // Load a program's artifact + descriptor, seeding the facts from its
+  // example — gated on the served ledger: certificate provenance must match
+  // it, and the artifact's node closure must be fully certified. Serving
+  // surface: refusals report counts, never node ids.
   useEffect(() => {
     let cancelled = false;
     loadSeq.current += 1;
@@ -165,6 +209,7 @@ export function Runner() {
     setError(null);
     setElapsedMs(null);
     artifactRef.current = null;
+    if (ledger.kind !== "ready" || programs === null || programs.length === 0) return;
     const mustOk = (response: Response) => {
       if (!response.ok) throw new Error(`fetch failed (${response.status}): ${response.url}`);
       return response;
@@ -177,6 +222,18 @@ export function Runner() {
     ])
       .then(([artifactJson, descriptor]) => {
         if (cancelled) return;
+        assertPackageCertified(descriptor, ledger.index);
+        const artifact = JSON.parse(artifactJson) as CompiledProgramArtifact;
+        const uncertified = findUncertified(
+          collectClosureIds(artifact, Object.keys(descriptor.defaults)),
+          ledger.index,
+        );
+        if (uncertified.length > 0) {
+          throw new Error(
+            `refused: ${uncertified.length} node(s) in this package are not certified ` +
+              "under the served ledger",
+          );
+        }
         artifactRef.current = artifactJson;
         setPkg(descriptor);
         setRefOverrides({});
@@ -192,12 +249,12 @@ export function Runner() {
         setMonth(descriptor.default_period);
       })
       .catch((cause) => {
-        if (!cancelled) setError(String(cause));
+        if (!cancelled) setError(cause instanceof Error ? cause.message : String(cause));
       });
     return () => {
       cancelled = true;
     };
-  }, [programId]);
+  }, [programId, ledger, programs]);
 
   const run = useCallback(async () => {
     // Snapshot everything before any await: a program switch mid-run nulls
@@ -301,13 +358,33 @@ export function Runner() {
   }, [determination]);
 
   const fieldClass = "field text-[0.82rem]";
-  const entry = programs.find((program) => program.id === programId);
+  const entry = (programs ?? []).find((program) => program.id === programId);
   const facts = pkg ? keyFacts(pkg) : [];
   const editedCount = Object.keys(refOverrides).length;
 
+  // The honest empty state: an empty certified registry (or a ledger that
+  // refused to validate) serves nothing — say so instead of 404ing.
+  if (ledger.kind === "refused" || (programs !== null && programs.length === 0)) {
+    return (
+      <div className="panel p-5">
+        <p className="smallcaps text-[0.62rem] text-ink-secondary">Nothing certified to serve</p>
+        <p className="mt-3 max-w-2xl text-[0.9rem] font-light leading-relaxed text-ink-secondary">
+          Programs are served only under a valid certification ledger, and the current one
+          certifies none of them. This is a state, not an error: the gate fails closed until a
+          ledger that covers a program&apos;s full closure is vendored.
+        </p>
+        <p className="mt-3 font-mono text-[0.68rem] text-ink-muted">
+          {ledger.kind === "refused"
+            ? `└─ ${ledger.reason}`
+            : `└─ ledger ${ledger.kind === "ready" ? ledger.index.ledger.ledger_id : "…"} — 0 programs certified`}
+        </p>
+      </div>
+    );
+  }
+
   // Group the catalog for the picker: federal-level first, then states.
   const groups = new Map<string, ProgramIndexEntry[]>();
-  for (const program of programs) {
+  for (const program of programs ?? []) {
     const label = JURISDICTIONS[program.jurisdiction] ?? program.jurisdiction;
     if (!groups.has(label)) groups.set(label, []);
     groups.get(label)!.push(program);
@@ -363,8 +440,14 @@ export function Runner() {
         {entry ? (
           <p className="mt-2 font-mono text-[0.65rem] text-ink-muted">
             {entry.rules} rules ·{" "}
-            {entry.provenance === "envelope" ? "engine-stamped provenance" : "hash-pinned"} ·
-            executes in this tab
+            {entry.provenance === "envelope" ? "engine-stamped provenance" : "hash-pinned"} ·{" "}
+            {/* The certificate line is the reason this program is visible at all. */}
+            {pkg?.certified
+              ? `certified (ledger ${pkg.certified.ledger_id})`
+              : error
+                ? "not certified — refused"
+                : "checking certification…"}{" "}
+            · executes in this tab
           </p>
         ) : null}
       </div>

@@ -11,22 +11,44 @@
  *
  * public/corpus/ is gitignored: 30+ MB of YAML belongs in a checkout or a
  * content-addressed bucket (docs/artifact-distribution.md), never in git.
+ * The one exception is ledger.json — the certification ledger vendored
+ * here is the authority every serving surface gates against, so it is
+ * tracked (see .gitignore's carve-out) and a clone fails CLOSED to the
+ * ledger's certified set rather than OPEN to whatever is on disk.
  *
- * Usage: bun scripts/build-corpus.mjs <rulespec-us-checkout> [...more checkouts]
+ * Usage: bun scripts/build-corpus.mjs [--ledger <path>] <rulespec-us-checkout> [...more]
  */
 import { execSync } from "node:child_process";
 import { mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import { validateLedger } from "../src/lib/certified.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const outRoot = join(here, "..", "public", "corpus");
 
-const checkouts = process.argv.slice(2);
+let ledgerPath = join(here, "..", "data", "certified-nodes.json");
+const checkouts = [];
+{
+  const args = process.argv.slice(2);
+  for (let i = 0; i < args.length; i += 1) {
+    if (args[i] === "--ledger") {
+      ledgerPath = args[i + 1];
+      i += 1;
+    } else {
+      checkouts.push(args[i]);
+    }
+  }
+}
 if (checkouts.length === 0) {
-  console.error("usage: build-corpus.mjs <rulespec-checkout> [...more]");
+  console.error("usage: build-corpus.mjs [--ledger <path>] <rulespec-checkout> [...more]");
   process.exit(1);
 }
+
+// Validate before writing anything: an invalid ledger must not become the
+// served one, and fail-closed means the whole corpus build dies with it.
+const ledgerRaw = readFileSync(ledgerPath, "utf8");
+const certified = await validateLedger(JSON.parse(ledgerRaw));
 
 /** Directories that hold corpus tooling or fixtures, not modules. */
 const SKIP_DIRS = new Set(["tests", "tools", "bulk", "programs", "node_modules", ".git"]);
@@ -116,13 +138,28 @@ writeFileSync(
   join(outRoot, "manifest.json"),
   JSON.stringify({ format: "axiom-local.corpus.v1", sources, modules }),
 );
+// The served ledger, byte-identical: everything that gates on certification
+// (the Runner, the explorer, determine.mjs) reads this one spelling.
+writeFileSync(join(outRoot, "ledger.json"), ledgerRaw);
 // The tracked lock: deploys regenerate the corpus from exactly these
-// commits, so what production serves is what was reviewed here.
+// commits, so what production serves is what was reviewed here — and the
+// ledger identity pins WHICH certified set that corpus was served under.
 writeFileSync(
   join(here, "..", "corpus.lock.json"),
-  `${JSON.stringify({ sources }, null, 2)}\n`,
+  `${JSON.stringify(
+    {
+      sources,
+      ledger: {
+        ledger_id: certified.ledger.ledger_id,
+        certified_set_version: certified.setVersion,
+      },
+    },
+    null,
+    2,
+  )}\n`,
 );
 console.log(
   `wrote ${modules.length} modules (${ruleCount} named rules) from ` +
-    `${sources.map((s) => `${s.repo}@${s.commit.slice(0, 7)}`).join(", ")} → public/corpus/`,
+    `${sources.map((s) => `${s.repo}@${s.commit.slice(0, 7)}`).join(", ")} → public/corpus/ ` +
+    `under ledger ${certified.ledger.ledger_id} (${certified.ledger.entries.length} nodes)`,
 );

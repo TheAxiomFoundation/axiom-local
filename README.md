@@ -33,24 +33,28 @@ the id it came from.
 
 ## The programs: full composed artifacts, not demos
 
-The page ships a library of **composed compiled artifacts** — the same
-versioned release units the hosted engine executes, provenance and sha-256
-shown on the page — selectable from the program panel:
+The page ships **composed compiled artifacts** — the same versioned release
+units the hosted engine executes, provenance and sha-256 shown on the page —
+and serves ONLY what the **certification ledger** vouches for. Every node a
+program can surface (rules, parameters, relations, inputs) must carry a
+verifier-issued certificate in the vendored ledger
+(`data/certified-nodes.json`, served as `public/corpus/ledger.json`);
+`scripts/build-packages.mjs` refuses to vendor anything less, and the
+runtime loader re-checks the stamp on every load. There is no bypass flag.
+The current ledger certifies the New York SNAP direct-compile closure:
 
 | Program | Rules | Inputs | Law |
 |---|---|---|---|
-| Colorado SNAP (the golden path) | 319 | 585 | 7 USC 2011–2036 · 7 CFR 273 · 10 CCR 2506-1 |
-| Massachusetts SNAP | 372 | 719 | 7 USC · 7 CFR 273 · 106 CMR 360–366 |
-| Federal individual income tax | 137 | 184 | 26 USC 1, 24, 32, 55, 63, 151… |
-| Florida Temporary Cash Assistance | 831 | 2,113 | 45 CFR · FL 65A-4 |
+| New York SNAP (the golden path) | 122 | 143 | 7 USC 2011–2036 · 7 CFR 273 · 18 NYCRR 385–387 |
 
-The landing page embeds the runner: pick any of the vendored programs, state
-the facts, run — for the canonical Colorado SNAP two-person household
-($1,200 monthly earned income, $900 shelter costs) it computes a **$478
-monthly allotment**, the exact value axiom-api's parity suite pins. Every
-determination is downloadable as the same JSON `scripts/determine.mjs --json`
-prints, byte for byte. `scripts/build-packages.mjs` admits new artifacts
-(descriptor generation is engine-probed; see the PROGRAMS config).
+The landing page embeds the runner: state the facts, run — for the canonical
+two-person household ($1,200 monthly earned income, $900 shelter costs) it
+computes a **$478 monthly benefit**, matching the value axiom-api's parity
+suite pins for the same facts. Every determination is downloadable as the
+same JSON `scripts/determine.mjs --json` prints, byte for byte.
+`scripts/build-packages.mjs` admits new artifacts (descriptor generation is
+engine-probed; see the DIRECT_PROGRAMS / PROGRAMS configs) — but only with a
+ledger that certifies their full closure.
 
 A handful of headline questions carry the curated determinations; every
 program's remaining inputs take **screening presumptions**, all of them
@@ -63,8 +67,11 @@ walkthrough.
 Beyond the catalog, the landing page carries the **corpus explorer**: search every
 encoded rule across the served RuleSpec corpus, slice at any target
 (a statute section, a regulation paragraph), and the import closure is
-fetched, compiled in the tab, and run — no bundle required. Slices are
-valid and cited but not parity-pinned; the provenance line says which.
+fetched, compiled in the tab, and run — no bundle required. The certified
+gate applies here too: a slice whose closure touches any uncertified node
+refuses, naming the missing ids (the explorer is dev tooling — the one
+surface allowed to name them). Slices are valid and cited but not
+parity-pinned; the provenance line says which corpus commit and ledger.
 Generate the corpus locally with
 `bun scripts/build-corpus.mjs <rulespec-us checkout>`.
 
@@ -131,15 +138,14 @@ cd axiom-local && bun install
 bun run dev          # http://localhost:3000
 
 # Or the same determination straight from your terminal:
-bun scripts/determine.mjs --programs                        # list the programs
+bun scripts/determine.mjs --programs                        # the certified catalog
 bun scripts/determine.mjs                                   # $478, the pinned case
-bun scripts/determine.mjs --program fiit --set taxable_income=120000
-bun scripts/determine.mjs --set snap_countable_earned_income=2400   # ineligible
+bun scripts/determine.mjs --set snap_gross_monthly_earned_income=2400   # ineligible
 bun scripts/determine.mjs --people member_age=42,9,70
 bun scripts/determine.mjs --what-if snap_earned_income_deduction_rate_for_net_income=0.3
-bun scripts/determine.mjs --set assistance_payments=500     # override a presumption
+bun scripts/determine.mjs --set snap_total_monthly_unearned_income=500  # override a presumption
 bun scripts/determine.mjs --trace                           # chain of citation
-bun scripts/determine.mjs --slots                           # list all 585 inputs
+bun scripts/determine.mjs --slots                           # list all 143 inputs
 bun scripts/determine.mjs --json                            # machine-readable
 ```
 

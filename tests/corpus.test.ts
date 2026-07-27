@@ -1,8 +1,13 @@
 /**
- * Corpus slicing, end to end against the vendored nodejs wasm build: resolve
- * a closure from the generated manifest, compile it, synthesize a
- * descriptor, probe to a fixpoint, execute. Skipped when public/corpus/ has
- * not been generated (it is gitignored; CI runs without it).
+ * Corpus slicing, end to end against the vendored nodejs wasm build:
+ * resolve a closure from the generated manifest, compile it, gate it
+ * against the certification ledger, synthesize a descriptor, probe to a
+ * fixpoint, execute. Skipped when public/corpus/ has not been generated
+ * (it is gitignored; CI runs without it).
+ *
+ * The gate cuts both ways and both are asserted here: the certified root
+ * slices and runs; roots whose closure carries ANY uncertified node
+ * refuse, naming the ids (dev-tooling context).
  */
 import { createRequire } from "node:module";
 import { existsSync, readFileSync } from "node:fs";
@@ -10,34 +15,60 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import type { CompiledProgramArtifact } from "../src/lib/engine/types";
 import {
+  assertArtifactCertified,
+  validateLedger,
+  type CertifiedIndex,
+} from "../src/lib/certified";
+import {
   moduleUrl,
   probeFixpoint,
   resolveClosure,
   synthesizePackage,
   type CorpusManifest,
 } from "../src/lib/corpus";
-import { buildPackageRequest } from "../src/lib/goldenPath";
+import { buildPackageRequest, type GoldenPackage } from "../src/lib/goldenPath";
 
 const require = createRequire(import.meta.url);
 const corpusDir = join(__dirname, "..", "public", "corpus");
 const manifestPath = join(corpusDir, "manifest.json");
 const haveCorpus = existsSync(manifestPath);
 
-const ROOTS = [
+const CERTIFIED_ROOT = "us-ny:policies/otda/snap/fy-2026-benefit-calculation";
+const UNCERTIFIED_ROOTS = [
   "us-co:regulations/10-ccr-2506-1/4.311.3",
   "us-ny:regulations/18-nycrr/385/3",
   "us-co:policies/cdhs/snap/fy-2026-benefit-calculation",
 ];
 
-describe.skipIf(!haveCorpus)("corpus slicing", () => {
+describe.skipIf(!haveCorpus)("corpus slicing under the certified gate", async () => {
   const engine = require("../engine/pkg-node/axiom_rules_engine_wasm.js");
   const manifest = haveCorpus
     ? (JSON.parse(readFileSync(manifestPath, "utf8")) as CorpusManifest)
     : null!;
+  const certified: CertifiedIndex = haveCorpus
+    ? await validateLedger(JSON.parse(readFileSync(join(corpusDir, "ledger.json"), "utf8")))
+    : null!;
 
-  it("records its source commit", () => {
+  const compileAt = (root: string) => {
+    const closure = resolveClosure(manifest, root);
+    const modules = Object.fromEntries(
+      closure.map((target) => [
+        target,
+        readFileSync(join(corpusDir, moduleUrl(target).replace("/corpus/", "")), "utf8"),
+      ]),
+    );
+    const artifactJson = engine.compile(JSON.stringify(modules), root) as string;
+    return { closure, artifactJson, artifact: JSON.parse(artifactJson) as CompiledProgramArtifact };
+  };
+
+  it("records its source commit and its ledger identity", () => {
     expect(manifest.sources[0].repo).toContain("rulespec");
     expect(manifest.sources[0].commit).toMatch(/^[0-9a-f]{40}$/);
+    const lock = JSON.parse(
+      readFileSync(join(__dirname, "..", "corpus.lock.json"), "utf8"),
+    ) as { ledger: { ledger_id: string; certified_set_version: string } };
+    expect(lock.ledger.ledger_id).toBe(certified.ledger.ledger_id);
+    expect(lock.ledger.certified_set_version).toBe(certified.setVersion);
   });
 
   it("moduleUrl preserves colons inside statute paths (us-la:statutes/47:294)", () => {
@@ -54,97 +85,91 @@ describe.skipIf(!haveCorpus)("corpus slicing", () => {
     }
   });
 
-  for (const root of ROOTS) {
-    it(`slices, compiles, probes, and executes ${root}`, () => {
-      const closure = resolveClosure(manifest, root);
-      expect(closure.length).toBeGreaterThan(0);
-      const modules = Object.fromEntries(
-        closure.map((target) => [
-          target,
-          readFileSync(join(corpusDir, moduleUrl(target).replace("/corpus/", "")), "utf8"),
-        ]),
-      );
-      const artifactJson = engine.compile(JSON.stringify(modules), root) as string;
-      const artifact = JSON.parse(artifactJson) as CompiledProgramArtifact;
-      expect(artifact.program.derived.length).toBeGreaterThan(0);
+  it(`slices, gates, probes, and executes the certified root ${CERTIFIED_ROOT}`, () => {
+    const { closure, artifactJson, artifact } = compileAt(CERTIFIED_ROOT);
+    expect(closure.length).toBeGreaterThan(0);
+    expect(artifact.program.derived.length).toBeGreaterThan(0);
 
+    const { pkg } = synthesizePackage(artifact, CERTIFIED_ROOT, manifest.sources[0].commit);
+    // The explorer's own gate order: post-compile, and again post-probe
+    // for the refs the probe admitted.
+    assertArtifactCertified(artifact, Object.keys(pkg.defaults), certified);
+    probeFixpoint(engine, artifactJson, artifact, pkg);
+    assertArtifactCertified(artifact, Object.keys(pkg.defaults), certified);
+
+    const request = buildPackageRequest({
+      pkg,
+      answers: { household: {}, people: {}, refOverrides: {} },
+    });
+    const response = JSON.parse(engine.execute(artifactJson, JSON.stringify(request)));
+    const outputs = response.results[0].outputs;
+    for (const id of Object.values(pkg.outputs)) {
+      expect(outputs[id], `output ${id} present`).toBeDefined();
+    }
+  });
+
+  for (const root of UNCERTIFIED_ROOTS) {
+    it(`refuses the uncertified root ${root}, naming the ids`, () => {
+      const { artifactJson, artifact } = compileAt(root);
       const { pkg } = synthesizePackage(artifact, root, manifest.sources[0].commit);
-      probeFixpoint(engine, artifactJson, artifact, pkg);
-
-      const request = buildPackageRequest({
-        pkg,
-        answers: { household: {}, people: {}, refOverrides: {} },
-      });
-      const response = JSON.parse(engine.execute(artifactJson, JSON.stringify(request)));
-      const outputs = response.results[0].outputs;
-      for (const id of Object.values(pkg.outputs)) {
-        expect(outputs[id], `output ${id} present`).toBeDefined();
+      expect(artifactJson.length).toBeGreaterThan(0);
+      expect(() =>
+        assertArtifactCertified(artifact, Object.keys(pkg.defaults), certified),
+      ).toThrowError(/closure not certified .*uncertified node id/s);
+      // The refusal names at least one concrete uncertified legal id, so a
+      // maintainer can see exactly what the ledger is missing.
+      try {
+        assertArtifactCertified(artifact, Object.keys(pkg.defaults), certified);
+      } catch (error) {
+        expect(String(error)).toMatch(new RegExp(`${root.split(":")[0]}:[^\\s]+`));
       }
     });
   }
 
   /**
-   * The whole thesis in one test: a slice compiled from corpus source, plus
-   * curation applied as a data overlay (the vendored descriptor's entity
-   * plan and screening presumptions, carried by slot name), reproduces the
-   * pinned $478 determination — no pre-composed artifact involved.
+   * The whole thesis in one test: a slice compiled from corpus source,
+   * plus curation applied as a data overlay (the vendored descriptor's
+   * entity plan and screening presumptions, carried by slot name),
+   * reproduces the pinned $478 determination — no pre-composed artifact
+   * involved, every node certified.
    */
-  it("reproduces the pinned co-snap allotment from source + curation overlay", () => {
-    const root = "us-co:policies/cdhs/snap/fy-2026-benefit-calculation";
-    const closure = resolveClosure(manifest, root);
-    const modules = Object.fromEntries(
-      closure.map((target) => [
-        target,
-        readFileSync(join(corpusDir, moduleUrl(target).replace("/corpus/", "")), "utf8"),
-      ]),
-    );
-    const artifactJson = engine.compile(JSON.stringify(modules), root) as string;
-    const artifact = JSON.parse(artifactJson) as CompiledProgramArtifact;
-    const { pkg } = synthesizePackage(artifact, root, manifest.sources[0].commit);
+  it("reproduces the pinned ny-snap benefit from source + curation overlay", () => {
+    const { artifactJson, artifact } = compileAt(CERTIFIED_ROOT);
+    const { pkg } = synthesizePackage(artifact, CERTIFIED_ROOT, manifest.sources[0].commit);
 
-    // The overlay: the vendored descriptor's entity plan (membership
-    // relations, count_from) and its screening presumptions by slot name.
     const vendored = JSON.parse(
-      readFileSync(join(__dirname, "..", "public", "programs", "co-snap", "package.json"), "utf8"),
-    );
+      readFileSync(join(__dirname, "..", "public", "programs", "ny-snap", "package.json"), "utf8"),
+    ) as GoldenPackage;
     pkg.entities = vendored.entities;
     pkg.query = vendored.query;
-    probeFixpoint(engine, artifactJson, artifact, pkg);
-    const vendoredByName = new Map<string, { dtype: string; value: unknown }>(
-      (Object.values(vendored.defaults) as { name: string; dtype: string; value: unknown }[]).map(
-        (slot) => [slot.name, slot],
-      ),
+    const vendoredByName = new Map(
+      Object.values(vendored.defaults).map((slot) => [slot.name, slot]),
     );
     for (const slot of Object.values(pkg.defaults)) {
       const carried = vendoredByName.get(slot.name);
       if (carried && carried.dtype === slot.dtype) slot.value = carried.value;
     }
-
-    // The golden-path household, as ref overrides on the slice.
-    const golden: Record<string, string> = {
-      household_size: "2",
-      snap_countable_earned_income: "1200",
-      household_shelter_costs_incurred: "900",
-    };
-    const refOverrides: Record<string, string> = {};
-    for (const [ref, slot] of Object.entries(pkg.defaults)) {
-      if (golden[slot.name]) refOverrides[ref] = golden[slot.name];
-    }
-    pkg.outputs.snap_allotment = "us-co:regulations/10-ccr-2506-1/4.207.2#snap_allotment";
+    probeFixpoint(engine, artifactJson, artifact, pkg);
+    assertArtifactCertified(artifact, Object.keys(pkg.defaults), certified);
+    pkg.outputs = vendored.outputs;
 
     const request = buildPackageRequest({
       pkg,
       answers: {
-        household: { household_size: "2" },
+        household: {
+          household_size: "2",
+          snap_gross_monthly_earned_income: "1200",
+          household_shelter_costs_incurred: "900",
+        },
         people: { member_age: ["42", "9"] },
-        refOverrides,
+        refOverrides: {},
       },
     });
     const response = JSON.parse(engine.execute(artifactJson, JSON.stringify(request)));
     const outputs = response.results[0].outputs;
-    const allotment = outputs[pkg.outputs.snap_allotment];
-    expect(allotment.kind).toBe("scalar");
-    expect(allotment.value.value).toBe("478");
+    const benefit = outputs[pkg.outputs.snap_benefit_amount];
+    expect(benefit.kind).toBe("scalar");
+    expect(benefit.value.value).toBe("478");
     const eligible = outputs[pkg.outputs.snap_eligible];
     expect(eligible.outcome).toBe("holds");
   });

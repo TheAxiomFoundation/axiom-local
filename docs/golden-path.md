@@ -1,4 +1,4 @@
-# The golden path: Colorado SNAP
+# The golden path: New York SNAP
 
 One household, one program, carried across every way of running Axiom — this
 page in the browser, a clone of this repo on your own machine, and (once the
@@ -20,7 +20,7 @@ reproduction, not a shrug.
 
 | Output | Value | Where pinned |
 |---|---|---|
-| `snap_allotment` | **$478 / month** | this repo's `tests/goldenPath.test.ts`; axiom-api `examples/parity/co-snap-us-co.json` |
+| `snap_benefit_amount` | **$478 / month** | this repo's `tests/goldenPath.test.ts`; matches axiom-api's parity value for the same facts |
 | `snap_net_income` | **$226.50 / month** | same |
 
 The arithmetic, readable straight off the explain trace: $1,200 earned income
@@ -32,26 +32,32 @@ floored, is **$478**.
 
 ## The program
 
-The composed compiled artifact `us-co-snap` — 319 derived rules, 127
-statutory parameters, 585 inputs — composed from:
+The artifact is compiled **directly from the corpus** at vendor time — the
+closure of `us-ny:policies/otda/snap/fy-2026-benefit-calculation`: 122
+derived rules, 65 statutory parameters, 143 inputs — composed from:
 
 - **7 USC 2011–2036** (the Food and Nutrition Act),
 - **7 CFR 273** (federal SNAP regulations),
-- **10 CCR 2506-1** (Colorado's SNAP rules).
+- **18 NYCRR 385–387** (New York's SNAP rules).
 
 Provenance travels with it: the descriptor pins the artifact's sha-256, the
-compiling engine version, and the artifact format version; the page shows all
-three and compares the fetched hash against the pin.
+corpus commit, the compiling engine version, and the artifact format version
+— and its **certificate provenance**: the ledger id, the certified-set
+version, and one verifier certificate per output. Only certified nodes are
+ever served (`data/certified-nodes.json`, served as
+`public/corpus/ledger.json`); a program whose closure the ledger does not
+fully certify is refused at vendor time and again at load. No flag, no
+grace period.
 
 ## Screening presumptions
 
-Four questions carry the determination above. The program's ~580 other inputs
-each carry a **screening presumption** — resident of the state, not a
-duplicate participant, no student exemptions in play, and so on. A
-presumption is a legal position: the page lists every one, and correcting any
-of them re-runs the determination with your answer in force. The
-presumption values live in the package descriptor
-(`public/programs/co-snap/package.json`), matched by durable input ref.
+Four questions carry the determination above. The program's ~140 other inputs
+each carry a **screening presumption** — resident of the state, citizen,
+work-registration compliance, and so on. A presumption is a legal position:
+the page lists every one, and correcting any of them re-runs the
+determination with your answer in force. The presumption values live in the
+package descriptor (`public/programs/ny-snap/package.json`), matched by
+durable input ref.
 
 ## Change the law
 
@@ -59,7 +65,7 @@ The artifact is data. The page's what-if amends the earned-income deduction
 rate from 20% to 30% — one JSON entry, patched in the tab — and re-runs the
 same household under amended law. Current law is never mutated; restoring it
 is running the original artifact again. `tests/whatIf.test.ts` pins that the
-amendment moves the allotment and that current law still computes $478
+amendment moves the benefit and that current law still computes $478
 afterward.
 
 ## The same rules, elsewhere

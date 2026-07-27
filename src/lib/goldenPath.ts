@@ -2,8 +2,8 @@
  * The golden-path package: a composed, versioned compiled artifact plus a
  * descriptor that makes it answerable with a handful of headline questions.
  *
- * The descriptor (public/programs/co-snap/package.json, emitted by
- * scripts/build-co-snap-package.mjs) carries a screening-presumption default
+ * The descriptor (public/programs/<id>/package.json, emitted by
+ * scripts/build-packages.mjs) carries a screening-presumption default
  * for every one of the program's discovered inputs. The page asks only the
  * curated headline questions; every other input takes its default — and all
  * of them stay visible and overridable, because presuming an answer is a
@@ -22,6 +22,7 @@ import type {
   RelationRecord,
   ScalarValue,
 } from "./engine/types";
+import type { CertifiedProvenance } from "./certified";
 
 export interface PackageDefault {
   name: string;
@@ -64,10 +65,17 @@ export interface GoldenPackage {
   title: string;
   /** "envelope": engine-stamped artifact; "legacy": pre-envelope, hash-pinned only. */
   provenance?: "envelope" | "legacy";
+  /**
+   * Certificate provenance stamped at vendor time. Its ABSENCE is a load
+   * refusal: nothing uncertified is servable (src/lib/certified.ts).
+   */
+  certified?: CertifiedProvenance;
   source: {
     repo: string;
     artifact_path: string;
     artifact_sha256: string;
+    /** Corpus commit, for programs compiled directly from public/corpus/. */
+    corpus_commit?: string;
     engine_version: string | null;
     artifact_format_version: number | null;
   };

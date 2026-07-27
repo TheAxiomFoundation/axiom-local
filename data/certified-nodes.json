@@ -1,0 +1,2857 @@
+{
+  "format": "axiom-certified-ledger/1",
+  "ledger_id": "fixture-us-ny-snap",
+  "issued_at": "2026-07-27T20:39:34.471Z",
+  "fixture": true,
+  "vintage": {
+    "encoding_release": "fixture",
+    "engine_release": "0.1.0",
+    "corpus_release": "fixture"
+  },
+  "entries": [
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.adequate_child_care_unavailable_to_attend_class_and_meet_student_work_requirement",
+      "certificate_id": "fixture-cert-0331071b53b8",
+      "claim": "attested",
+      "evidence_sha256": "4bf01e981514f1a8873feee6ce3be6a4c84de640958d8f42c760cf1beafbf412"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.alaska_subsistence_hunts_or_fishes_30_hours_weekly",
+      "certificate_id": "fixture-cert-a4ac989dd945",
+      "claim": "attested",
+      "evidence_sha256": "dea10e70fa17dae394012fa5627a923ad8ea44ff42cd0de118c8be7d08c19474"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.alien_status_documentation_missing_or_unwilling",
+      "certificate_id": "fixture-cert-ae77002fcae4",
+      "claim": "attested",
+      "evidence_sha256": "8453d1a9be10bd0f614ae0c70a0c6989c6ccdb25c2a4f91fedc14dd150521646"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.all_household_members_experiencing_homelessness",
+      "certificate_id": "fixture-cert-06033f2fabdd",
+      "claim": "attested",
+      "evidence_sha256": "6307c008abe4816e22bfcf416431d1d4d968d58ea567437aef138edf1afd8777"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.assigned_or_placed_in_higher_education_through_qualifying_employment_training_program",
+      "certificate_id": "fixture-cert-6cdc53413948",
+      "claim": "attested",
+      "evidence_sha256": "3c2c6b4a99cd3ec1007c48aeb45e21c0d02d974c61182186b190143d62f5239d"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.child_support_deduction",
+      "certificate_id": "fixture-cert-6af1170986a3",
+      "claim": "attested",
+      "evidence_sha256": "ea7c7eb4547511b143b875cb718737ba627c8417520147af674b64652572d518"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.dependent_care_deduction",
+      "certificate_id": "fixture-cert-6b30016b3923",
+      "claim": "attested",
+      "evidence_sha256": "37fdc3459078e4b2f22802642fe412a95c7b631ad5c3a4cdb44aeed0177966ea"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.enrolled_at_least_half_time",
+      "certificate_id": "fixture-cert-5957ef202489",
+      "claim": "attested",
+      "evidence_sha256": "cc169281476539501e0e02fb1c8a61fe9aae68b3137141be47c3cae2f6cce45b"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.enrolled_in_business_technical_trade_or_vocational_school_requiring_high_school_diploma",
+      "certificate_id": "fixture-cert-592046c6c5d8",
+      "claim": "attested",
+      "evidence_sha256": "ef4cff5fb0b01db28ee2a46231939aece0f948eda594fac82d8f5230df11487d"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.enrolled_in_college_or_university_degree_program",
+      "certificate_id": "fixture-cert-ebc0e513bd95",
+      "claim": "attested",
+      "evidence_sha256": "b0d132feaa06e891fd7f829b0e155a0f272b58b1788e616ef32118979b6927ac"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.enrolled_through_jobs_or_successor_program",
+      "certificate_id": "fixture-cert-e5bb86a32f18",
+      "claim": "attested",
+      "evidence_sha256": "ae8ed081d0b1f0be360ba5912f8f5acd44e21f579ebc389ba45205a536a3545b"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.federal_minimum_wage",
+      "certificate_id": "fixture-cert-34b02c7ec388",
+      "claim": "attested",
+      "evidence_sha256": "068f8c11f6b3a2672177a6e28903abf43963723487a745da7de9710766f4f7a4"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.federal_or_state_minimum_wage",
+      "certificate_id": "fixture-cert-0a1495fe0933",
+      "claim": "attested",
+      "evidence_sha256": "1eae5d624e7ee347a5ba4aabc22f0a8206337f52c0da8a1f30e76f6df5d2ac45"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.first_full_month_benefit_level",
+      "certificate_id": "fixture-cert-a267188ba387",
+      "claim": "attested",
+      "evidence_sha256": "c3d60877657a6d4e28eb332ac99d77445e0177a511ab99bc34e547f753a2754a"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.homeless_household_free_shelter_all_month",
+      "certificate_id": "fixture-cert-5ebeb7cfee69",
+      "claim": "attested",
+      "evidence_sha256": "72e2fd57a894a129bde2d26c2b98a1dcdc44b4922525500b855265dfe8e8073a"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.homeless_household_has_shelter_costs",
+      "certificate_id": "fixture-cert-775e760c1a2c",
+      "claim": "attested",
+      "evidence_sha256": "ee8c1545baecc823e3d5ae08b6af243fefcfd76af364150ac3be1122bccf7fc6"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_applies_following_more_than_30_days_not_certified",
+      "certificate_id": "fixture-cert-9108a1b9ec19",
+      "claim": "attested",
+      "evidence_sha256": "203f1783d8e117b3e1db8c896cd485fc8c9d61cf7ceae8a6f825dbb74901b833"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_billed_separately_for_non_telephone_standard_utility",
+      "certificate_id": "fixture-cert-a049e9eb9dc6",
+      "claim": "attested",
+      "evidence_sha256": "b18f441f56aa60fb9a1ad87f80770ac117e3ca38cb27dd802ede0a9d0b8388bc"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_certified_for_participation_in_food_stamp_program",
+      "certificate_id": "fixture-cert-b6ca15179026",
+      "claim": "attested",
+      "evidence_sha256": "1990bef060f02d82ee531f6fd52e8d44291f85d349e08cc5a0aa002ba811aeee"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_contains_individual_participating_in_more_than_one_household_or_project_area",
+      "certificate_id": "fixture-cert-11d5784e25be",
+      "claim": "attested",
+      "evidence_sha256": "3badd40357173567116074816b2653323fc6149b5d9eebe1583c53542cb6bfd4"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_entitled_to_excess_medical_deduction",
+      "certificate_id": "fixture-cert-0afd1cf8953f",
+      "claim": "attested",
+      "evidence_sha256": "b015186f002dfddd53e3ce5475831babe16194df6eb2b84451ed50778003232d"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_entitled_to_heap_or_liheaa_payment",
+      "certificate_id": "fixture-cert-3c86249263fc",
+      "claim": "attested",
+      "evidence_sha256": "1c51eca40009f0b98b5d6b1f064b0a069994c37a82c617dbb312dea491a8f3a3"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_has_earned_income_budgeted_for_snap",
+      "certificate_id": "fixture-cert-caa21a1ada91",
+      "claim": "attested",
+      "evidence_sha256": "08bca95e797c7048e5296203dda0261c618447d6e424d984ff67e23891cbc487"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_has_out_of_pocket_dependent_care_expenses",
+      "certificate_id": "fixture-cert-f92fbbf12a1f",
+      "claim": "attested",
+      "evidence_sha256": "5a9cbd70e3b06fc277cbc23b6344e99536e1f7cec3c8990c7444fd895be4118b"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_in_central_meter_housing_charged_only_for_excess_heating_or_cooling",
+      "certificate_id": "fixture-cert-f8e042013702",
+      "claim": "attested",
+      "evidence_sha256": "834f33baf9715391372b3efc4ccfd4df30d41a2339f66ae3130c2c24be82f726"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_in_project_area_solely_for_vacation",
+      "certificate_id": "fixture-cert-105ddec8cc19",
+      "claim": "attested",
+      "evidence_sha256": "a1aa4b1ec96185a519ab7dd166f3c0d81f268fafa382b89165aa0a8f5356d9ea"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_incurred_or_anticipated_basic_service_cost_for_one_telephone",
+      "certificate_id": "fixture-cert-37ae3d9bb999",
+      "claim": "attested",
+      "evidence_sha256": "8ebd076272da7910a115cd9bb0ecbb0ecbd6e05fe0cc5d59913e24ea561c6c2d"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_incurred_or_anticipated_heating_or_cooling_costs_separate_from_rent_or_mortgage",
+      "certificate_id": "fixture-cert-af1d92a407d8",
+      "claim": "attested",
+      "evidence_sha256": "6d586076e9cc4e62c8f9439de61322d91a1a48f016fb2d7dcfe72fd69faafbb5"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_initial_month",
+      "certificate_id": "fixture-cert-2471eb225b82",
+      "claim": "attested",
+      "evidence_sha256": "83b7bc4e729f2c538b446d289aab3c178960c2e5e8076d5c4066b6cacd9c98ae"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_is_migrant_or_seasonal_farmworker_household",
+      "certificate_id": "fixture-cert-a9c7ef83bd0f",
+      "claim": "attested",
+      "evidence_sha256": "f79ac400fccc9ce1a6b978582b75b740d0adfaf5cd30403045d435db84e4b6e7"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_lives_in_application_state",
+      "certificate_id": "fixture-cert-86054a017573",
+      "claim": "attested",
+      "evidence_sha256": "2b2dfb0a20cbab5a2e1b36c66336ec66c72d363d76019cff1566fe50bb7a40c3"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_member_disqualified_for_failure_to_comply_with_periodic_reporting_requirements",
+      "certificate_id": "fixture-cert-89e7ed79d3b2",
+      "claim": "attested",
+      "evidence_sha256": "78016b1e8d60df3ee0f5f4c27567862ac5dc434d47a5f6947bd7466f50757029"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_member_disqualified_for_failure_to_comply_with_work_requirements",
+      "certificate_id": "fixture-cert-72293961f007",
+      "claim": "attested",
+      "evidence_sha256": "683f9110412c44329a91135514bb9dab1d0295b1d9547d59079130eac424e912"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_member_disqualified_for_intentional_program_violation",
+      "certificate_id": "fixture-cert-b5dd02b338c0",
+      "claim": "attested",
+      "evidence_sha256": "aa35274a672a5e9bb67f7cf39cd9fcf912892e3117de001ce20806da95b0544a"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_member_ineligible_to_participate_in_snap",
+      "certificate_id": "fixture-cert-19cc37312682",
+      "claim": "attested",
+      "evidence_sha256": "13f7a1b8958278122ee83f462addd9f38f963e27a0ceae12b6b61d97dfba3467"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_resides_in_nassau_or_suffolk_county",
+      "certificate_id": "fixture-cert-4009fd9e96cb",
+      "claim": "attested",
+      "evidence_sha256": "1fe615d5cfba4481abb828ea730f7d25dd0d0c207fd69c5679685c4830a02329"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_resides_in_new_york_city",
+      "certificate_id": "fixture-cert-688036004ac9",
+      "claim": "attested",
+      "evidence_sha256": "d3c7f4a1c3f627f24a26ce6fb690748142b06acd00fb296922e75d878acfbd91"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_shelter_costs_incurred",
+      "certificate_id": "fixture-cert-63b356960dd2",
+      "claim": "attested",
+      "evidence_sha256": "bd1be6977bd99a6ae51d78921c9e1f9a5b8b69c597f275aa991b80e888066740"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_size",
+      "certificate_id": "fixture-cert-ee0d753a73a9",
+      "claim": "attested",
+      "evidence_sha256": "280bbd4838d8cdf980c164b64529652cc88469ddf8727ca6e6196e40c7d51568"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.household_was_not_certified_for_participation_during_prior_period",
+      "certificate_id": "fixture-cert-cae7197e41ed",
+      "claim": "attested",
+      "evidence_sha256": "bf2166ab2b0e0a150cbcdd52c9a957f0a15649f0bae8f4e2d11fd82c301f25df"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.known_student_refused_work_study_assignment",
+      "certificate_id": "fixture-cert-276e199f0181",
+      "claim": "attested",
+      "evidence_sha256": "0797f593849f81406d5f4f4e99682184a5c70711f636e821c912a845c79c800b"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.medical_deduction",
+      "certificate_id": "fixture-cert-700ad4e1f018",
+      "claim": "attested",
+      "evidence_sha256": "c77392cd9f3468fcf675a559b14a9c3b2546698c32e7bd9538e5e22606ac3201"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_abawd_monthly_work_hours",
+      "certificate_id": "fixture-cert-a2c1a3f99918",
+      "claim": "attested",
+      "evidence_sha256": "7103e704c2df034d54610416491faa610a3cc9cafcdbe0d7b511029463ded862"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_abawd_weekly_work_hours",
+      "certificate_id": "fixture-cert-4f5d04513ab2",
+      "claim": "attested",
+      "evidence_sha256": "0b5b753ad3dacfab2db71a87305f974b669e0188e730270d0f991e42c480b9ae"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_accepted_bona_fide_suitable_employment_offer_if_offered",
+      "certificate_id": "fixture-cert-9a430ef42c7e",
+      "claim": "attested",
+      "evidence_sha256": "3c09197abca545ae867d7fde219bd4f250177a588f868d41c244359abb196721"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_age",
+      "certificate_id": "fixture-cert-522949f08700",
+      "claim": "attested",
+      "evidence_sha256": "0fe836baa2051a88ad812226669e990c99ae3192db3d986c08b2e8b584398889"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_age_16_or_17_is_not_household_head_or_attends_school_or_training_half_time",
+      "certificate_id": "fixture-cert-82621a7392f2",
+      "claim": "attested",
+      "evidence_sha256": "556d7983163e89f636da8f89e6ecaef51c19ce2a61dfc47541ba8f2e58faf65e"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_age_24_or_younger_and_was_in_foster_care_on_attaining_age_18",
+      "certificate_id": "fixture-cert-b27aec5a7ddb",
+      "claim": "attested",
+      "evidence_sha256": "6e714e7437dca946391f14981c93e50f5c17f10c838271f717929eff170d3dfe"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_authorized_to_receive_family_assistance_nonemergency_safety_net_or_ssi_benefits_but_not_yet_paid",
+      "certificate_id": "fixture-cert-5008e65e48a6",
+      "claim": "attested",
+      "evidence_sha256": "2b7a17a86615707e3b98ee1da7be288de5665c2d342a0b0983395839af58247d"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_combines_work_and_work_program_20_hours_weekly",
+      "certificate_id": "fixture-cert-dcb807d6b46d",
+      "claim": "attested",
+      "evidence_sha256": "177fc4863284f5f9f53ed1ec22af06de7b3d5c8070800b1f9077afe5c403f19a"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_covered_by_abawd_time_limit_waiver",
+      "certificate_id": "fixture-cert-15a919087b9a",
+      "claim": "attested",
+      "evidence_sha256": "107ba98c121df74af229764393bed17a15e8b11c4c5dce4b372884f04237f6a0"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_determined_eligible_for_family_assistance_or_nonemergency_safety_net_benefits",
+      "certificate_id": "fixture-cert-4729c7a81ab2",
+      "claim": "attested",
+      "evidence_sha256": "7f0f8c15d0099d31d20494e5892e1199f4ace520f7cd0733ddc63a1a728daee3"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_family_assistance_nonemergency_safety_net_or_ssi_benefits_suspended_or_being_recouped",
+      "certificate_id": "fixture-cert-499dff893bc0",
+      "claim": "attested",
+      "evidence_sha256": "b25a09283c80ef815e712a497e9dea7ad710f29ec2bfc23c88dcecda75c96329"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_family_assistance_or_nonemergency_safety_net_grant_amount",
+      "certificate_id": "fixture-cert-247d4b8ed27b",
+      "claim": "attested",
+      "evidence_sha256": "be904c7a113272f1eb2c0b1939daddc06323ab4fa42fcd1c2120db0c04b8590a"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_has_additional_three_month_abawd_eligibility",
+      "certificate_id": "fixture-cert-51e5d702ee51",
+      "claim": "attested",
+      "evidence_sha256": "5b288abab74eac466d29c87498de575c9720a8b6223778dc514efac74329ec7c"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_has_deportation_or_removal_withheld",
+      "certificate_id": "fixture-cert-89bd382ff986",
+      "claim": "attested",
+      "evidence_sha256": "b05c71823e89dcfce2083156758b847220447076c9800c320f33b22249fb1078"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_has_documentary_or_collateral_evidence_of_ssn_application_or_every_effort",
+      "certificate_id": "fixture-cert-855be3f9453d",
+      "claim": "attested",
+      "evidence_sha256": "d7fe53b49bfe204cf1314552a361c2b4d2132c000082bd15e617129cb196e4a0"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_has_eligible_military_connection",
+      "certificate_id": "fixture-cert-4bf8e59c2acc",
+      "claim": "attested",
+      "evidence_sha256": "947a3079b1875804767b488f18efdbc17341a34af677617f8b6e697f824f4a38"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_is_amerasian_immigrant",
+      "certificate_id": "fixture-cert-d148b3026cb8",
+      "claim": "attested",
+      "evidence_sha256": "643240efb127f6a8436268e3ea7e51213afef49027d99a5f6c82f4c64993a33c"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_is_american_indian_born_in_canada_or_recognized_indian_tribe_member",
+      "certificate_id": "fixture-cert-4570f0f16c56",
+      "claim": "attested",
+      "evidence_sha256": "acaaef8626f4c292de496136bb00bebf1da322470e53ff2176257bca35588564"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_is_asylee",
+      "certificate_id": "fixture-cert-ee539f7d3b56",
+      "claim": "attested",
+      "evidence_sha256": "6ada85c2d4c7b518248685f0f4094ef3b92bdb8e1c77296d3ec338086fbd62db"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_is_cuban_or_haitian_entrant",
+      "certificate_id": "fixture-cert-368b48e7db5b",
+      "claim": "attested",
+      "evidence_sha256": "0375c2a27e39057d908ade8a1ec977c2c5e8fa34e7ea0b247d26a35e84f3348c"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_is_hmong_or_highland_laotian_qualifying_person_or_family_member",
+      "certificate_id": "fixture-cert-a35c2a73be13",
+      "claim": "attested",
+      "evidence_sha256": "963f64fefc0430cd2055b35ebd71013f3f22ab0b2b8284d3d14178d3fbd37be5"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_is_homeless",
+      "certificate_id": "fixture-cert-c131e9f5549c",
+      "claim": "attested",
+      "evidence_sha256": "0a9e22ab6ee5634b79875e7e350db4c11adbecb63c44aedb4c69a23ab85c008f"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_is_parent_of_household_member_under_age_eighteen",
+      "certificate_id": "fixture-cert-756ad0b51423",
+      "claim": "attested",
+      "evidence_sha256": "a2a1aa38532d97520516e40337c770a64a5a6420c1e582626c3a6e424b505f41"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_is_pregnant",
+      "certificate_id": "fixture-cert-51e891490713",
+      "claim": "attested",
+      "evidence_sha256": "31605274059dd8fe2381cabe8856b310833309cf1b046c868598a67e5fb0a4ce"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_is_qualified_alien_subject_to_five_year_wait",
+      "certificate_id": "fixture-cert-18b1eb95295d",
+      "claim": "attested",
+      "evidence_sha256": "7f88b51c0f23dfa2946338cb084757fb49c573d286fbff3ec9a5080364e0ce08"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_is_qualified_alien_with_forty_qualifying_quarters",
+      "certificate_id": "fixture-cert-a9d03d6ebed9",
+      "claim": "attested",
+      "evidence_sha256": "3e13cef93dffeeb5358df356f151b6814e280146d8e6a9588c58e508711db90f"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_is_refugee",
+      "certificate_id": "fixture-cert-f0b5f323ef8e",
+      "claim": "attested",
+      "evidence_sha256": "d3d73b38d04bcecde952dfea2ca0df5adaed9280a4e977c355a8c77e6bff34b3"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_is_trafficking_victim_or_qualifying_family_member",
+      "certificate_id": "fixture-cert-bb666a8306a4",
+      "claim": "attested",
+      "evidence_sha256": "eed4dba1bbd552f5143daee34b84a4b47c04993e3041155f34f1d3c6680bc8dc"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_is_under_age_eighteen",
+      "certificate_id": "fixture-cert-aa7b5318214e",
+      "claim": "attested",
+      "evidence_sha256": "519b56ed39f2a8bffa19907a8930b227d72317d9fb17df832fd974216edb2516"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_is_us_citizen",
+      "certificate_id": "fixture-cert-42ca368fb2d8",
+      "claim": "attested",
+      "evidence_sha256": "ccf00d689fff63611dbb7c45407a48ea2848f86099ae43c94f69da0de24c610f"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_is_us_noncitizen_national",
+      "certificate_id": "fixture-cert-11150e406ae8",
+      "claim": "attested",
+      "evidence_sha256": "90dc821416af781da2b8bfe4accd985f5a346cd1d47d9b49e1f8e37b26ad3b50"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_is_veteran",
+      "certificate_id": "fixture-cert-f17dc977aafd",
+      "claim": "attested",
+      "evidence_sha256": "66d2bf542b115e45675f66119e6a6637af1f22b51b0c7f0c693e9e0ed6041d92"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_later_provided_ssn_ending_disqualification",
+      "certificate_id": "fixture-cert-30cc3ee1f47d",
+      "claim": "attested",
+      "evidence_sha256": "9c4cd70ecff0faa82bfba58137d9e4fd01ee5395921a4293d8ed23831c39d314"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_medically_certified_physically_or_mentally_unfit_for_employment",
+      "certificate_id": "fixture-cert-7c53cb31863a",
+      "claim": "attested",
+      "evidence_sha256": "559935a9655b6aef0f9b045e5f0f7417c5e8eb147e17fba72b27eb64e73c994e"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_paid_family_assistance_or_nonemergency_safety_net_benefits",
+      "certificate_id": "fixture-cert-0d15bb002420",
+      "claim": "attested",
+      "evidence_sha256": "2298a6317708943797f570abbc4cff064269853af4321aaf20f0bcfa6c7c0c2f"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_participated_in_snap_et_if_assigned",
+      "certificate_id": "fixture-cert-4f239fbc1cd7",
+      "claim": "attested",
+      "evidence_sha256": "f787be678d36766b4ff9379a1690a237f186bb209598bea317f552aa00a8f96a"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_participated_in_workfare_if_assigned",
+      "certificate_id": "fixture-cert-8cad4cf69450",
+      "claim": "attested",
+      "evidence_sha256": "f746b407b0f0da39016a33f2fd0d2d50a6af3e2aafd871b0a1b020ad57a16752"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_participates_in_abawd_work_program_20_hours_weekly",
+      "certificate_id": "fixture-cert-2bdb07356ff9",
+      "claim": "attested",
+      "evidence_sha256": "78c1be30f21768674277ac33f3fc9cacf3c67fbcb3614d474e74a7ce3a0dbc74"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_participates_in_abawd_workfare_program",
+      "certificate_id": "fixture-cert-d695b2713b36",
+      "claim": "attested",
+      "evidence_sha256": "fb12406a122d0944fc06a72cfa342801686d3d201c92996cc942056d83917652"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_physically_or_mentally_unfit_for_employment",
+      "certificate_id": "fixture-cert-7e077fb59cbc",
+      "claim": "attested",
+      "evidence_sha256": "ba026197b71d08d0f6aed1fc6f7276e03e259effc4ee265c3615d6debe1662fd"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_provided_employment_status_or_availability_information",
+      "certificate_id": "fixture-cert-4e6f1f6db20b",
+      "claim": "attested",
+      "evidence_sha256": "fb32bde9ab4341e47cde6b6e3b37feffb42791f433955a24e2635a149e07174b"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_receives_blindness_or_disability_benefits",
+      "certificate_id": "fixture-cert-b347cad57a41",
+      "claim": "attested",
+      "evidence_sha256": "3eb6f3571e34eb835b1d8709824ab4c7a06ec57e27b64f5402624e19be93fbe0"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_receives_family_assistance_nonemergency_safety_net_or_ssi_benefits",
+      "certificate_id": "fixture-cert-df6986f3ce96",
+      "claim": "attested",
+      "evidence_sha256": "c727c6db2fa5f0d511ccbbb853c3605fdf1ef0e2f1cdd6e059f6c0f832d79e02"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_receiving_or_applying_for_unemployment_compensation_and_complying",
+      "certificate_id": "fixture-cert-da3f9fa7bc80",
+      "claim": "attested",
+      "evidence_sha256": "045abb003e8cfb96a62b44d2ab84d8a2e9d32872e47a981f4d27f796ea8f5004"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_refused_or_failed_to_provide_or_apply_for_ssn",
+      "certificate_id": "fixture-cert-8a6a5eb71ef3",
+      "claim": "attested",
+      "evidence_sha256": "ac0c2a58d77e999b13b287b6033d26a41bccabc43e8926b4ee876562b50b027a"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_regained_abawd_eligibility",
+      "certificate_id": "fixture-cert-b7ae1bf2c821",
+      "claim": "attested",
+      "evidence_sha256": "c18b18e83591cacc302915d1dd9e44fdeac4c81c4ed20dbd84fee28d0850e0f6"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_registered_for_work_or_registered_by_state",
+      "certificate_id": "fixture-cert-bb9e7be991c9",
+      "claim": "attested",
+      "evidence_sha256": "8767d1d947d04c1911415d9ef12bb4b3c7bca7e6e3041e84f56e457a97db164d"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_regular_participant_in_drug_or_alcohol_treatment",
+      "certificate_id": "fixture-cert-4feca8e01dff",
+      "claim": "attested",
+      "evidence_sha256": "7e85bf810928d524ba50ab1ac2ec56c1d8d39ee15fac5ebc1e50213c1802d35d"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_reported_to_referred_suitable_employer_if_referred",
+      "certificate_id": "fixture-cert-46fe8f42dfec",
+      "claim": "attested",
+      "evidence_sha256": "0d6fdbb75a86210fdcbc5cdca43345e63ae9530af8081fec84d556f8d40e6c12"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_resides_with_household_member_under_age_eighteen",
+      "certificate_id": "fixture-cert-08aa5b273e0a",
+      "claim": "attested",
+      "evidence_sha256": "aa3021fa9fba41bd92329005c14e04e221596a533f32ff6dfb0806605f85865a"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_responsible_for_dependent_child_under_six_or_incapacitated_person",
+      "certificate_id": "fixture-cert-54c02874b171",
+      "claim": "attested",
+      "evidence_sha256": "2d87856dba7c837f5d79c2e33fcbc621b8602266a734fc17e85dfceaae5e3a95"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_snap_work_requirements_waived_due_to_pending_ssi_joint_application",
+      "certificate_id": "fixture-cert-34597d08aa90",
+      "claim": "attested",
+      "evidence_sha256": "6cbba74091ddd864bf120bcac7fc6642013e610f34871df5ad459ddf6edfd13b"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_ssn_application_filed_pending_state_agency_notification",
+      "certificate_id": "fixture-cert-7c9d08effb8f",
+      "claim": "attested",
+      "evidence_sha256": "464a9c0f01f607ba3cccedc3dce22121a56a268356944dffa45ece404ea7f553"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_student_enrolled_at_least_half_time_and_student_eligible",
+      "certificate_id": "fixture-cert-b227e91f771d",
+      "claim": "attested",
+      "evidence_sha256": "3e7185718bdd9d332d7050c3fbef2f27801f7f93c01842d34b3d60c7002559a5"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_subject_to_and_complying_with_title_iv_work_requirement",
+      "certificate_id": "fixture-cert-0081775ad501",
+      "claim": "attested",
+      "evidence_sha256": "28fc8f17eb8d2a408c96f25fbca6e2da2803986285e98e87e1a884b1340396a0"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_unable_to_obtain_documents_required_for_ssn_application_with_caseworker_assistance_needed",
+      "certificate_id": "fixture-cert-5a493e8ce507",
+      "claim": "attested",
+      "evidence_sha256": "9f4fe84293bec09115a1dd1eadd2c62e4fc26e7e129139ebf54e69d95da135b5"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_voluntarily_quit_or_reduced_work_below_30_hours_without_good_cause",
+      "certificate_id": "fixture-cert-84530168556d",
+      "claim": "attested",
+      "evidence_sha256": "38a850a9cf27b3b9c37339a0647e2665756fd7b6f9279a84be37acdead5dc3a2"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_was_lawfully_residing_on_1996_08_22_and_born_on_or_before_1931_08_22",
+      "certificate_id": "fixture-cert-24c96757eab8",
+      "claim": "attested",
+      "evidence_sha256": "d02db04a315b7844a30dbe2d27158722025df8613c2bcd5bb5a6908153538aa1"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_weekly_wages",
+      "certificate_id": "fixture-cert-3eb7dc4b59ee",
+      "claim": "attested",
+      "evidence_sha256": "50cd21080fcce5cefc272749c03f07249f6162923c5a2c9c7d6166fa822195e7"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.member_weekly_work_hours",
+      "certificate_id": "fixture-cert-c0fd0bcd4e28",
+      "claim": "attested",
+      "evidence_sha256": "851e42799137315e9ba5e955d3d81387ad19ff0eee1be831bc69e80c460f0abf"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.migrant_or_seasonal_farmworker_under_contract_to_begin_employment_within_30_days",
+      "certificate_id": "fixture-cert-e8ddf9cbd977",
+      "claim": "attested",
+      "evidence_sha256": "84adbd8f13bfed2c82d1f9c23ba659a4527a7ada0efa069eb7953c0f9a9e25b1"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.proration_factor_from_application_day_to_end_of_initial_month",
+      "certificate_id": "fixture-cert-a91c508830fc",
+      "claim": "attested",
+      "evidence_sha256": "4dfc66ef995d88fa9338ec81907d94edaeefbfa1e5f0f0c7c6239912f825ca55"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.proration_factor_from_release_day_to_end_of_month",
+      "certificate_id": "fixture-cert-dfc4f61089ee",
+      "claim": "attested",
+      "evidence_sha256": "819088cf5bfa8913270100cb329f2b8e5c54a98590a49cc39c50dc340c5efb70"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.public_institution_prerelease_joint_ssi_food_stamp_applicant",
+      "certificate_id": "fixture-cert-502a83040168",
+      "claim": "attested",
+      "evidence_sha256": "cddf47e94394f125acd068bad7919da99b3173859dc7567284aedb78b4ec5970"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.qualified_alien_five_year_status_period_met",
+      "certificate_id": "fixture-cert-11b5bce8a2a8",
+      "claim": "attested",
+      "evidence_sha256": "ff408ab352ea986f44bef9344e08f863485dc9bde2204424ccc73739cc7146bf"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.resident_of_battered_women_and_children_shelter_and_prior_abusive_household_member",
+      "certificate_id": "fixture-cert-f0d199a81771",
+      "claim": "attested",
+      "evidence_sha256": "f6342a2d7095abb5a9f07ff16cbe0c1a9a5fccc993365524985573f0619acb94"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.responsible_for_care_of_dependent_child_under_twelve",
+      "certificate_id": "fixture-cert-ebc0231b905b",
+      "claim": "attested",
+      "evidence_sha256": "b9159d131f7736c496b3ed665c9149045487842a1053ee9253eb75e6c76a7b53"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.responsible_for_care_of_dependent_household_member_age_six_to_under_twelve",
+      "certificate_id": "fixture-cert-78d507268466",
+      "claim": "attested",
+      "evidence_sha256": "9e329dc3091f0c8a7245e9925a5e1fe168d818b96901731178f2b6b7d475a6cb"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.responsible_for_care_of_dependent_household_member_under_age_six",
+      "certificate_id": "fixture-cert-c88ee1109c61",
+      "claim": "attested",
+      "evidence_sha256": "4bd0b33c286b03111d058c0ff77ced047afd9df83eac989d5a984c9cdc93aaa6"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.single_parent_enrolled_full_time_in_higher_education",
+      "certificate_id": "fixture-cert-82d20eddf312",
+      "claim": "attested",
+      "evidence_sha256": "8ad5fcc64839ab4f522e4a4388b5c328e4506a28c9312b3a7ae6b9beb1bc9c12"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.single_parent_household_condition_satisfied",
+      "certificate_id": "fixture-cert-d76c7a509560",
+      "claim": "attested",
+      "evidence_sha256": "a4d6889017fccf462c2b9cdf3ef3f009a98f4b621b6771495c6cdf2c5a29762f"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.snap_abawd_countable_months_in_three_year_period",
+      "certificate_id": "fixture-cert-0c04de96498e",
+      "claim": "attested",
+      "evidence_sha256": "95279f3ad1df146f8019ccb6864ab5f6a3e5109eb16c71051b5e9c31088fbbca"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.snap_allowable_monthly_child_support_payments",
+      "certificate_id": "fixture-cert-cc22689ab105",
+      "claim": "attested",
+      "evidence_sha256": "f9618e310ea26ef8972c80535ddf4cdb064887ad6729336bc7439143ec41154c"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.snap_allowable_monthly_dependent_care_expenses",
+      "certificate_id": "fixture-cert-f112c4c5428b",
+      "claim": "attested",
+      "evidence_sha256": "495a98facadf346d2d0356ed2c97318ed93c736b8a44782073d2b6e202d4b9d4"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.snap_countable_financial_resources",
+      "certificate_id": "fixture-cert-ab858fc56b93",
+      "claim": "attested",
+      "evidence_sha256": "eb5a598c8e5976690a33c4f0fc106ce2c47fa5367665066213dc6931faa17447"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.snap_gross_monthly_earned_income",
+      "certificate_id": "fixture-cert-18e32c6632f2",
+      "claim": "attested",
+      "evidence_sha256": "cfa9f18213500862f8138b80e7b6ce0a52645934dbbdaeec42aa5b82064a46c8"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.snap_income_exclusions",
+      "certificate_id": "fixture-cert-9c99c2bbfa53",
+      "claim": "attested",
+      "evidence_sha256": "bc0c0513290ea50a8ed847bf379a99c205a0b028f5548fd76abc33c28b7c0b64"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.snap_initial_month_prorated_allotment",
+      "certificate_id": "fixture-cert-730c965f8505",
+      "claim": "attested",
+      "evidence_sha256": "b52934d69fe6be353bbf9e7e27c13e69ab39a1612cd4659bc90f25a735348d0c"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.snap_member_is_elderly_or_disabled",
+      "certificate_id": "fixture-cert-58219da5b1e3",
+      "claim": "attested",
+      "evidence_sha256": "d89530e040b87aabeeeef1be1c0aa1b2a8ec68860788790ae8318e752afb545a"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.snap_total_medical_expenses",
+      "certificate_id": "fixture-cert-0a5f9d05230a",
+      "claim": "attested",
+      "evidence_sha256": "15100853920bf34869fa6a6b0b9632aea2e87df2abf3573eb07655804c0f6b61"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.snap_total_monthly_unearned_income",
+      "certificate_id": "fixture-cert-d906f66f4f35",
+      "claim": "attested",
+      "evidence_sha256": "924fdbae75a69d4ac90ce5eaa00a362f2f0b999fd36db051894340dde40b106e"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.state_agency_averaged_student_work_hours_meet_twenty_per_week",
+      "certificate_id": "fixture-cert-0b24bd48f96a",
+      "claim": "attested",
+      "evidence_sha256": "a7fcd7604ffe71a431a78c702a651d31dee4e7cf1e9c3553ec32b97ae7361b9c"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.state_agency_fault_in_ssn_application_processing",
+      "certificate_id": "fixture-cert-22ba66d46860",
+      "claim": "attested",
+      "evidence_sha256": "f1018ca11d784e5ef8c9028b6922b0341b5be28cdf81282147d773dbbe2c4976"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.state_agency_rounds_thirty_percent_net_income_up",
+      "certificate_id": "fixture-cert-8da1bc53a6e1",
+      "claim": "attested",
+      "evidence_sha256": "1d575004667bffb298200cb4c762c93bb9bc69ae99afa1ef6a7166f2a91f0f2f"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.student_age",
+      "certificate_id": "fixture-cert-79181b496923",
+      "claim": "attested",
+      "evidence_sha256": "115dcb4801bfb52709d7cc303fd2374fdc7da49ff069b04704c4c69519d06dda"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.student_anticipates_working_in_work_study",
+      "certificate_id": "fixture-cert-0ca325b8788e",
+      "claim": "attested",
+      "evidence_sha256": "21a1af42e2e5dc1d377ef35399fff5c9888f3309315da1aee9e88402ceb4abbd"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.student_currently_being_trained_by_employer",
+      "certificate_id": "fixture-cert-ede8b72d8c0a",
+      "claim": "attested",
+      "evidence_sha256": "a46d819fa70f34e3c7281092d377e128c8a81022a7b61c4bf134a1fa0b81ca4d"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.student_enrollment_status_ending_event_occurred",
+      "certificate_id": "fixture-cert-ba385546b9d2",
+      "claim": "attested",
+      "evidence_sha256": "3b09a6802b636e83b069522cbc1760afd737003548f833896c1ebd7fe4523658"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.student_paid_employment_hours_per_week",
+      "certificate_id": "fixture-cert-7ae4ba8f93e2",
+      "claim": "attested",
+      "evidence_sha256": "73473694f03b23d0fb2331c0fe3bc589b26fceb87e6e11d1958ec56db8b2323d"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.student_participating_in_on_the_job_training_program",
+      "certificate_id": "fixture-cert-addd81ea4523",
+      "claim": "attested",
+      "evidence_sha256": "e507c2206f97bd9cc35f5e4d2ed14b57639ff3a29748974c34a1cf6df135f995"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.student_participating_in_state_or_federally_financed_work_study",
+      "certificate_id": "fixture-cert-21bf663d043b",
+      "claim": "attested",
+      "evidence_sha256": "7ac4dcc129467ab2fc0fb23f0a89fd2da443893328e6500dfef2d5f2d7d7292e"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.student_physically_or_mentally_unfit",
+      "certificate_id": "fixture-cert-51ce5c2e3764",
+      "claim": "attested",
+      "evidence_sha256": "a44f8aa4562177f2f27bbf36574f2541801dec66201e206de278a601a4e399b3"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.student_receives_tanf",
+      "certificate_id": "fixture-cert-0e36ab8473a1",
+      "claim": "attested",
+      "evidence_sha256": "86ed12297973ac94bde823b3cedf57ab6266a45bced5deb5e49340de5d25c324"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.student_school_term_has_begun",
+      "certificate_id": "fixture-cert-17e8bdae0917",
+      "claim": "attested",
+      "evidence_sha256": "80352bea2b80f9e5c10a8f29ac6ef853dc8375d09aac52f98d773416a0cda66c"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.student_self_employment_hours_per_week",
+      "certificate_id": "fixture-cert-4b23b3407906",
+      "claim": "attested",
+      "evidence_sha256": "47bcfd73f9c7b6ef45029c3298fd67ac183c17dff380b40abb5cf9a6b06b4210"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.student_self_employment_weekly_earnings",
+      "certificate_id": "fixture-cert-4c4d21ba68dc",
+      "claim": "attested",
+      "evidence_sha256": "c43cfcceae52f0dad117e87c1c116fbabcaffdbe8d73310420fa1132dd94efcb"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.verified_higher_homeless_shelter_costs",
+      "certificate_id": "fixture-cert-079b85d1d6a5",
+      "claim": "attested",
+      "evidence_sha256": "e080a964885d95e666b32df69b7580261cd7d1cc8d6a4ad0075ef2c76e020338"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.work_study_approved_at_snap_application",
+      "certificate_id": "fixture-cert-2385eba1a265",
+      "claim": "attested",
+      "evidence_sha256": "ebf5c1226d5946fd5c79bdeae0959c7ad762034523f41378ef7722274278baae"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.work_study_approved_for_school_term",
+      "certificate_id": "fixture-cert-dcecd071df80",
+      "claim": "attested",
+      "evidence_sha256": "d10d56a2054296fe056d09e61f7339f6bb9eed6dc730ad5b9ea7d2da76f29571"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.work_study_exemption_period_active",
+      "certificate_id": "fixture-cert-a6741a694b2a",
+      "claim": "attested",
+      "evidence_sha256": "1b730caba02ba0a8951e216d1365b6f8ae06c82a612c301a8438cbaca190b5e3"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.work_supplementation_earned_income",
+      "certificate_id": "fixture-cert-193ffc4d7f7a",
+      "claim": "attested",
+      "evidence_sha256": "2afd48204b7bd5fc221a030aa2d018ca3f320fc37cd948f8c0e01e2e6b254d4e"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#ny_snap_excess_shelter_cost",
+      "certificate_id": "fixture-cert-825603630d78",
+      "claim": "attested",
+      "evidence_sha256": "b9ba9dc9796eebbc2036e6cc176fa85bb6026dba1270b269e4af747c8e1bade6"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#shelter_costs",
+      "certificate_id": "fixture-cert-aa249a42d540",
+      "claim": "attested",
+      "evidence_sha256": "b0ebb14854aa5da791b6304617b9e4ed219520c7450182f8079a9c5c58305bd9"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#snap_claimed_homeless_shelter_deduction",
+      "certificate_id": "fixture-cert-0070b10d8c65",
+      "claim": "attested",
+      "evidence_sha256": "f8d61011e75a6def93ebdc4282bc19af61d7276eebf78df92cbb7e8fdb38bf28"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#snap_eligible",
+      "certificate_id": "fixture-cert-d03e5e554281",
+      "claim": "attested",
+      "evidence_sha256": "70cd6234e186fea648748d5b2400a5f93ff4b6f2d3975c238f7d31b60880b161"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#snap_excess_shelter_deduction",
+      "certificate_id": "fixture-cert-bfbb206073cb",
+      "claim": "attested",
+      "evidence_sha256": "42e54fb6edd5ba332f2a05fdc2e7d129533cb3f5a42742be719ec5b657438b1c"
+    },
+    {
+      "legal_id": "us-ny:policies/otda/snap/fy-2026-benefit-calculation#snap_total_allowable_shelter_expenses",
+      "certificate_id": "fixture-cert-b36525956e6b",
+      "claim": "attested",
+      "evidence_sha256": "0c37ec087a37bfa2d4e37ab7e3d616262cf8a18dfe9b13d927f519dbbe176a38"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/a#heating_cooling_standard_amount_nassau_suffolk",
+      "certificate_id": "fixture-cert-952f722a1da0",
+      "claim": "attested",
+      "evidence_sha256": "6943551e87549ec9119569e448d73e7b8792711f6feac6a3bd453aaf8acf64fe"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/a#heating_cooling_standard_amount_new_york_city",
+      "certificate_id": "fixture-cert-c40bf5ee72c2",
+      "claim": "attested",
+      "evidence_sha256": "1642ebb7c198fecab7da704da141c73e19426822fb6be004e7ccae4dffe059a0"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/a#heating_cooling_standard_amount_rest_of_state",
+      "certificate_id": "fixture-cert-9629263fb1c4",
+      "claim": "attested",
+      "evidence_sha256": "8a2dcd62558b992dbbfcf88529b48fada71efb3d7d79816b7f3234e73b7fdd69"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/a#input.household_entitled_to_heap_or_liheaa_payment",
+      "certificate_id": "fixture-cert-55e0914e91e0",
+      "claim": "attested",
+      "evidence_sha256": "ec16ffcd7a805943f68536cbfe12f6f5e65a376380e855f51c72a54f821fe711"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/a#input.household_in_central_meter_housing_charged_only_for_excess_heating_or_cooling",
+      "certificate_id": "fixture-cert-0c1876d6cbb9",
+      "claim": "attested",
+      "evidence_sha256": "9d2b9c6e7247e73b7fb9778ab971343f236901935aa8fc131ed4ab2e370d7387"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/a#input.household_incurred_or_anticipated_heating_or_cooling_costs_separate_from_rent_or_mortgage",
+      "certificate_id": "fixture-cert-d9d2f7f0815d",
+      "claim": "attested",
+      "evidence_sha256": "aa1bf64d989419611ee1e84f729a6501c8b190719d176d8c394e3f624d0bbc91"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/a#input.household_resides_in_nassau_or_suffolk_county",
+      "certificate_id": "fixture-cert-9d15a4ab73e8",
+      "claim": "attested",
+      "evidence_sha256": "f8d025a15cb86979fa48f1d0385a3d406e8816c58101d806d2c5f4f5ed54318f"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/a#input.household_resides_in_new_york_city",
+      "certificate_id": "fixture-cert-a93e33543336",
+      "claim": "attested",
+      "evidence_sha256": "9ee03434905e0af10aea34c4f4577e4cc1caf61b56de841f3bf88f3d8309b555"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/a#snap_heating_cooling_standard_allowance_eligible",
+      "certificate_id": "fixture-cert-951dc7b1be07",
+      "claim": "attested",
+      "evidence_sha256": "e9eea429d779f0d4c2a41365d9ab54931bc4cfdbc1f4d4e15e27750143507196"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/a#snap_standard_utility_allowance",
+      "certificate_id": "fixture-cert-036ac1b5e0c8",
+      "claim": "attested",
+      "evidence_sha256": "05608ff158d770ad8eb7cde87d1af99cf45db675a42b39acb95dcc6025883b6e"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/b#input.household_billed_separately_for_non_telephone_standard_utility",
+      "certificate_id": "fixture-cert-5b0e8b38cd4c",
+      "claim": "attested",
+      "evidence_sha256": "581843e85a2f30568a0379b94c5e9ca8060e8dfe305a7e0f7778effce3f57493"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/b#snap_limited_utility_allowance",
+      "certificate_id": "fixture-cert-c0112e5e3757",
+      "claim": "attested",
+      "evidence_sha256": "a7679b553ac9fa22c002b91645b0318691f766fdc4f3b07471f5bc8043d764f9"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/b#snap_utilities_standard_allowance_eligible",
+      "certificate_id": "fixture-cert-324c3b4522a8",
+      "claim": "attested",
+      "evidence_sha256": "25e629e4763ab3fdc68b50310010aff9026db35e500f33b723d88b47dc40e1ad"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/b#utilities_standard_amount_nassau_suffolk",
+      "certificate_id": "fixture-cert-fc3d53c8c28a",
+      "claim": "attested",
+      "evidence_sha256": "14804db5b061c1a971b8472a6740fbcb5cd4ff91bc78c453f4957f7df0498662"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/b#utilities_standard_amount_new_york_city",
+      "certificate_id": "fixture-cert-898a3528bea2",
+      "claim": "attested",
+      "evidence_sha256": "c36b0a1cbfb5630e1bf391592a1e61e9a28a282274508ee2802f3f35822aff38"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/b#utilities_standard_amount_rest_of_state",
+      "certificate_id": "fixture-cert-7565e0b1d3d0",
+      "claim": "attested",
+      "evidence_sha256": "e6bbd6cc641187ed40858ccc8294f5c7859bd81997508d79fe2731553fa89f6c"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/c#input.household_incurred_or_anticipated_basic_service_cost_for_one_telephone",
+      "certificate_id": "fixture-cert-8ff9c624c679",
+      "claim": "attested",
+      "evidence_sha256": "5da90dde582bcad012ed909265050db61d719501c4958bb323a9ddfe5d1fd62d"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/c#snap_individual_utility_allowance",
+      "certificate_id": "fixture-cert-5d88e2bc75fe",
+      "claim": "attested",
+      "evidence_sha256": "d1d6eadfe56b1c20f3b013c9697afe784323773c4706d4ecdf2899f56529871f"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/c#snap_telephone_standard_allowance_eligible",
+      "certificate_id": "fixture-cert-172be9ae6351",
+      "claim": "attested",
+      "evidence_sha256": "08209f84e6b1c6f00c8986d9335174b165c9bd666edfd7fbd164cb12f0be76bb"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/v/c#telephone_standard_allowance_amount",
+      "certificate_id": "fixture-cert-f14aaa811b3e",
+      "claim": "attested",
+      "evidence_sha256": "eadffc45b847d4d81e15de1a1f3c4a868b4672bb45caffc881ad2cc35d96e65d"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/vi#input.all_household_members_experiencing_homelessness",
+      "certificate_id": "fixture-cert-f005c2473e44",
+      "claim": "attested",
+      "evidence_sha256": "c3baa809aa2488529eba0ca9535d51b528ff598939238b34bbb6172ed0769825"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/vi#input.homeless_household_free_shelter_all_month",
+      "certificate_id": "fixture-cert-8a8809d3a22c",
+      "claim": "attested",
+      "evidence_sha256": "067ecc4300c6d483887041edfea339e2ab414a9f85b8529d07fa635c0af8343d"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/vi#input.homeless_household_has_shelter_costs",
+      "certificate_id": "fixture-cert-59d977cf5dab",
+      "claim": "attested",
+      "evidence_sha256": "e469d4aabda6f8748c074277d1688907e9ff95d48a80bee80b4d998e03fb0a1b"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/vi#input.verified_higher_homeless_shelter_costs",
+      "certificate_id": "fixture-cert-03668f57ca30",
+      "claim": "attested",
+      "evidence_sha256": "4778d3d9b121dc0b3bd8fbd44c3b12581fe7d6c1d86a423c2c23ad72b3fddf5c"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/12/f/3/vi#snap_allowable_shelter_costs",
+      "certificate_id": "fixture-cert-8fc98dac6012",
+      "claim": "attested",
+      "evidence_sha256": "8df11454c940832a69642b7e1d26e81324ced2140344db19123368099f6a3ac0"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/1#initial_month_benefit_level",
+      "certificate_id": "fixture-cert-5a0b438c6b96",
+      "claim": "attested",
+      "evidence_sha256": "7f597f104c01661d88a573219808129779f145efe19224518b76d0d1d6384810"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/1#initial_month_of_certification",
+      "certificate_id": "fixture-cert-0cb4b2d31e47",
+      "claim": "attested",
+      "evidence_sha256": "bf77ea1e5b2ac25bcf60ec589a4fba0be0e75703ad63894e03bae84e176ec6cb"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/1#input.first_full_month_benefit_level",
+      "certificate_id": "fixture-cert-4f2e1825c3e2",
+      "claim": "attested",
+      "evidence_sha256": "0962bebc64fb20138ab320d145aba56237862d4710ca6cb59e030b670c619f22"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/1#input.household_applies_following_more_than_30_days_not_certified",
+      "certificate_id": "fixture-cert-d1a0d2128182",
+      "claim": "attested",
+      "evidence_sha256": "c9d4b6508efc544c5bcb757ac17ef9a05caff6bda203829afae2c92d5f4c8d31"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/1#input.household_certified_for_participation_in_food_stamp_program",
+      "certificate_id": "fixture-cert-e1394ecec2a1",
+      "claim": "attested",
+      "evidence_sha256": "23e88b9e3d3be9e8210b2eb95f90263d98bff12dd49627c4b305619710b3fd23"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/1#input.household_is_migrant_or_seasonal_farmworker_household",
+      "certificate_id": "fixture-cert-223622415313",
+      "claim": "attested",
+      "evidence_sha256": "f75420718330fc749ced8bd88f3c64f8d113f1d6788de9ff78b8cf67884b2c2c"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/1#input.household_was_not_certified_for_participation_during_prior_period",
+      "certificate_id": "fixture-cert-9349a74c377a",
+      "claim": "attested",
+      "evidence_sha256": "2302ff4568e5969cd823e4027a1bc63fafe28ad54fbecdbc864634c49aa829af"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/1#input.proration_factor_from_application_day_to_end_of_initial_month",
+      "certificate_id": "fixture-cert-ba61d100d9df",
+      "claim": "attested",
+      "evidence_sha256": "c0a0b130f1e22a57bc3d8898bb56682d9f4f16235833403306c07d0986bd905c"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/1#input.proration_factor_from_release_day_to_end_of_month",
+      "certificate_id": "fixture-cert-db0a71b919d9",
+      "claim": "attested",
+      "evidence_sha256": "9107161a39bc59845038e390be83d2456969f6256954c05686d0124502b4b4eb"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/1#input.public_institution_prerelease_joint_ssi_food_stamp_applicant",
+      "certificate_id": "fixture-cert-9f82f61d7e24",
+      "claim": "attested",
+      "evidence_sha256": "242ca86e9a3d57413336fa29c3654e7030e72278b9538c74596469c8fb0cd81f"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#family_assistance_or_safety_net_minimum_payable_grant_amount",
+      "certificate_id": "fixture-cert-315bebe6b2f8",
+      "claim": "attested",
+      "evidence_sha256": "b7fbd4c905be26669bf3bcc9948bc42b688193a48a9908072627cae17224ed6f"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#input.household_has_earned_income_budgeted_for_snap",
+      "certificate_id": "fixture-cert-13609af99890",
+      "claim": "attested",
+      "evidence_sha256": "bbea08e6d8ecc0aca5e70662c2af9d5bd78e6979e6aff39c355d78f32894a432"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#input.household_has_out_of_pocket_dependent_care_expenses",
+      "certificate_id": "fixture-cert-2ade7dd5e936",
+      "claim": "attested",
+      "evidence_sha256": "75f2b99fd4c570a42741649c9f0111f6c4bc95adadf4b237fd18c3b6cb6f6791"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#input.household_member_disqualified_for_failure_to_comply_with_periodic_reporting_requirements",
+      "certificate_id": "fixture-cert-7db063f2b489",
+      "claim": "attested",
+      "evidence_sha256": "7c660049ca07fc46944b3c555e4fb8f6a930763f41ee4b234d6600af306b4abd"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#input.household_member_disqualified_for_failure_to_comply_with_work_requirements",
+      "certificate_id": "fixture-cert-ee40bbb2bffb",
+      "claim": "attested",
+      "evidence_sha256": "bd89205a6868227a292d3378d7bcb7fa8e5325f35add4c27aa75c381ad5e44fe"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#input.household_member_disqualified_for_intentional_program_violation",
+      "certificate_id": "fixture-cert-c56d6c5c3e69",
+      "claim": "attested",
+      "evidence_sha256": "3822b00a93221e00b36261d274db79dd66f2ce8f1a4bf0deb3bff33d6113f786"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#input.household_member_ineligible_to_participate_in_snap",
+      "certificate_id": "fixture-cert-1820435afcc9",
+      "claim": "attested",
+      "evidence_sha256": "8acbe5cde8fc9258e62e4fd68090d8c4eaa347140bd628fef9a08be5b904674d"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#input.member_authorized_to_receive_family_assistance_nonemergency_safety_net_or_ssi_benefits_but_not_yet_paid",
+      "certificate_id": "fixture-cert-f855d34a0ed3",
+      "claim": "attested",
+      "evidence_sha256": "09a113bcc16bf8d13c5b4dd9cf82888bd120b33c5d902e937773a7c54211452d"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#input.member_determined_eligible_for_family_assistance_or_nonemergency_safety_net_benefits",
+      "certificate_id": "fixture-cert-a9a2013c87a8",
+      "claim": "attested",
+      "evidence_sha256": "138df1fb6c855aafd24bfec03ae8390e8acba30f8004546c74bf7c100992f581"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#input.member_family_assistance_nonemergency_safety_net_or_ssi_benefits_suspended_or_being_recouped",
+      "certificate_id": "fixture-cert-c8008919673f",
+      "claim": "attested",
+      "evidence_sha256": "0d97abe73aa5410228e819a1c8835e95b71002083cd41089367408ce172b1dff"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#input.member_family_assistance_or_nonemergency_safety_net_grant_amount",
+      "certificate_id": "fixture-cert-24c8c2babf57",
+      "claim": "attested",
+      "evidence_sha256": "376c41f765f5c6ee6e3096d471ea4ce4c352be8472d13b53affe362dbcef2b03"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#input.member_paid_family_assistance_or_nonemergency_safety_net_benefits",
+      "certificate_id": "fixture-cert-9a814e5d86d7",
+      "claim": "attested",
+      "evidence_sha256": "849733d36160542ac82bd7769e9781b84e2631d538a5f3a463a9eda2bda5466f"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#input.member_receives_family_assistance_nonemergency_safety_net_or_ssi_benefits",
+      "certificate_id": "fixture-cert-6f49660296bd",
+      "claim": "attested",
+      "evidence_sha256": "ec5e3f6d24780c594f21e286f0747e00ec11a6aba4a50d098bef6d2b64b05ad6"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#member_has_family_assistance_nonemergency_safety_net_or_ssi_categorical_status",
+      "certificate_id": "fixture-cert-b669be585578",
+      "claim": "attested",
+      "evidence_sha256": "0269a3a279a601296a719d2f13dcbb0be70434196fe8f27142b14dd4daaa7fcd"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#ny_snap_all_members_public_assistance_categorical_path_satisfied",
+      "certificate_id": "fixture-cert-3af9b0cddeda",
+      "claim": "attested",
+      "evidence_sha256": "857f01f8e37c426b02fe9900e23f7f4f53387e57f27a0bc667944bf3627348bb"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#ny_snap_categorical_eligibility_130_percent_fpl_ratio",
+      "certificate_id": "fixture-cert-b4b251abb989",
+      "claim": "attested",
+      "evidence_sha256": "49002330b7f71feeeaccfc22266a126470925d1090e7c70c3c9f025ed1b5af0b"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#ny_snap_categorical_eligibility_150_percent_fpl_ratio",
+      "certificate_id": "fixture-cert-45744cf12022",
+      "claim": "attested",
+      "evidence_sha256": "8f94931897f75bcfed26cd4e86382244fefda633ad9afe83bd1356ce64ded919"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#ny_snap_categorical_eligibility_200_percent_fpl_ratio",
+      "certificate_id": "fixture-cert-a65d67bfa1b2",
+      "claim": "attested",
+      "evidence_sha256": "79d992582b28c8521dff6bcc3cc2bb25d3c8f0b18568cba278782d3117268fe4"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#ny_snap_categorical_gross_income_limit_130_percent_fpl",
+      "certificate_id": "fixture-cert-d00b1f79f88a",
+      "claim": "attested",
+      "evidence_sha256": "d8d82f619232dba39c05cec7fd81d09f108c182c0bbe0abbbde3295697bc649c"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#ny_snap_categorical_gross_income_limit_150_percent_fpl",
+      "certificate_id": "fixture-cert-f29fe418a25b",
+      "claim": "attested",
+      "evidence_sha256": "c4893d64e268bc200d45175a490129178b4396af67216dc34dd3e958e8aad083"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#ny_snap_categorical_gross_income_limit_200_percent_fpl",
+      "certificate_id": "fixture-cert-bc59093b2abb",
+      "claim": "attested",
+      "evidence_sha256": "847be0460d1b869519d16950bdfb227575b1cd6bf28f5fba7a635da5ff600770"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#ny_snap_categorically_eligible",
+      "certificate_id": "fixture-cert-ff3f192823f9",
+      "claim": "attested",
+      "evidence_sha256": "b8461fe6006cd27ced46e8aa6124d21a29c2ea790b0a2c56894b2df1b10abbd5"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#ny_snap_dependent_care_200_percent_categorical_path_satisfied",
+      "certificate_id": "fixture-cert-88c203cc7e91",
+      "claim": "attested",
+      "evidence_sha256": "255145f6f9eb47313508e260ecf9e713bc4ea295cecee2dc7a5f961e26ca33ba"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#ny_snap_earned_income_150_percent_categorical_path_satisfied",
+      "certificate_id": "fixture-cert-fc64fcaba98b",
+      "claim": "attested",
+      "evidence_sha256": "bb125db47de96cc91261568c66821c750c0ea8ffff757e016f53ee8d662068b6"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#ny_snap_elderly_disabled_200_percent_categorical_path_satisfied",
+      "certificate_id": "fixture-cert-70cfc75acda4",
+      "claim": "attested",
+      "evidence_sha256": "6729f223b8c8a820d5f42b51a48a661202093e7a795fa1ef10be41682ed1d94c"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#ny_snap_residual_130_percent_categorical_path_satisfied",
+      "certificate_id": "fixture-cert-e21911d53185",
+      "claim": "attested",
+      "evidence_sha256": "cacb655c2803c5aa0ee5dcb62d70c64d1d5e6abde3de7befadc8014cb6d4dfc3"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#relation.ny_snap_categorical_member_of_household",
+      "certificate_id": "fixture-cert-ea9a99496f65",
+      "claim": "attested",
+      "evidence_sha256": "70bfd9addf17407faa820e23bbae59e2a3cc58b3e21195937affb0957a60a90c"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#snap_categorically_eligible_for_resource_exemption",
+      "certificate_id": "fixture-cert-737b53dd9d31",
+      "claim": "attested",
+      "evidence_sha256": "2fc7471d122e304ea065ecd153d1153435c2907e9a86bc898328db1fdbd2e936"
+    },
+    {
+      "legal_id": "us-ny:regulations/18-nycrr/387/14/a/5#snap_income_limit_exemption_for_categorically_eligible_household",
+      "certificate_id": "fixture-cert-b4a2cebb0f68",
+      "claim": "attested",
+      "evidence_sha256": "1f5f4f642f9dfd4892de59036ee4cd837154a38295e586b182ced7ad819bc49b"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#input.household_size",
+      "certificate_id": "fixture-cert-0271382cb5bd",
+      "claim": "attested",
+      "evidence_sha256": "11c072c8f936570d87e5fb2b4dd5701d93a1dff6c87fc4520cb5c51a1614d092"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#snap_asset_limit",
+      "certificate_id": "fixture-cert-aeb0babb6966",
+      "claim": "attested",
+      "evidence_sha256": "e1346212b7c1941db2ea99c72551e1e057ed3aa863441d507eca7cd1fbaf1413"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#snap_asset_limit_elderly_or_disabled_member",
+      "certificate_id": "fixture-cert-0c70e238db65",
+      "claim": "attested",
+      "evidence_sha256": "7ae5e5924a8479c1019b886980656b1e76e4f0fdf9dac8aabf4fa5c5b7dc4b9d"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#snap_asset_limit_other_households",
+      "certificate_id": "fixture-cert-21df4f06ccac",
+      "claim": "attested",
+      "evidence_sha256": "9111cc7f1f8a86f9a3ff8d92b2743b551e8ca533bb4002fe83dd016bba8cc89f"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#snap_homeless_shelter_deduction",
+      "certificate_id": "fixture-cert-f4bdeb275623",
+      "claim": "attested",
+      "evidence_sha256": "dd5360597b9df66b1cbd648fbbe93619a93249cf20f4114221e073b0d99dd8f7"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#snap_maximum_excess_shelter_deduction_48_states_dc",
+      "certificate_id": "fixture-cert-c3399c567caa",
+      "claim": "attested",
+      "evidence_sha256": "718a37808bcd5a98750410e242b526c3b15f99851089820c3947f4786836c039"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#snap_maximum_excess_shelter_deduction_alaska",
+      "certificate_id": "fixture-cert-c41ef2be28fc",
+      "claim": "attested",
+      "evidence_sha256": "1bf36d37bb336b94ceebcf90c809088941134f1cea5340acc3879b1c23032fbe"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#snap_maximum_excess_shelter_deduction_guam",
+      "certificate_id": "fixture-cert-1b93a847617a",
+      "claim": "attested",
+      "evidence_sha256": "f86b75e9f810744bf0c41884901f0cd4aac6ac212e0446a5bca835182cfb9358"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#snap_maximum_excess_shelter_deduction_hawaii",
+      "certificate_id": "fixture-cert-1cc880a7e358",
+      "claim": "attested",
+      "evidence_sha256": "1daa5157c7431dc87c9ac764865704cbb854f4692f21485b126d6956752f9610"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#snap_maximum_excess_shelter_deduction_virgin_islands",
+      "certificate_id": "fixture-cert-3200b07e4877",
+      "claim": "attested",
+      "evidence_sha256": "89a12a94f41b1fd601b1dc604178f42f2341d1b71e6f678b464aeb4e4ac48548"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#snap_standard_deduction",
+      "certificate_id": "fixture-cert-ef6b040113b5",
+      "claim": "attested",
+      "evidence_sha256": "a160f85f2a805e037323a9017bf0107416f6244642091e9deeb9be846b02369d"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#snap_standard_deduction_48_states_dc",
+      "certificate_id": "fixture-cert-430858f03629",
+      "claim": "attested",
+      "evidence_sha256": "0ef41812cf43e2ee4ba69e5eeafd6c93d782a76211abe62bce21767b628554cf"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#snap_standard_deduction_48_states_dc_table",
+      "certificate_id": "fixture-cert-f4ff1a3a7c0d",
+      "claim": "attested",
+      "evidence_sha256": "a3aedb364671b541b385b5a7e22a781bd7412659d47a08ff2de2bb6daa3951a8"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#snap_standard_deduction_alaska_table",
+      "certificate_id": "fixture-cert-5857a446d900",
+      "claim": "attested",
+      "evidence_sha256": "b08abbefc360e517f93878e6004c802bb2f94c42be92a1f17ab45fb2986bbbdc"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#snap_standard_deduction_guam_table",
+      "certificate_id": "fixture-cert-22fc80b41e3b",
+      "claim": "attested",
+      "evidence_sha256": "5a1fa52afb41888c04f887256a8b3aa9bb3b070342fd5ec1f88c05fc3052fc34"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#snap_standard_deduction_hawaii_table",
+      "certificate_id": "fixture-cert-f9ff557373f3",
+      "claim": "attested",
+      "evidence_sha256": "4fa8180abfe6935063eddaf82e1ea80242fc91ba91ec7fcb0ffeca32a592212c"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/deductions#snap_standard_deduction_virgin_islands_table",
+      "certificate_id": "fixture-cert-641136c8405c",
+      "claim": "attested",
+      "evidence_sha256": "c9076452860d24dc55c24dd3dbb90704cc9280ddf1008c35801bcf4b200d82e9"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/income-eligibility-standards#snap_gross_income_limit_130_percent_fpl_48_states_dc",
+      "certificate_id": "fixture-cert-dd0cc7c07040",
+      "claim": "attested",
+      "evidence_sha256": "6b5644e0816d77b63c0010d18d75cc94271381b8ada037533d38370be832c48a"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/income-eligibility-standards#snap_gross_income_limit_130_percent_fpl_48_states_dc_additional_member",
+      "certificate_id": "fixture-cert-b4b4fc17d94f",
+      "claim": "attested",
+      "evidence_sha256": "60d39364c1a00cbeadd5ee33380c6f11249f68450f6777f413dfcaff33daf4f8"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/income-eligibility-standards#snap_gross_income_limit_130_percent_fpl_48_states_dc_table",
+      "certificate_id": "fixture-cert-dbec86f13ad5",
+      "claim": "attested",
+      "evidence_sha256": "cd9580909f2bfd570433055f80dc25b6c92cbc3ac8532f390835dfb34e82aff5"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/income-eligibility-standards#snap_gross_income_limit_165_percent_fpl_48_states_dc",
+      "certificate_id": "fixture-cert-72510d87096f",
+      "claim": "attested",
+      "evidence_sha256": "1234892adf60a7eb67f685cf29a703ed52aa797094245c1fec32c574085c69a5"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/income-eligibility-standards#snap_gross_income_limit_165_percent_fpl_48_states_dc_additional_member",
+      "certificate_id": "fixture-cert-600bdf2c53db",
+      "claim": "attested",
+      "evidence_sha256": "9c08f16ad111cb98b2fcc2f1ce17c7a09ad7aa36add5ded6eed65fcab9caf2c4"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/income-eligibility-standards#snap_gross_income_limit_165_percent_fpl_48_states_dc_table",
+      "certificate_id": "fixture-cert-6159f9a56e92",
+      "claim": "attested",
+      "evidence_sha256": "f5322c18ec2b2e00633091f97ca3803714fbe2c1532d7f43ca6c4f6bec7d42fa"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/income-eligibility-standards#snap_net_income_limit_100_percent_fpl_48_states_dc",
+      "certificate_id": "fixture-cert-493bdb8fb965",
+      "claim": "attested",
+      "evidence_sha256": "5b7ad70a50a82e01eefe4b2b59e59deb919b2169131a24b461d1c0eb9efb7418"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/income-eligibility-standards#snap_net_income_limit_100_percent_fpl_48_states_dc_additional_member",
+      "certificate_id": "fixture-cert-a82cd2d3d6e1",
+      "claim": "attested",
+      "evidence_sha256": "d9ea4c724d678b30fc0f31b25e6efaa6e46ae3f0d35c5da828a00431545fb22c"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/income-eligibility-standards#snap_net_income_limit_100_percent_fpl_48_states_dc_table",
+      "certificate_id": "fixture-cert-f41296b6ccc8",
+      "claim": "attested",
+      "evidence_sha256": "d9a811a9f9b121ebdd0946015011ed9888700c678878e6c548986f862f273095"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/maximum-allotments#snap_maximum_allotment",
+      "certificate_id": "fixture-cert-9c5e10da1ecb",
+      "claim": "attested",
+      "evidence_sha256": "192207efe0e43f33ba9ff08246216ae61cb1cff4541daf2416e5578466a7d21c"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/maximum-allotments#snap_maximum_allotment_additional_member",
+      "certificate_id": "fixture-cert-a748dbd4430e",
+      "claim": "attested",
+      "evidence_sha256": "005ab0f73edb142a1127e1cf01bdab42774edb7a23e219a12f56a51a19062a61"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/maximum-allotments#snap_maximum_allotment_alaska_rural_1_additional_member",
+      "certificate_id": "fixture-cert-71489d84718d",
+      "claim": "attested",
+      "evidence_sha256": "b3e997841285e0919a26a89571fd3d5c689c33fd84251593ae9e4c41d8751448"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/maximum-allotments#snap_maximum_allotment_alaska_rural_1_table",
+      "certificate_id": "fixture-cert-48219d5a5f13",
+      "claim": "attested",
+      "evidence_sha256": "fc6f6ef4b24827943a3288c0ab54602a7128d72a84f1b6dac9ce22f5fe24c6e0"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/maximum-allotments#snap_maximum_allotment_alaska_rural_2_additional_member",
+      "certificate_id": "fixture-cert-73971021623a",
+      "claim": "attested",
+      "evidence_sha256": "028d6aef8d2241b8c73b34332d779bda282c437ce2d3eac02c94e9cf3290e50f"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/maximum-allotments#snap_maximum_allotment_alaska_rural_2_table",
+      "certificate_id": "fixture-cert-f481ff81b50e",
+      "claim": "attested",
+      "evidence_sha256": "f58e2378821ead937e0caa6f8da8d8635ac2c5d69179222e1653d1170dd9e97e"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/maximum-allotments#snap_maximum_allotment_alaska_urban_additional_member",
+      "certificate_id": "fixture-cert-f1325d9431b8",
+      "claim": "attested",
+      "evidence_sha256": "f06c3ad4273669c670378eff68d105ba3ee9ad5fb3edb2731b82a5d4cf286269"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/maximum-allotments#snap_maximum_allotment_alaska_urban_table",
+      "certificate_id": "fixture-cert-64020c591040",
+      "claim": "attested",
+      "evidence_sha256": "05c81352e16a3cb0fa5099fb3e6c424ed7b5caaa088a68aeb1fc082b46514fac"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/maximum-allotments#snap_maximum_allotment_guam_additional_member",
+      "certificate_id": "fixture-cert-8b0780de9583",
+      "claim": "attested",
+      "evidence_sha256": "2530edea670e97c2131357514859a4358e87d1da0119086d2723ad9983a2caf6"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/maximum-allotments#snap_maximum_allotment_guam_table",
+      "certificate_id": "fixture-cert-a8f1a6c049ac",
+      "claim": "attested",
+      "evidence_sha256": "c00af2ffc9ea5280e83b9f93b9abd82dc629269105e1709065c30989ff212553"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/maximum-allotments#snap_maximum_allotment_hawaii_additional_member",
+      "certificate_id": "fixture-cert-72e82dc2f34a",
+      "claim": "attested",
+      "evidence_sha256": "09f7118d60212e349c0398c69f355e2d3d1ae629fd5a347c47fe437ad9c24a48"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/maximum-allotments#snap_maximum_allotment_hawaii_table",
+      "certificate_id": "fixture-cert-34c3a04e2e48",
+      "claim": "attested",
+      "evidence_sha256": "c616b1b4174f0447d05ea9f9d2e9734ae15b49bc8e090012c651335540fc2106"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/maximum-allotments#snap_maximum_allotment_table",
+      "certificate_id": "fixture-cert-f4f505bf958f",
+      "claim": "attested",
+      "evidence_sha256": "decddb6fa91cfabd66ed9f8685a66750e2ef0fe43ddf2f2e3aabcba48b0d4ac5"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/maximum-allotments#snap_maximum_allotment_virgin_islands_additional_member",
+      "certificate_id": "fixture-cert-39a3928e64df",
+      "claim": "attested",
+      "evidence_sha256": "02e3d183ee764f6c39fb2840c4e0ba1a86f86748165602032ec1f974da834012"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/maximum-allotments#snap_maximum_allotment_virgin_islands_table",
+      "certificate_id": "fixture-cert-f759f7dd3e97",
+      "claim": "attested",
+      "evidence_sha256": "146e339b73462ab71bdb2faae91d2367cdb110ab2dbb7ff84a11655b64f178a0"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/fy-2026-cola/maximum-allotments#snap_one_person_thrifty_food_plan_cost",
+      "certificate_id": "fixture-cert-52ff61ab087f",
+      "claim": "attested",
+      "evidence_sha256": "94d89c81b0a6c8c63b178fe98ff1cccc1203de0fbee128b93cc4a35a405e46a8"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#input.household_initial_month",
+      "certificate_id": "fixture-cert-121efcee4494",
+      "claim": "attested",
+      "evidence_sha256": "a61f6d6d67570005a4b47482d35304db709a6df4844f786056927123e02cc77a"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#input.snap_gross_monthly_earned_income",
+      "certificate_id": "fixture-cert-85c1beb60450",
+      "claim": "attested",
+      "evidence_sha256": "f0cb4f0e942a39bd4ded81c002cc7d310f637e8c0ec56525720a73eced2a5773"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#input.snap_total_monthly_unearned_income",
+      "certificate_id": "fixture-cert-663ef74075db",
+      "claim": "attested",
+      "evidence_sha256": "98d69209dd7be530654515d5bcdba679bae34b2db271a1f6750a30e1fd252af7"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#relation.member_of_household",
+      "certificate_id": "fixture-cert-6b0e481e283d",
+      "claim": "attested",
+      "evidence_sha256": "b9cebf11d8547515d2d944a015a3a675209ce180120c1d37dcbb618ee86e26b1"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#snap_benefit",
+      "certificate_id": "fixture-cert-8643e18efdc1",
+      "claim": "attested",
+      "evidence_sha256": "a15c556bac2e6ec28be0deafaf30b602f785403e22c810f7824bfaf02f6ab856"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#snap_countable_earned_income",
+      "certificate_id": "fixture-cert-ab135c4e36e7",
+      "claim": "attested",
+      "evidence_sha256": "4d3c3fbeb34fa5996047bc44e72d47a4deb75b90130a6f3ac6fa4089a136da99"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#snap_countable_unearned_income",
+      "certificate_id": "fixture-cert-160f490db2bb",
+      "claim": "attested",
+      "evidence_sha256": "e16afe0bff707e8658fe349fff1ece24541aa7df271ba69fac4ae9eecbc0ecf2"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#snap_gross_monthly_income",
+      "certificate_id": "fixture-cert-22d13beaa8a6",
+      "claim": "attested",
+      "evidence_sha256": "05a03c1eb56ef613a400a8cbbdd4b3a1eb282e50a64a972ce55a14d44f08b768"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#snap_household_member_eligible",
+      "certificate_id": "fixture-cert-f121098bb7cd",
+      "claim": "attested",
+      "evidence_sha256": "962da26be1f2d68683e0cffc4838bd11f3181231a950f240fe9e2c8fed829b5e"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#snap_household_residency_and_citizenship_eligible",
+      "certificate_id": "fixture-cert-d5bcda4c585a",
+      "claim": "attested",
+      "evidence_sha256": "fb009c14e62edffc6912435376d2450663e0bfe7074037182fb47b507fbffca6"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#snap_initial_month_issued_allotment",
+      "certificate_id": "fixture-cert-124a12f816fe",
+      "claim": "attested",
+      "evidence_sha256": "0bd6e00d8f0d57dbab1f23f9e9d589efa2b3c6f023e919f85f62bc647fc9e1ff"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#snap_member_eligible",
+      "certificate_id": "fixture-cert-fc120b7363f4",
+      "claim": "attested",
+      "evidence_sha256": "dcae195dd1a6597d94c92941d63154360f7901785c2ed2ce1ad99f9d2e9a8cb7"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#snap_monthly_household_income",
+      "certificate_id": "fixture-cert-2476e13930d2",
+      "claim": "attested",
+      "evidence_sha256": "1cc291f02ad334f5eecfe2f2acfaab3fc337a7a3815cd6f81e34875e5d9a4550"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#snap_residency_eligible",
+      "certificate_id": "fixture-cert-924013cd106e",
+      "claim": "attested",
+      "evidence_sha256": "20595074909a32b6b90ad1f8e348609e5f4b3e9a4f0fcfe299c9bdd8b361963c"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#snap_ssn_eligible",
+      "certificate_id": "fixture-cert-42c627490468",
+      "claim": "attested",
+      "evidence_sha256": "dc645381033e5209f131c13d8dc748353511ab60d61f45ba681f6ccd22d7f0c9"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#snap_student_eligible",
+      "certificate_id": "fixture-cert-45149289d1bf",
+      "claim": "attested",
+      "evidence_sha256": "96f7cba37d83edc6d2c75168bfb001b9865dd9a336b873afc2c51099245aa24f"
+    },
+    {
+      "legal_id": "us:policies/usda/snap/state-plan-composition#snap_work_requirement_eligible",
+      "certificate_id": "fixture-cert-dba0e7ff7bf6",
+      "claim": "attested",
+      "evidence_sha256": "c05461ab3205d925d38cfd8e6654bccc6a4c0d92a010763a232ae81208f5c8db"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#input.household_entitled_to_excess_medical_deduction",
+      "certificate_id": "fixture-cert-d62be8050377",
+      "claim": "attested",
+      "evidence_sha256": "e72ff79752708d8bb945e5bcc5bd3833c4aafae7d03695911d69ed86a642998a"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#input.snap_allowable_monthly_child_support_payments",
+      "certificate_id": "fixture-cert-9343d0da840c",
+      "claim": "attested",
+      "evidence_sha256": "76bbb0c80836a255fb591ca474bcb33aea01e80cd09f63861427b9358414d270"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#input.snap_allowable_monthly_dependent_care_expenses",
+      "certificate_id": "fixture-cert-a36eb24d352d",
+      "claim": "attested",
+      "evidence_sha256": "61337d5a60c922088785ec59c0e677707218ec2c7f818c1653e5e4bbd422ad06"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#input.snap_income_exclusions",
+      "certificate_id": "fixture-cert-579b9fa037da",
+      "claim": "attested",
+      "evidence_sha256": "e5d13016e5ca4d9bcd525a5830914dec6a98fd1da6370fd5642da25b2b0c5082"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#input.snap_total_medical_expenses",
+      "certificate_id": "fixture-cert-20e62baa483f",
+      "claim": "attested",
+      "evidence_sha256": "4186282ec2da5c9a3a2a3d8d12a895cfdb6da9721a5be5b4c57e3f6c633b77a5"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#input.state_agency_rounds_thirty_percent_net_income_up",
+      "certificate_id": "fixture-cert-339df0da78a0",
+      "claim": "attested",
+      "evidence_sha256": "eada34260175a55bbb7488fe545024a45d1ef7ed18f2aed59bd4f5047328b872"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_allotment_net_income_reduction_rate",
+      "certificate_id": "fixture-cert-cf689230c175",
+      "claim": "attested",
+      "evidence_sha256": "db8af9fa1860d69008aa224c5a041d3900af298ecb376987ec90f00346715bd5"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_calculated_monthly_allotment_before_minimums",
+      "certificate_id": "fixture-cert-cb28faadd5ea",
+      "claim": "attested",
+      "evidence_sha256": "a41d33ed511cbfc02a3d0cf4a5862181ce0f352e7e748027e751caec92e0d138"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_earned_income_deduction_for_net_income",
+      "certificate_id": "fixture-cert-8048fa9399f4",
+      "claim": "attested",
+      "evidence_sha256": "5e972ee87c77cfab07cdab624ca937b8a845e8d3254715912a53c91e79ded7a3"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_earned_income_deduction_rate_for_net_income",
+      "certificate_id": "fixture-cert-934b343fc940",
+      "claim": "attested",
+      "evidence_sha256": "3f70fad0a1dd60375d34766855e72f79aa8d00e0064bc419027519d68e1cb44c"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_excess_medical_deduction_for_net_income",
+      "certificate_id": "fixture-cert-37d080bf132b",
+      "claim": "attested",
+      "evidence_sha256": "5e2aec1b44f6e78ab90a48132a0a22348d6a0838e9f4660d232bd468f52bc20d"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_excess_shelter_cost",
+      "certificate_id": "fixture-cert-593ca1277a8e",
+      "claim": "attested",
+      "evidence_sha256": "5b9715db881daf60d07a0d84a3ba75b3150d6a4f90b2cf0188d240d9e3c25dc2"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_excess_shelter_deduction_for_net_income",
+      "certificate_id": "fixture-cert-f7efef0006eb",
+      "claim": "attested",
+      "evidence_sha256": "df8484d709c28bb01b032ad946bb4ca8c3ad60a1e291c45e7459f02d18c76e6e"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_excess_shelter_income_share",
+      "certificate_id": "fixture-cert-75bf5d3f6473",
+      "claim": "attested",
+      "evidence_sha256": "d46500ca4e3fec6b9e4648dd5c34415427a6cb826921859ea0d5d386a0f2a8ee"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_homeless_shelter_deduction_for_net_income",
+      "certificate_id": "fixture-cert-48e4879d0040",
+      "claim": "attested",
+      "evidence_sha256": "06e8d8965bb25895f23172bb6ee8f4c3aba55558b9ed6d67c3ccf7a515e07839"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_initial_month_minimum_issuance",
+      "certificate_id": "fixture-cert-239b7d7ae3be",
+      "claim": "attested",
+      "evidence_sha256": "0945fc7f78d32dd4929cced901b92a015e88dc602beeedc5f3e3514a8fe90d1e"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_medical_expense_threshold",
+      "certificate_id": "fixture-cert-0e793c1176e7",
+      "claim": "attested",
+      "evidence_sha256": "fd0b3acd9cfbf7d1c1690df2371bf0c6bdfbcac470e107181b808cc03bf50444"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_minimum_benefit",
+      "certificate_id": "fixture-cert-d22170a58a31",
+      "claim": "attested",
+      "evidence_sha256": "026328bf9b612bfa3b8800484277b946d68a0302ffc50e61f98788e43c593691"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_minimum_benefit_household_size_limit",
+      "certificate_id": "fixture-cert-912793280754",
+      "claim": "attested",
+      "evidence_sha256": "29b288f0e4062fbbcdfac5d3bda8dce2362b432becd3c3e5b2fe5daf8774a137"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_minimum_benefit_rate",
+      "certificate_id": "fixture-cert-43087ebc918e",
+      "claim": "attested",
+      "evidence_sha256": "5630785251f74e42007135661c99fb6d0658a65376f6c48735a0e7f7a52761e4"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_monthly_allotment",
+      "certificate_id": "fixture-cert-bb93e912357f",
+      "claim": "attested",
+      "evidence_sha256": "05c1c08caa61160c07f2a704de7020a517724bc16272ab5925b4ab35dd77b400"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_net_income_before_shelter",
+      "certificate_id": "fixture-cert-e56d2742510f",
+      "claim": "attested",
+      "evidence_sha256": "02b2e49fc571a4a5e46bfbfd08379833a7fc1fc88ac595d4c879dab36a47c676"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_net_monthly_income",
+      "certificate_id": "fixture-cert-9f481df85b4e",
+      "claim": "attested",
+      "evidence_sha256": "57cdd17edcf24a67723e4f2f230ec17084e1d2972e3f96428d770919103ef182"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/10#snap_total_gross_income",
+      "certificate_id": "fixture-cert-7b11e3c26b50",
+      "claim": "attested",
+      "evidence_sha256": "3de6fd99b303a24553f6a14ce0c974207e1cf67c6e57bfc52349a738d3c5335f"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.member_abawd_monthly_work_hours",
+      "certificate_id": "fixture-cert-6eb78d368c15",
+      "claim": "attested",
+      "evidence_sha256": "f30a4900df9b142d1c061548eeb45742706af94cae97c128ea4a389b2ff8dcd3"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.member_abawd_weekly_work_hours",
+      "certificate_id": "fixture-cert-538ba0916339",
+      "claim": "attested",
+      "evidence_sha256": "a440939179a392ff9c3fb25d75a0b2da0ac2a9a21fe9b457551f40939014e2e6"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.member_age",
+      "certificate_id": "fixture-cert-b8ee0e69e764",
+      "claim": "attested",
+      "evidence_sha256": "153dfd16d8a020da827b36a2d63dada1d0639e567acc08613f593a9bff595343"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.member_age_24_or_younger_and_was_in_foster_care_on_attaining_age_18",
+      "certificate_id": "fixture-cert-f34d379ca0d0",
+      "claim": "attested",
+      "evidence_sha256": "9bb5fb8e786341ac6b59e49ffc176b79561dec6b147fc76e3e8bb1c032e522cc"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.member_combines_work_and_work_program_20_hours_weekly",
+      "certificate_id": "fixture-cert-e5a6256f1156",
+      "claim": "attested",
+      "evidence_sha256": "2b7181e4b6decfc0e9c700c0f693d7749d43cfe99191b3d97ad6100aff379587"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.member_covered_by_abawd_time_limit_waiver",
+      "certificate_id": "fixture-cert-3bc28b4a305a",
+      "claim": "attested",
+      "evidence_sha256": "3144d27274b93fb64f02a187046d524916b28a32b57b5ba6a7f23d5eddedadfa"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.member_has_additional_three_month_abawd_eligibility",
+      "certificate_id": "fixture-cert-69b58510a0c6",
+      "claim": "attested",
+      "evidence_sha256": "fe3d658d1a86550cc2df5640ebd3f96e3c11ce7dd343843f91dbe16b931f4e0f"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.member_is_homeless",
+      "certificate_id": "fixture-cert-27a2f9d7e639",
+      "claim": "attested",
+      "evidence_sha256": "92b043e6062192113f6b83d46b67dc5ed34845bc8aa476d85ece3aef1a2c058d"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.member_is_parent_of_household_member_under_age_eighteen",
+      "certificate_id": "fixture-cert-097bfa653400",
+      "claim": "attested",
+      "evidence_sha256": "96b76b116f33d896ec610d45298e3167bc2841c2e76b155a33c3dc03a1ca8d7a"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.member_is_pregnant",
+      "certificate_id": "fixture-cert-21f79ff3bc08",
+      "claim": "attested",
+      "evidence_sha256": "8dd6ae06207847c146b5a81b5791e9feeea10289e3d7490085b19cf3b105b9be"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.member_is_veteran",
+      "certificate_id": "fixture-cert-97dc7b9f7d55",
+      "claim": "attested",
+      "evidence_sha256": "905192542d527659743782be3c75b2e276d221b3795192004bd468986565b561"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.member_medically_certified_physically_or_mentally_unfit_for_employment",
+      "certificate_id": "fixture-cert-5abd13cb2d2f",
+      "claim": "attested",
+      "evidence_sha256": "02d2eeaaa1b975c9de3d42b2e04528a111a9169e1ea99530a5c68d175d4b48b7"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.member_participates_in_abawd_work_program_20_hours_weekly",
+      "certificate_id": "fixture-cert-9ea467cf58cd",
+      "claim": "attested",
+      "evidence_sha256": "9b60115b164eb550cd02109ef6d018e7682416ff7c744127db5e53a3b72e82c5"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.member_participates_in_abawd_workfare_program",
+      "certificate_id": "fixture-cert-1f74a5cef7f2",
+      "claim": "attested",
+      "evidence_sha256": "2e07d0041df67780f4f2e8465231d3e418158ed5a3b03d1031eaec05fb45fde8"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.member_regained_abawd_eligibility",
+      "certificate_id": "fixture-cert-70454c7a7468",
+      "claim": "attested",
+      "evidence_sha256": "5ef1cd1f3d116509453bfc22e4af121e111af5ac22e302b7b6605eb83e88426d"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.member_resides_with_household_member_under_age_eighteen",
+      "certificate_id": "fixture-cert-420c7532a243",
+      "claim": "attested",
+      "evidence_sha256": "3b81dd5b6932c4a1ff2bfdb6c8abad5b87bcfd29bb05cef3df6f3cb1dcccd8a0"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#input.snap_abawd_countable_months_in_three_year_period",
+      "certificate_id": "fixture-cert-55dbf38e4910",
+      "claim": "attested",
+      "evidence_sha256": "c848d5d842f95da719c035390291e7d26ca233f6c7c146429ec8fcd238918175"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#snap_member_abawd_countable_month_limit_exceeded",
+      "certificate_id": "fixture-cert-0eca23842597",
+      "claim": "attested",
+      "evidence_sha256": "eee71f15780937231c9a1a08a30b7e1e2db3f14c47c7bf4843440625cf343c99"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#snap_member_abawd_exception_applies",
+      "certificate_id": "fixture-cert-515e56f32121",
+      "claim": "attested",
+      "evidence_sha256": "5a833cec6cb22783bd8867a931592050b4d77afa1590999f542008e3e5b41a91"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#snap_member_abawd_exception_applies_scalar_limit",
+      "certificate_id": "fixture-cert-719302091d25",
+      "claim": "attested",
+      "evidence_sha256": "8694a9732829500a2e0fe8be92aa1dbacbf4adfd98b60455aec5474d6fb34c7d"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#snap_member_abawd_exception_applies_scalar_limit_2",
+      "certificate_id": "fixture-cert-7e37a3919f41",
+      "claim": "attested",
+      "evidence_sha256": "709d31a6bcfcd2e4f6a08b78db5c38b4be458f2fdcb11ac73cab39d393d9d0b1"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#snap_member_abawd_fulfilling_work_requirement",
+      "certificate_id": "fixture-cert-5e87654afaee",
+      "claim": "attested",
+      "evidence_sha256": "54ad60d46e9c6f26ac4c479579aec6533a17ae86fdca49339aa7b857c85b7611"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#snap_member_abawd_fulfilling_work_requirement_scalar_limit",
+      "certificate_id": "fixture-cert-521c8199b5b7",
+      "claim": "attested",
+      "evidence_sha256": "5d7bf3bba8ea5a926ae253fd3bb473ee7d1f1daea57a15be56c11b2dbaf1b50c"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#snap_member_abawd_fulfilling_work_requirement_scalar_limit_2",
+      "certificate_id": "fixture-cert-bd86413c3f69",
+      "claim": "attested",
+      "evidence_sha256": "ae57723206f5366ec72d1e358fd61b953ea852391ae1d7cedc5db13c3fc4719a"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#snap_member_abawd_regained_or_additional_eligibility",
+      "certificate_id": "fixture-cert-afd231edb4c2",
+      "claim": "attested",
+      "evidence_sha256": "b1469126f612fa50ef1a0883f195ebd0e9b488e740b7eb5aa88def21cc543a05"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#snap_member_abawd_time_limit_eligible",
+      "certificate_id": "fixture-cert-c1de8b1136f9",
+      "claim": "attested",
+      "evidence_sha256": "d1c0877a5f3bdc9f13fd3f114526b63ae6e00495445b131e4ad9c1ab3e4c0198"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#snap_member_abawd_time_limit_inapplicable",
+      "certificate_id": "fixture-cert-91af360a8822",
+      "claim": "attested",
+      "evidence_sha256": "9e73955fc00c734e27b3a4dfe9598f6324a9592c2412fd54fc339ce9a19d783e"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#snap_member_work_requirement_eligible",
+      "certificate_id": "fixture-cert-a6c82f880958",
+      "claim": "attested",
+      "evidence_sha256": "494e3e515cce8b053bc3fda16f1a6fba42adf36e2db210a03aa4d298160968cf"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/24#snap_member_work_requirement_ineligible",
+      "certificate_id": "fixture-cert-bc5c11edcda6",
+      "claim": "attested",
+      "evidence_sha256": "07ea5a6b3ceacdfac86610cb10250468c55b73e55ade5ac5532c2668522609ac"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/3#input.household_contains_individual_participating_in_more_than_one_household_or_project_area",
+      "certificate_id": "fixture-cert-fdd6ff2b30a8",
+      "claim": "attested",
+      "evidence_sha256": "a0a9169d5359747cdba89cd6d7314268b6ee33533ccb83b6c46a6d00e575b7eb"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/3#input.household_in_project_area_solely_for_vacation",
+      "certificate_id": "fixture-cert-214df04d6c1b",
+      "claim": "attested",
+      "evidence_sha256": "e3633d0b4aabdb38aebb36622be498662daa05a114e7e8ebabb96e7d059191f8"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/3#input.household_lives_in_application_state",
+      "certificate_id": "fixture-cert-6d75aa1dac31",
+      "claim": "attested",
+      "evidence_sha256": "5c585e520d20816e6f7132e8e4c1b31766e0d4ad9eb8d69e0d38828aa179f4fb"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/3#input.resident_of_battered_women_and_children_shelter_and_prior_abusive_household_member",
+      "certificate_id": "fixture-cert-9f8d91f11e62",
+      "claim": "attested",
+      "evidence_sha256": "8d1bd096ae478025807985de9c26e33ae2394a1cf6ac4673b5564704832cbde0"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/3#snap_duplicate_participation_exception_applies",
+      "certificate_id": "fixture-cert-1059f99168b9",
+      "claim": "attested",
+      "evidence_sha256": "bfef126f4940c2280e390eab3550306669046e724e2c14a37b1ecfab037848dd"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/3#snap_household_duplicate_participation_barred",
+      "certificate_id": "fixture-cert-b25b077ecca1",
+      "claim": "attested",
+      "evidence_sha256": "8f5d5914bb66799822855f0df1ef7e1f02c019bcb437cd3f7b7dd5cbb5400c3d"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/3#snap_household_residency_eligible",
+      "certificate_id": "fixture-cert-f73ccf958e2d",
+      "claim": "attested",
+      "evidence_sha256": "b0f5ba921cc9f35bb5c6844b3342da6854150fff899d65df0d63e9741fe861c6"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/3#snap_household_state_resident",
+      "certificate_id": "fixture-cert-0ebf25499187",
+      "claim": "attested",
+      "evidence_sha256": "529ba94720819822de7b7043a0c4d88cd26ba8b2b0584a3677b437cdb0cb96c6"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.alien_status_documentation_missing_or_unwilling",
+      "certificate_id": "fixture-cert-eb11640f89e0",
+      "claim": "attested",
+      "evidence_sha256": "fff08574a204fe63b248789eb21837bfa5242184e36c3d6e69173c3170022703"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.member_has_deportation_or_removal_withheld",
+      "certificate_id": "fixture-cert-9f9ff44765d5",
+      "claim": "attested",
+      "evidence_sha256": "db71e9a4899a393cfdcb78f11f6f4cec02e8172005d9526d0397af571d035c77"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.member_has_eligible_military_connection",
+      "certificate_id": "fixture-cert-dc11137b2b6d",
+      "claim": "attested",
+      "evidence_sha256": "cb277c3444e661f7c1146c29b07c675529a3b5c8ac4cb49c4cf772336e46785d"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.member_is_amerasian_immigrant",
+      "certificate_id": "fixture-cert-7c9788b4706d",
+      "claim": "attested",
+      "evidence_sha256": "12e991ee75176383cbd5fde9063f61106a49ffda0dc6e2ac0b6e8377ea5ad731"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.member_is_american_indian_born_in_canada_or_recognized_indian_tribe_member",
+      "certificate_id": "fixture-cert-44eacd11b4d0",
+      "claim": "attested",
+      "evidence_sha256": "29ff0aea8ec4a3e948cf1ef01823fe0c0e5819a675ecdbda14d17dc8d2c2d2ca"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.member_is_asylee",
+      "certificate_id": "fixture-cert-aa8ab0b1cb89",
+      "claim": "attested",
+      "evidence_sha256": "d01c9b030514fd69fe1489fe942d9643d52ac362776d28b7e9d5c8eda4df7947"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.member_is_cuban_or_haitian_entrant",
+      "certificate_id": "fixture-cert-0e97a6b6dbcc",
+      "claim": "attested",
+      "evidence_sha256": "2de83b3ff3bc4ce003aac6a1285b92a8a542d2894e1e07467648fe6046aae895"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.member_is_hmong_or_highland_laotian_qualifying_person_or_family_member",
+      "certificate_id": "fixture-cert-0a83de1a3f75",
+      "claim": "attested",
+      "evidence_sha256": "49e1a2fdd080150bc5e7fe7aeb448aa431e4a7aec35945a64ae189d25ae26c8b"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.member_is_qualified_alien_subject_to_five_year_wait",
+      "certificate_id": "fixture-cert-64d3a3cefbea",
+      "claim": "attested",
+      "evidence_sha256": "1acafa45cef62abcc06fd58f96e86101156a7ccc9f860e3f2a071bf4273af835"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.member_is_qualified_alien_with_forty_qualifying_quarters",
+      "certificate_id": "fixture-cert-342adcf5180b",
+      "claim": "attested",
+      "evidence_sha256": "fbfaf8e832957d0442a0af74efe0cf566c60ea6cef8f4d2a5a4ba6ba933d6dc0"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.member_is_refugee",
+      "certificate_id": "fixture-cert-974238937cad",
+      "claim": "attested",
+      "evidence_sha256": "3ab19c6b7459b77563e93653fa0ad4c5a99b0e01a139251a7634b24d4a3c46f5"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.member_is_trafficking_victim_or_qualifying_family_member",
+      "certificate_id": "fixture-cert-70bcff04551b",
+      "claim": "attested",
+      "evidence_sha256": "85de43f86e92318b48df1f024097401f33d5b890a1c8d30b71374dc68a45080e"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.member_is_under_age_eighteen",
+      "certificate_id": "fixture-cert-fd99f3645e6a",
+      "claim": "attested",
+      "evidence_sha256": "37d76652d9340683acd7580d0c85967a8542002262e445442293fcdd92822011"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.member_is_us_citizen",
+      "certificate_id": "fixture-cert-a545b57ba833",
+      "claim": "attested",
+      "evidence_sha256": "8f9dff927b79650db6d79e7a2ad7e7ee14fab146a2ff09a337c630e7e25f31a9"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.member_is_us_noncitizen_national",
+      "certificate_id": "fixture-cert-e6bc373da400",
+      "claim": "attested",
+      "evidence_sha256": "c1863de9ea389fdffc5549d9faf24770984f2d29da8ef3c3111a0768211314e7"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.member_receives_blindness_or_disability_benefits",
+      "certificate_id": "fixture-cert-f76dbdf9c6be",
+      "claim": "attested",
+      "evidence_sha256": "8724fb3bf4120d113013fbec4d07a47ebf9860a5e6f4ad56161fa7a5f2c96baf"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.member_was_lawfully_residing_on_1996_08_22_and_born_on_or_before_1931_08_22",
+      "certificate_id": "fixture-cert-5a8403aa064d",
+      "claim": "attested",
+      "evidence_sha256": "f0bf69af36d1db7ad9ccd0a2e0729310dd6599a94e2054a3555795adf8f488fd"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#input.qualified_alien_five_year_status_period_met",
+      "certificate_id": "fixture-cert-19721bedc2d1",
+      "claim": "attested",
+      "evidence_sha256": "7f4579b37b40fe713bd031179587d5f0e8a385aca110e790e0ba9edc042fb542"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#snap_member_alien_status_eligible",
+      "certificate_id": "fixture-cert-a655fe277fb3",
+      "claim": "attested",
+      "evidence_sha256": "6ce11a68ab37e47bdbe48f1f345790d33656f66d9bf303030f2b4e6a78ce763b"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#snap_member_citizen_or_national_status_eligible",
+      "certificate_id": "fixture-cert-7c2e71ddc84b",
+      "claim": "attested",
+      "evidence_sha256": "9c7d46ef620cc45c720324c6c177a65495174531f61befd3e4e8bbe7095ba60c"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#snap_member_citizenship_or_alien_status_eligible",
+      "certificate_id": "fixture-cert-45e26a3088a0",
+      "claim": "attested",
+      "evidence_sha256": "e563ec15a73c67650a0c3193fc8c85f2f37b497aca4df65bd053b75183bbe1bb"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#snap_member_qualified_alien_after_wait_eligible",
+      "certificate_id": "fixture-cert-1ce2dd5dd84d",
+      "claim": "attested",
+      "evidence_sha256": "410754d8e5911785a9afb5f72a69f58083004e6b308229680a8c633809613f32"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#snap_member_qualified_alien_immediately_eligible",
+      "certificate_id": "fixture-cert-ede0bc38c2f4",
+      "claim": "attested",
+      "evidence_sha256": "02bce819216c38d4d5a19ad8ab9ba62bcb00d1687a08aea8cb9fc1320012c4ae"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#snap_member_qualified_alien_status_eligible",
+      "certificate_id": "fixture-cert-069411f6fc75",
+      "claim": "attested",
+      "evidence_sha256": "e12e97d6b56c8b2db3b6b49e0c0e3d9b9eb51001aac7cd1ac314f727d885b133"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/4#snap_member_special_nonqualified_alien_status_eligible",
+      "certificate_id": "fixture-cert-394aea85bb75",
+      "claim": "attested",
+      "evidence_sha256": "3a89eddc5ae15592ca0fe390e9b7289a2fb7d56e66fe4b92f2d3603fc38e9d1d"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.adequate_child_care_unavailable_to_attend_class_and_meet_student_work_requirement",
+      "certificate_id": "fixture-cert-31bcbc64d442",
+      "claim": "attested",
+      "evidence_sha256": "faed2fc867b467d62a40ae989c21063913f7d76a365eb0f72f8619d730448aee"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.assigned_or_placed_in_higher_education_through_qualifying_employment_training_program",
+      "certificate_id": "fixture-cert-cd6bc12a0c09",
+      "claim": "attested",
+      "evidence_sha256": "b2bedc5899ed5cd3290e25c13c3e0feafd6a23ca4f9d4ae03a58463789fdbaad"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.enrolled_at_least_half_time",
+      "certificate_id": "fixture-cert-11fd90f60eef",
+      "claim": "attested",
+      "evidence_sha256": "f2b794a5afbf5fec7e77d0e5ac82239fbabf7d95d6904f0d4985353f0dbd0c68"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.enrolled_in_business_technical_trade_or_vocational_school_requiring_high_school_diploma",
+      "certificate_id": "fixture-cert-6ebeebfffc3f",
+      "claim": "attested",
+      "evidence_sha256": "5d80bbb6666c9779ec2b4ae03721394d498968a5662e8bc4baf4e5ae42e21643"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.enrolled_in_college_or_university_degree_program",
+      "certificate_id": "fixture-cert-51f9c48a4d70",
+      "claim": "attested",
+      "evidence_sha256": "2947d3c8f53fa4d3c16f2c6b1a24414f504b392619740df64e7cd7e9a22b5bbf"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.enrolled_through_jobs_or_successor_program",
+      "certificate_id": "fixture-cert-30c10c85454a",
+      "claim": "attested",
+      "evidence_sha256": "14f67543f4e52bf3f682c3f96426c848bdd2521523c77f3ee67e701be0de970d"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.federal_minimum_wage",
+      "certificate_id": "fixture-cert-ad8e376b5dc4",
+      "claim": "attested",
+      "evidence_sha256": "29e134e5ed09e2345652c7d5691d2627c37f6b12585cd2c1dce30f61a9447e84"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.known_student_refused_work_study_assignment",
+      "certificate_id": "fixture-cert-6f2a3b19cfee",
+      "claim": "attested",
+      "evidence_sha256": "86606ac4f7f0e0585018be693d4cdf583307a9fa10f67d31824835f663dbe155"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.responsible_for_care_of_dependent_child_under_twelve",
+      "certificate_id": "fixture-cert-aa83031714bd",
+      "claim": "attested",
+      "evidence_sha256": "b5fc4dc48b65cc9840a3409aabb288795635356030bb4d2b4449be378d685f6e"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.responsible_for_care_of_dependent_household_member_age_six_to_under_twelve",
+      "certificate_id": "fixture-cert-194efb3f40c1",
+      "claim": "attested",
+      "evidence_sha256": "5b2851f8f474c4948cb8af21535dd412ebdad89d0bcae913c7c5e3a4ce0559a8"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.responsible_for_care_of_dependent_household_member_under_age_six",
+      "certificate_id": "fixture-cert-eb1c445ca64a",
+      "claim": "attested",
+      "evidence_sha256": "ea8c160ad51d9829caf7b8afec716680de633274526807d163ff4f995093063b"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.single_parent_enrolled_full_time_in_higher_education",
+      "certificate_id": "fixture-cert-1cc8d46d24f8",
+      "claim": "attested",
+      "evidence_sha256": "bb650e3f7da60d8e2e198524b663b43b15c733955ce44e11d34005e81958b124"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.single_parent_household_condition_satisfied",
+      "certificate_id": "fixture-cert-de17d04e43a4",
+      "claim": "attested",
+      "evidence_sha256": "28ef77bfba57f7fc4caf1d075e7d72c8a035df942a12b286271eb2dc360bb8ef"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.state_agency_averaged_student_work_hours_meet_twenty_per_week",
+      "certificate_id": "fixture-cert-be6f27bc4dfb",
+      "claim": "attested",
+      "evidence_sha256": "0f700f70809c696a082a41a5be382b571cfb949ca4cfbd6523f4719b3e2b818f"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.student_age",
+      "certificate_id": "fixture-cert-e1e39cd5685e",
+      "claim": "attested",
+      "evidence_sha256": "d6e1c2592f2e7e1dbe27f969af0b8ed55c8e147e5d81b58a0535084d04b8ac0e"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.student_anticipates_working_in_work_study",
+      "certificate_id": "fixture-cert-65370d7758c9",
+      "claim": "attested",
+      "evidence_sha256": "c40fda32017c9cf011db9da5d47bd5279fb673db457f3007f1894af8ef19d92e"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.student_currently_being_trained_by_employer",
+      "certificate_id": "fixture-cert-1d7d41f6ca0e",
+      "claim": "attested",
+      "evidence_sha256": "74abdaf6602724c8161ebe4181ae96910d955853fc202ef805400d4a25619f39"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.student_enrollment_status_ending_event_occurred",
+      "certificate_id": "fixture-cert-94256b58f358",
+      "claim": "attested",
+      "evidence_sha256": "e1c2138b435b57194d6fcf85b2c72a69a3fa4ed545f0db5366ad3a2ae16e7d99"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.student_paid_employment_hours_per_week",
+      "certificate_id": "fixture-cert-e2f0e6cfb87a",
+      "claim": "attested",
+      "evidence_sha256": "5f9e2d5629d361762e7cd2068a0d2204cd6967da1f27b892b1d7b86e4779e7b1"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.student_participating_in_on_the_job_training_program",
+      "certificate_id": "fixture-cert-8af294beb4e2",
+      "claim": "attested",
+      "evidence_sha256": "a2f6900f6ad12201c6978b58aa58b298524e8bc4db9b4949f466d697c63310f6"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.student_participating_in_state_or_federally_financed_work_study",
+      "certificate_id": "fixture-cert-6aeb281312ed",
+      "claim": "attested",
+      "evidence_sha256": "6232506cf2fcf3af0e3aa744ea1c6f17a2fbf557f2c5fdf59f4e03f0c10bc773"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.student_physically_or_mentally_unfit",
+      "certificate_id": "fixture-cert-8eaf0610b871",
+      "claim": "attested",
+      "evidence_sha256": "53d9ba5c9fa09f5fccd0592444f5c9ebbadd116ce4ba3b07b6411c858ce2ede9"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.student_receives_tanf",
+      "certificate_id": "fixture-cert-bdf0770a3dc8",
+      "claim": "attested",
+      "evidence_sha256": "7ae2707fd50decefc517cfb22b88c8b1123f3a669bc1c26c89c5248ababba01e"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.student_school_term_has_begun",
+      "certificate_id": "fixture-cert-a1648133e4d6",
+      "claim": "attested",
+      "evidence_sha256": "90cb8e149d2c4aa0de56844ccc6d8dff8c6067fb0f5fcf86fd8d8f19f45baa67"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.student_self_employment_hours_per_week",
+      "certificate_id": "fixture-cert-d31b4d1a98d0",
+      "claim": "attested",
+      "evidence_sha256": "aaef33d9d2068e2d586703d1170f4d9897c043addf95202fecbbe437a36fa261"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.student_self_employment_weekly_earnings",
+      "certificate_id": "fixture-cert-13022f55c686",
+      "claim": "attested",
+      "evidence_sha256": "f526767ec5374d7138339f626969b12c95cb3a9182da2c9c2ab8cd7f2aa3683b"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.work_study_approved_at_snap_application",
+      "certificate_id": "fixture-cert-fd88a98da03a",
+      "claim": "attested",
+      "evidence_sha256": "4120a67f45c9c6e32785c6f74ed46752d7a245acab866e3903334fac39fad5cf"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.work_study_approved_for_school_term",
+      "certificate_id": "fixture-cert-6459bad7fb85",
+      "claim": "attested",
+      "evidence_sha256": "29270f8c178788adf68d55925f66d9d6b94f701b4b5477581a58c90d5a806bd9"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#input.work_study_exemption_period_active",
+      "certificate_id": "fixture-cert-01366a34cc75",
+      "claim": "attested",
+      "evidence_sha256": "00e6d6a4fcf2d58c7b89f5fe194521a0c3157b843709e0b93765f190cb829f5f"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_member_enrolled_in_institution_of_higher_education",
+      "certificate_id": "fixture-cert-e55e92355946",
+      "claim": "attested",
+      "evidence_sha256": "e84dbdf358187c5e541b6db8c54be7eee55bc72eccb3c194353e18af3488ffea"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_member_student_eligible",
+      "certificate_id": "fixture-cert-7fc9b6fad680",
+      "claim": "attested",
+      "evidence_sha256": "ba184ac03199979fcb339cfeef20b5cfe2f7c30f03dc48a804258ef50d092f86"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_member_student_ineligible",
+      "certificate_id": "fixture-cert-f32c1ed8dbe0",
+      "claim": "attested",
+      "evidence_sha256": "02a08c52ea72dd13dc2216bd322356f11a589406892859acd1bd6bb1ae54180a"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_student_age_exemption",
+      "certificate_id": "fixture-cert-1a0766cc6c12",
+      "claim": "attested",
+      "evidence_sha256": "1d28ce2524efb55a201e457cfbc4683f3dce20b5b68e3b28c41d6277725c9681"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_student_age_exemption_scalar_limit",
+      "certificate_id": "fixture-cert-d73ea355d1ab",
+      "claim": "attested",
+      "evidence_sha256": "3112cc6a36a0008098a20f5bbaa7ac9c74ef4a37dc60a20423830bd14b5c8245"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_student_age_exemption_scalar_limit_2",
+      "certificate_id": "fixture-cert-53103cae0cd5",
+      "claim": "attested",
+      "evidence_sha256": "03c036dcb01335c4e1a19a723f0cc2e1596fbe7149ccc0fe59730681dba81ee8"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_student_dependent_six_to_under_twelve_exemption",
+      "certificate_id": "fixture-cert-48c3788d53f1",
+      "claim": "attested",
+      "evidence_sha256": "f933d81042e4a2f431fb068336110ae4b10f1f0a6370515f32591753739f4300"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_student_dependent_under_six_exemption",
+      "certificate_id": "fixture-cert-0431eb80d5a6",
+      "claim": "attested",
+      "evidence_sha256": "54f776b2f6a4949a5fb6283a4d843c0919dc8b99328405e9a60eb4db2a71331c"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_student_employment_exemption",
+      "certificate_id": "fixture-cert-69ff780cb11c",
+      "claim": "attested",
+      "evidence_sha256": "b4ba59b03dcad42bbf744ca26af117fdf3737ef24831a0b5808387d17de94deb"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_student_employment_exemption_scalar_limit",
+      "certificate_id": "fixture-cert-5460378cd5ae",
+      "claim": "attested",
+      "evidence_sha256": "db512d9eaccf8b95a26b2ea6944ca5423a7e8d39cec62067beee17e2dfa7fd63"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_student_employment_training_program_exemption",
+      "certificate_id": "fixture-cert-080ecf7375ee",
+      "claim": "attested",
+      "evidence_sha256": "bbb76ceae80723e44074fc0af2814d90fd7fe6a4bf6d17beba1aab7a162ecf3c"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_student_enrollment_status_active",
+      "certificate_id": "fixture-cert-d0cf92922916",
+      "claim": "attested",
+      "evidence_sha256": "a64f8683a42bf31da5afef9ee5004d4bb9d8c338bc6584d046017a2468fed5dc"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_student_exempt",
+      "certificate_id": "fixture-cert-64b8be3400a6",
+      "claim": "attested",
+      "evidence_sha256": "50283222aeffd4d4a6798ddf801b5220575b50cb41cfeadc2cf64c2e572895e1"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_student_jobs_program_exemption",
+      "certificate_id": "fixture-cert-e9039fe3e8da",
+      "claim": "attested",
+      "evidence_sha256": "ff36bfcc647a56ae01895fd7a08ec4933776d7e3157fe8d3a9dd46cfb104561c"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_student_on_the_job_training_exemption",
+      "certificate_id": "fixture-cert-b7df6d829fdb",
+      "claim": "attested",
+      "evidence_sha256": "8acf3a960934a0658ff0a800bcb9440fb9cd011094b459cf519ef281729a850d"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_student_physical_or_mental_unfitness_exemption",
+      "certificate_id": "fixture-cert-1b7540d395d5",
+      "claim": "attested",
+      "evidence_sha256": "7afe48dcd7aa3395192a4e9e8975a84fba6361e7264a6cd92b64aebde5014536"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_student_single_parent_full_time_exemption",
+      "certificate_id": "fixture-cert-88c89d381cd7",
+      "claim": "attested",
+      "evidence_sha256": "4fe64b9b2d7938566159c8ce28aaa1ba3e55cb5e1ae9520df5e7ad7f97b820f8"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_student_tanf_exemption",
+      "certificate_id": "fixture-cert-e89a3af59b73",
+      "claim": "attested",
+      "evidence_sha256": "b958b0afdc5f0fc579a382f3b8aebbcefb1a492a6a05520215b3dccd91bc20d5"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/5#snap_student_work_study_exemption",
+      "certificate_id": "fixture-cert-1debc4294e0b",
+      "claim": "attested",
+      "evidence_sha256": "b653809f45915d320ed68a680f3fbf19b8b4ac87dea6f0c6f1a61cea7388a6b7"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/6#input.member_has_documentary_or_collateral_evidence_of_ssn_application_or_every_effort",
+      "certificate_id": "fixture-cert-f9f54e72333a",
+      "claim": "attested",
+      "evidence_sha256": "a620aa677b63e264d329238575416a0a378f09f8188250f5275bcf84748a5d0e"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/6#input.member_later_provided_ssn_ending_disqualification",
+      "certificate_id": "fixture-cert-fe6f01547e86",
+      "claim": "attested",
+      "evidence_sha256": "d67989377894b3d0999e3da51338c8671589c4bec84c57a068e4effbf2137915"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/6#input.member_refused_or_failed_to_provide_or_apply_for_ssn",
+      "certificate_id": "fixture-cert-37469214426a",
+      "claim": "attested",
+      "evidence_sha256": "aa38bbe3081976b2de9b8ee8cc20f2caceba8fce49ae0f2d620358f36d3d5ddf"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/6#input.member_ssn_application_filed_pending_state_agency_notification",
+      "certificate_id": "fixture-cert-dc46acf4746b",
+      "claim": "attested",
+      "evidence_sha256": "078de92242f8ff56b05fdd598109b2e6cee496be1f0afe6ff01426d6a4043011"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/6#input.member_unable_to_obtain_documents_required_for_ssn_application_with_caseworker_assistance_needed",
+      "certificate_id": "fixture-cert-612e2f8457bd",
+      "claim": "attested",
+      "evidence_sha256": "c3ecc9ee739979fe08742317703a428afa32d6795f061bb15e4063d107af8874"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/6#input.state_agency_fault_in_ssn_application_processing",
+      "certificate_id": "fixture-cert-3709d7a99ffc",
+      "claim": "attested",
+      "evidence_sha256": "30b0b5325fa96f4606dffd20164ea78bbb796dd42a6ab22aba6085da940066bf"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/6#snap_member_ssn_good_cause_applies",
+      "certificate_id": "fixture-cert-8f0d840ef4a0",
+      "claim": "attested",
+      "evidence_sha256": "fcd27ad44bc82a45a616c66a35498d4db8f2c5d0f22661aea0878d644939e39a"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/6#snap_member_ssn_requirement_eligible",
+      "certificate_id": "fixture-cert-e7f1a541c4c5",
+      "claim": "attested",
+      "evidence_sha256": "e18202db0aeaf92dd91b785a63285bedb1f9bcab99211b7cc7fd824593dd8371"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/6#snap_member_ssn_requirement_ineligible",
+      "certificate_id": "fixture-cert-8495be0decbf",
+      "claim": "attested",
+      "evidence_sha256": "63172f5433dca542079f5748906eb31d63847e2c78cefe7cd3ae0ddf64bd6a8d"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.alaska_subsistence_hunts_or_fishes_30_hours_weekly",
+      "certificate_id": "fixture-cert-4977116888d7",
+      "claim": "attested",
+      "evidence_sha256": "b9c5242f3a7465300e927650951dc8d4613ddd317d10b8c0c75eddb23bc362f1"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.federal_or_state_minimum_wage",
+      "certificate_id": "fixture-cert-b18225155504",
+      "claim": "attested",
+      "evidence_sha256": "04dddc80699f23abefdaebd938c483d3cfdc1002c8d3915e2d18c0e8ed7e00bc"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_accepted_bona_fide_suitable_employment_offer_if_offered",
+      "certificate_id": "fixture-cert-3a5dd810bc6d",
+      "claim": "attested",
+      "evidence_sha256": "cb8ef406633dbfabc8979e1ba06ea908d71f87690970729301645b7b135252a0"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_age_16_or_17_is_not_household_head_or_attends_school_or_training_half_time",
+      "certificate_id": "fixture-cert-86c8e3725119",
+      "claim": "attested",
+      "evidence_sha256": "db9b96fbfb9f914a244c0378aa000a6ac350e21b5cbc7b0ccb3e6be9d6faef92"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_participated_in_snap_et_if_assigned",
+      "certificate_id": "fixture-cert-5af155d09302",
+      "claim": "attested",
+      "evidence_sha256": "521cd4998fdd66b9ea4c631ea30e34fea3ab26d1e91c46ec84010f3cae5f4675"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_participated_in_workfare_if_assigned",
+      "certificate_id": "fixture-cert-e5a9061e52ff",
+      "claim": "attested",
+      "evidence_sha256": "f86858857eaef6f8fc315a75ca924ed20dd585964b540171ccc10821ecd9e895"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_physically_or_mentally_unfit_for_employment",
+      "certificate_id": "fixture-cert-6220a11419c7",
+      "claim": "attested",
+      "evidence_sha256": "a0b77a6fcecb78b5cd0f32473df759261d46b806655ec4fdc9e4f11ecff4571c"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_provided_employment_status_or_availability_information",
+      "certificate_id": "fixture-cert-7c7bca13e11f",
+      "claim": "attested",
+      "evidence_sha256": "b766e821d6b72c73ca3974a6755dfccabd4d2d08b785def666c269983e8e49fc"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_receiving_or_applying_for_unemployment_compensation_and_complying",
+      "certificate_id": "fixture-cert-94df27f33da2",
+      "claim": "attested",
+      "evidence_sha256": "166dc6d8ee063588016d7c8f3547b074240257e689df2a357b018f512f5ac2a1"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_registered_for_work_or_registered_by_state",
+      "certificate_id": "fixture-cert-627436037117",
+      "claim": "attested",
+      "evidence_sha256": "627ede1fb141439bc59db325ec911f995e9a0cbc5f6ec5a8dc56dab905d22fde"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_regular_participant_in_drug_or_alcohol_treatment",
+      "certificate_id": "fixture-cert-a9c34189d1ec",
+      "claim": "attested",
+      "evidence_sha256": "4b78ceed0e732af68c64a6ae5107a32c30fbe183ab6a2fe941e6f2e1bbfeb9aa"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_reported_to_referred_suitable_employer_if_referred",
+      "certificate_id": "fixture-cert-ed621cb0cf5d",
+      "claim": "attested",
+      "evidence_sha256": "7998ebc3568499db1816e7f44bce9b192ef4871ddb90c8d033ce06a253452050"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_responsible_for_dependent_child_under_six_or_incapacitated_person",
+      "certificate_id": "fixture-cert-96c2365416b7",
+      "claim": "attested",
+      "evidence_sha256": "2b345a61bd8fcd5df31e2ed8794d5c69db533dab30b73f78080939fb83e49d37"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_snap_work_requirements_waived_due_to_pending_ssi_joint_application",
+      "certificate_id": "fixture-cert-918cfcdb79cf",
+      "claim": "attested",
+      "evidence_sha256": "07fe9f3db0e09265039126e7143e35b8faf7d80f5a4b16a4a325843580d351b7"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_student_enrolled_at_least_half_time_and_student_eligible",
+      "certificate_id": "fixture-cert-4a9e2d7bf439",
+      "claim": "attested",
+      "evidence_sha256": "3337db978d12c6c3f90dca7c3d3768858ad7f865e35fed9ec70649a118f6e634"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_subject_to_and_complying_with_title_iv_work_requirement",
+      "certificate_id": "fixture-cert-06ebf541bfb4",
+      "claim": "attested",
+      "evidence_sha256": "57656f3bd9a5d2b6698da3ffb07d58bbe27fc050918b41fb6b48a59e0e5226ad"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_voluntarily_quit_or_reduced_work_below_30_hours_without_good_cause",
+      "certificate_id": "fixture-cert-c1eff06e1ab4",
+      "claim": "attested",
+      "evidence_sha256": "97b724d3f52879db45aa368125ae512b00b2c1300e6babd091f4a06dda9b0b5c"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_weekly_wages",
+      "certificate_id": "fixture-cert-8cfd6a566a96",
+      "claim": "attested",
+      "evidence_sha256": "2e76c04fb0de86f44c616b884bd2eccaa4714da9037967d36fc76db72caabe6e"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.member_weekly_work_hours",
+      "certificate_id": "fixture-cert-a53db02806da",
+      "claim": "attested",
+      "evidence_sha256": "44b4e862383e97d4c2f16a535ad013744e96ee8c99dc75c9c0195c6ad4f839fb"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#input.migrant_or_seasonal_farmworker_under_contract_to_begin_employment_within_30_days",
+      "certificate_id": "fixture-cert-5bcd269fe7bb",
+      "claim": "attested",
+      "evidence_sha256": "1988ac0e4e177d9b90542cd5a68568a5339087c4713d35480f419cd2f3da6b54"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#snap_member_general_work_requirement_compliant",
+      "certificate_id": "fixture-cert-8a3f85708ec2",
+      "claim": "attested",
+      "evidence_sha256": "576b2f48695954146335a205aaa08916ab11996c03c4d5fc5a051848c88c2985"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#snap_member_general_work_requirement_eligible",
+      "certificate_id": "fixture-cert-50a87564aec3",
+      "claim": "attested",
+      "evidence_sha256": "116338885c88c8e7b16a92a6d1e24f59f0c714c7ea7b0f646579348ad0b39aae"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#snap_member_general_work_requirement_exempt",
+      "certificate_id": "fixture-cert-6917c1543874",
+      "claim": "attested",
+      "evidence_sha256": "41515a153f0b4b52ad43d4a9e5b9bd659731beb3a3325892ca179e56716f3bdd"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#snap_member_general_work_requirement_exempt_scalar_limit",
+      "certificate_id": "fixture-cert-3fd085448409",
+      "claim": "attested",
+      "evidence_sha256": "08ac722a5fa45eeabba37d01c7179351e08cc5091aac6ae40e892b79b9c585fd"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#snap_member_general_work_requirement_exempt_scalar_limit_2",
+      "certificate_id": "fixture-cert-0b85158c1643",
+      "claim": "attested",
+      "evidence_sha256": "37fd919dbb43a1b1c9fed2f82e801d35110dee78a8e60099ffa03eb56621cfd6"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#snap_member_general_work_requirement_exempt_scalar_limit_3",
+      "certificate_id": "fixture-cert-f4e1cfaf38bd",
+      "claim": "attested",
+      "evidence_sha256": "3eff64541630c43c713a9382479087dad05e63ec8ae899b0c72d11b4246e80f9"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/7#snap_member_general_work_requirement_waived",
+      "certificate_id": "fixture-cert-4f8ecbe70237",
+      "claim": "attested",
+      "evidence_sha256": "12fecbb900e372f454f53cdbe152ee689a2c0f38e61d792a832d6681eed7093c"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/8#input.snap_countable_financial_resources",
+      "certificate_id": "fixture-cert-602f7c56ac54",
+      "claim": "attested",
+      "evidence_sha256": "c86557e429b4e82ca5f681de653dae141a2eec58ebd80e4023a4a3bccfe22ff9"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/8#snap_financial_resources_within_limit",
+      "certificate_id": "fixture-cert-808cc95ec5dc",
+      "claim": "attested",
+      "evidence_sha256": "9bd46f7239d0be634942760dc42a6fbb3fe28452a1ea863dc581d0bf7b2d3d2b"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/8#snap_resource_eligible",
+      "certificate_id": "fixture-cert-1184ab4ab8c7",
+      "claim": "attested",
+      "evidence_sha256": "3ec9f0f8e0460c658874a1d5d13e5342d30a4e495511d1e4068f05b1e5dd9705"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/8#snap_resource_limit_categorical_exemption_applies",
+      "certificate_id": "fixture-cert-6da64c0de812",
+      "claim": "attested",
+      "evidence_sha256": "2e1f416994ccf49d3518393cf3c4cdbefdda3d88646ca0d266a9062018269b71"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/9#snap_full_excess_shelter_deduction_applies",
+      "certificate_id": "fixture-cert-80c7e9fc8755",
+      "claim": "attested",
+      "evidence_sha256": "78ca163b8df83f6e26ad73a3b9f7a8c4dbd629b74ec6d24594acfc0e1fddaa32"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/9#snap_individual_utility_allowance_state_option",
+      "certificate_id": "fixture-cert-f09a1878a371",
+      "claim": "attested",
+      "evidence_sha256": "d50e4c8cb3e7a7b1b52100f46d073753e886fba8fcc012bd4a13122e61037f1d"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/9#snap_limited_utility_allowance_state_option",
+      "certificate_id": "fixture-cert-03344f743d92",
+      "claim": "attested",
+      "evidence_sha256": "43de0c7092d3be1c33956e4afd763481fe7b58f583d96c4753e79b3dbaed4b4c"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/9#snap_standard_gross_income_eligible",
+      "certificate_id": "fixture-cert-6f5f093eea4a",
+      "claim": "attested",
+      "evidence_sha256": "257368d22c0393414e14f5c84f29a880f9385df443fe46a64c8cc6b6a444ead9"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/9#snap_standard_income_eligible",
+      "certificate_id": "fixture-cert-8c69f7bd018e",
+      "claim": "attested",
+      "evidence_sha256": "b5734460d63761e8c7f3b17add698fcd02f249c9adddd06ce49fdbf8a66166e1"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/9#snap_standard_net_income_eligible",
+      "certificate_id": "fixture-cert-8767ee4bb869",
+      "claim": "attested",
+      "evidence_sha256": "31a76b74aaaf54b36e649e18e0069abbdf25d1e21eb8004f36c6b72f5a2033cc"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/9#snap_standard_utility_allowance_state_option",
+      "certificate_id": "fixture-cert-2055e00c480b",
+      "claim": "attested",
+      "evidence_sha256": "d78cb0f30710e1e74daa45ff10f04769e994837a1daa8ea99f6eb5f1f1a4e6e6"
+    },
+    {
+      "legal_id": "us:regulations/7-cfr/273/9#snap_utility_allowance_for_shelter_costs",
+      "certificate_id": "fixture-cert-deff998ff34f",
+      "claim": "attested",
+      "evidence_sha256": "cf69263d4b1318457c653a43b9ffebc083b8f02297f4719e63e6ce4b103c4aa6"
+    },
+    {
+      "legal_id": "us:statutes/7/2012/j#input.snap_member_is_elderly_or_disabled",
+      "certificate_id": "fixture-cert-0cdc82a7db9b",
+      "claim": "attested",
+      "evidence_sha256": "9a40707a903dbc43b4939a3244acbc1c91ffd3c366a5e321a1e7bc49bd125cd7"
+    },
+    {
+      "legal_id": "us:statutes/7/2012/j#relation.member_of_household",
+      "certificate_id": "fixture-cert-19cf41eab4e9",
+      "claim": "attested",
+      "evidence_sha256": "262e51c47825cea8be99c8f10204c50b32ce4d9e52bdd6e3667c57dc2c73897f"
+    },
+    {
+      "legal_id": "us:statutes/7/2012/j#snap_household_has_elderly_or_disabled_member",
+      "certificate_id": "fixture-cert-2d1065a7a389",
+      "claim": "attested",
+      "evidence_sha256": "85972b3b668f1a4988d0278f5e6285789233dbe7a947fe0eb388b8dff785007e"
+    },
+    {
+      "legal_id": "us:statutes/7/2014/e/2#input.work_supplementation_earned_income",
+      "certificate_id": "fixture-cert-c27c742410fb",
+      "claim": "attested",
+      "evidence_sha256": "a0d498c2a6bd8abaf4a4c983cb85768bd1bd41c159c7a6fbd4d17ca74f9cc244"
+    },
+    {
+      "legal_id": "us:statutes/7/2014/e/2#snap_earned_income_deduction",
+      "certificate_id": "fixture-cert-0bc110ca8500",
+      "claim": "attested",
+      "evidence_sha256": "b50fa50e92600f1788f854741dfcc741669e5a16c45077ea929f0ddb751a032b"
+    },
+    {
+      "legal_id": "us:statutes/7/2014/e/2#snap_earned_income_subject_to_deduction",
+      "certificate_id": "fixture-cert-6e09cca07aea",
+      "claim": "attested",
+      "evidence_sha256": "82a84cd314a2054c6bae753c66afae7aa4e41ee266151fa3a752a0416b1e87df"
+    },
+    {
+      "legal_id": "us:statutes/7/2014/e/2/B#snap_earned_income_deduction_rate",
+      "certificate_id": "fixture-cert-94811c7ec44e",
+      "claim": "attested",
+      "evidence_sha256": "efc836d3cb8bcbf73fa6887492e3b5a6e1f6be0b8e3a46e92326da71c96e7a4d"
+    },
+    {
+      "legal_id": "us:statutes/7/2014/e/6/A#input.child_support_deduction",
+      "certificate_id": "fixture-cert-0a307d959cfc",
+      "claim": "attested",
+      "evidence_sha256": "df2ae8f9ef6976ab8d98ef64473622ed54743854781ad76fc74580dfff9fd0e7"
+    },
+    {
+      "legal_id": "us:statutes/7/2014/e/6/A#input.dependent_care_deduction",
+      "certificate_id": "fixture-cert-08e5d0af001f",
+      "claim": "attested",
+      "evidence_sha256": "abd43e9e07343719aa312cf6fa9e692598c32cb80fef4683fb547ac207b00966"
+    },
+    {
+      "legal_id": "us:statutes/7/2014/e/6/A#input.medical_deduction",
+      "certificate_id": "fixture-cert-98546b6f95ad",
+      "claim": "attested",
+      "evidence_sha256": "18e6ea32d074f3f848103d616998012940257e562d275eba3426f3f4e1295ccd"
+    },
+    {
+      "legal_id": "us:statutes/7/2014/e/6/A#snap_net_income",
+      "certificate_id": "fixture-cert-64a2c19b450a",
+      "claim": "attested",
+      "evidence_sha256": "fedd1dbd0ddd980a54f999c1f641a9d396df05d5840826b2803299638a4d9056"
+    },
+    {
+      "legal_id": "us:statutes/7/2014/e/6/A#snap_net_income_pre_shelter",
+      "certificate_id": "fixture-cert-4227f18e783e",
+      "claim": "attested",
+      "evidence_sha256": "1e7b8caddc3f48ec96a007d9b1e95aafdd44d8dc2edf9f8e02d39a1886320703"
+    },
+    {
+      "legal_id": "us:statutes/7/2017/a#snap_allotment_before_minimum",
+      "certificate_id": "fixture-cert-1b2c8e6b29ae",
+      "claim": "attested",
+      "evidence_sha256": "a1d758f0e31258e97b64c0a5a1d9a856b433ff3192319e8cef1c1157b6038bf0"
+    },
+    {
+      "legal_id": "us:statutes/7/2017/a#snap_household_food_contribution",
+      "certificate_id": "fixture-cert-09391ac5403c",
+      "claim": "attested",
+      "evidence_sha256": "45814da2c0bd7d059e06b80ccd87c2236e38efd95baca5ec89f6c984ca2fff19"
+    },
+    {
+      "legal_id": "us:statutes/7/2017/a#snap_household_food_contribution_rate",
+      "certificate_id": "fixture-cert-f2db8566a8b1",
+      "claim": "attested",
+      "evidence_sha256": "f1439943fbaf62297e9104c3297bd8b5a55542ee11ab0abb5a22957804bab24b"
+    },
+    {
+      "legal_id": "us:statutes/7/2017/a#snap_minimum_allotment_household_size_limit",
+      "certificate_id": "fixture-cert-0c09134704a3",
+      "claim": "attested",
+      "evidence_sha256": "5cac948e209669b4f29d211f3387818806f8a4dc61437c5a536dd450b33d0e3a"
+    },
+    {
+      "legal_id": "us:statutes/7/2017/a#snap_minimum_allotment_rate",
+      "certificate_id": "fixture-cert-40f8571c4c15",
+      "claim": "attested",
+      "evidence_sha256": "67ecfd1ad65ff96eb4d1fcc03338b158055ab8bdd05c09aac6e55827a111542d"
+    },
+    {
+      "legal_id": "us:statutes/7/2017/a#snap_minimum_monthly_allotment",
+      "certificate_id": "fixture-cert-480c7082da9d",
+      "claim": "attested",
+      "evidence_sha256": "ee737cb43301fcee401f3faf0e2c7d08cedbf00c1378505e241eafaafd545cbd"
+    },
+    {
+      "legal_id": "us:statutes/7/2017/a#snap_net_income_for_allotment",
+      "certificate_id": "fixture-cert-3eee1acfac7a",
+      "claim": "attested",
+      "evidence_sha256": "4aee93974fda54fa813c9391f31df1f68fd8c66c2de8985f2d03e78b9967aadd"
+    },
+    {
+      "legal_id": "us:statutes/7/2017/a#snap_regular_month_allotment",
+      "certificate_id": "fixture-cert-43c6ff3c2037",
+      "claim": "attested",
+      "evidence_sha256": "936897e6e344dc1c4500539cc044fabb1fe4a0202b7e26d2f935de990b295de3"
+    }
+  ]
+}

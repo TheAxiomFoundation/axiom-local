@@ -51,11 +51,11 @@ export default function Docs() {
           <div className="panel mt-4 overflow-x-auto">
             <table className="w-full">
               <tbody>
-                <FlagRow flag="--programs" desc="List every vendored program with its rule and input counts." />
+                <FlagRow flag="--programs" desc="List every certified program with its rule and input counts." />
                 <FlagRow
                   flag="--program"
                   args="<id>"
-                  desc="Which program to run (default co-snap). Each starts from its descriptor's example case."
+                  desc="Which program to run (default ny-snap). Each starts from its descriptor's example case."
                 />
                 <FlagRow
                   flag="--set"
@@ -99,7 +99,7 @@ export default function Docs() {
                 <tr className="border-b border-rule text-left text-ink-muted">
                   <th className="px-3 py-2 font-normal">id</th>
                   <th className="px-3 py-2 font-normal">program</th>
-                  <th className="px-3 py-2 font-normal">provenance</th>
+                  <th className="px-3 py-2 font-normal">certification</th>
                   <th className="px-3 py-2 text-right font-normal">rules</th>
                   <th className="px-3 py-2 text-right font-normal">inputs</th>
                 </tr>
@@ -112,11 +112,9 @@ export default function Docs() {
                       {program.title} <span className="text-ink-muted">({program.jurisdiction})</span>
                     </td>
                     <td className="px-3 py-2">
-                      {program.provenance === "envelope" ? (
-                        <span className="text-success">envelope</span>
-                      ) : (
-                        <span className="text-ink-muted">legacy</span>
-                      )}
+                      <span className="text-success">
+                        certified · {program.certified.ledger_id}
+                      </span>
                     </td>
                     <td className="px-3 py-2 text-right text-ink-secondary">{program.rules}</td>
                     <td className="px-3 py-2 text-right text-ink-secondary">{program.inputs}</td>
@@ -130,19 +128,21 @@ export default function Docs() {
             <code className="font-mono text-[0.8rem] text-ink">public/programs/&lt;id&gt;/artifact.json</code>
             ) plus a descriptor (
             <code className="font-mono text-[0.8rem] text-ink">package.json</code>) declaring
-            its inputs, screening presumptions, entities and relations, example case, and
-            sha-256 pin. Two provenance tiers: <em>envelope</em> artifacts carry the compiling
-            engine&apos;s version stamp; <em>legacy</em> artifacts pre-date the envelope and are
-            hash-pinned only, re-cut in the pipeline. Colorado SNAP additionally carries an
-            end-to-end parity pin ($478). One registered program is excluded:
-            tanf/us-ny&apos;s artifact has a parameter schedule with no value for the period —
-            it ships when repaired, not before.
+            its inputs, screening presumptions, entities and relations, example case,
+            sha-256 pin, and <em>certificate provenance</em>. Only certified programs
+            exist here at all: the vendor pipeline refuses any program whose node closure
+            — every rule, parameter, relation, and input — is not vouched for by the
+            vendored certification ledger (
+            <code className="font-mono text-[0.8rem] text-ink">public/corpus/ledger.json</code>
+            ), and the loader re-checks the stamp against the served ledger on every run.
+            There is no bypass flag. New York SNAP additionally carries an end-to-end
+            parity pin ($478 for the canonical two-person household).
           </p>
         </Section>
 
         <Section title="Inputs and presumptions">
           <p className="max-w-3xl text-[0.88rem] font-light text-ink-secondary">
-            A program can consider hundreds of inputs — Colorado SNAP has 585. The handful you
+            A program can consider hundreds of inputs — New York SNAP has 143. The handful you
             set are the facts of the case; every other input takes its declared{" "}
             <em>screening presumption</em> from the descriptor. A presumption is a legal
             position, not a hidden default: list them with{" "}
@@ -155,9 +155,9 @@ export default function Docs() {
           </p>
           <Record>
             <Cmd>bun scripts/determine.mjs --slots | grep -i student</Cmd>
-            <L>{dim("person    decimal  student_school_term_has_begun")}</L>
-            <L>{dim("person    decimal  enrolled_at_least_half_time")}</L>
+            <L>{dim("person    bool     student_school_term_has_begun")}</L>
             <L>{dim("person    integer  student_age")}</L>
+            <L>{dim("person    bool     student_physically_or_mentally_unfit")}</L>
             <L>{dim("…")}</L>
           </Record>
         </Section>
@@ -165,11 +165,11 @@ export default function Docs() {
         <Section title="JSON output">
           <Record>
             <Cmd>bun scripts/determine.mjs --json</Cmd>
-            <L>{dim('{ "program": "co-snap",')}</L>
+            <L>{dim('{ "program": "ny-snap",')}</L>
             <L>{dim('  "period": { "period_kind": "month", "start": "2026-01-01", "end": "2026-02-01" },')}</L>
             <L>{dim('  "amendment": null,')}</L>
             <L>{dim('  "answers": { "household": { … }, "people": { … }, "refOverrides": { } },')}</L>
-            <L>{dim('  "outputs": { "snap_allotment": "478", "snap_net_income": "226.5", "snap_eligible": "holds" } }')}</L>
+            <L>{dim('  "outputs": { "snap_benefit_amount": "478", "snap_net_income": "226.5", "snap_eligible": "holds" } }')}</L>
           </Record>
           <p className="mt-3 max-w-3xl text-[0.88rem] font-light text-ink-secondary">
             Judgment outputs come through as{" "}
@@ -228,11 +228,11 @@ export default function Docs() {
 
         <Section title="Verify what you run">
           <Record>
-            <Cmd>shasum -a 256 public/programs/co-snap/artifact.json</Cmd>
-            <L>{dim("# compare against source.artifact_sha256 in public/programs/co-snap/package.json")}</L>
+            <Cmd>shasum -a 256 public/programs/ny-snap/artifact.json</Cmd>
+            <L>{dim("# compare against source.artifact_sha256 in public/programs/ny-snap/package.json")}</L>
             <L />
             <Cmd>bun run test</Cmd>
-            <L>{dim("# the suite: packaging invariants for all programs, the $478 parity pin, corpus slicing, the CLI")}</L>
+            <L>{dim("# the suite: packaging invariants, the $478 parity pin, the certified-node gate and its leak scan, corpus slicing, the CLI")}</L>
           </Record>
         </Section>
       </div>
