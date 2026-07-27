@@ -1,8 +1,10 @@
 /**
  * The local CLI is a launch entry point: a clone of this repo must produce
  * the pinned golden-path values from the terminal with no toolchain beyond
- * bun. These tests spawn the real script — which serves only what the
- * vendored certification ledger vouches for.
+ * bun. These tests spawn the real script — everything serves with its
+ * certification status labeled (the permissive default); the enforced
+ * posture, pinned explicitly below, is the hard cut where only certified
+ * programs load.
  */
 
 import { execFileSync } from "node:child_process";
@@ -15,9 +17,14 @@ const run = (...args: string[]) =>
   execFileSync("bun", [script, ...args], { encoding: "utf8", timeout: 60_000 });
 
 /** Run expecting failure; returns stderr. */
-const runFail = (...args: string[]): string => {
+const runFailWith = (env: Record<string, string>, ...args: string[]): string => {
   try {
-    execFileSync("bun", [script, ...args], { encoding: "utf8", timeout: 60_000, stdio: "pipe" });
+    execFileSync("bun", [script, ...args], {
+      encoding: "utf8",
+      timeout: 60_000,
+      stdio: "pipe",
+      env: { ...process.env, ...env },
+    });
   } catch (error) {
     const spawn = error as { status: number | null; stderr: string };
     expect(spawn.status).toBe(1);
@@ -25,6 +32,7 @@ const runFail = (...args: string[]): string => {
   }
   throw new Error(`expected failure: ${args.join(" ")}`);
 };
+const runFail = (...args: string[]): string => runFailWith({}, ...args);
 
 describe("bun scripts/determine.mjs", () => {
   it("computes the pinned $478 for the canonical household", () => {
@@ -71,12 +79,41 @@ describe("bun scripts/determine.mjs", () => {
     expect(JSON.parse(spaced).outputs).toEqual(JSON.parse(compact).outputs);
   });
 
-  it("lists only certified programs with --programs", () => {
+  it("lists the whole catalog with statuses — certification is a status, not a gate", () => {
     const out = run("--programs");
-    expect(out).toContain("ny-snap");
-    // The uncertified catalog is gone — dropped at vendor time, not hidden.
+    expect(out).toMatch(/ny-snap\s+certified/);
+    expect(out).toMatch(/al-snap\s+encoded/);
+    // co-snap/fiit are absent for a different reason: their compiled
+    // artifacts no longer exist in the upstream checkout, so they cannot
+    // vendor in ANY mode.
     expect(out).not.toContain("co-snap");
-    expect(out).not.toContain("fiit");
+  });
+
+  it("runs an encoded program and labels it honestly", () => {
+    const out = run("--program", "al-snap");
+    expect(out).toContain("Alabama SNAP");
+    expect(out).toContain("encoded — not certified");
+    expect(out).not.toContain("certified (ledger");
+  });
+
+  it("the one-flag flip to enforced restores the refusal", () => {
+    // Same package, same ledger — only the posture changes.
+    const stderr = runFailWith(
+      { AXIOM_CERTIFIED_ENFORCEMENT: "enforced" },
+      "--program",
+      "al-snap",
+    );
+    expect(stderr).toMatch(/refused: package carries no certificate provenance/);
+    // Refusals name no node ids (serving surface).
+    expect(stderr).not.toMatch(/#/);
+    // The certified flagship still runs under the hard cut.
+    const out = execFileSync("bun", [script], {
+      encoding: "utf8",
+      timeout: 60_000,
+      env: { ...process.env, AXIOM_CERTIFIED_ENFORCEMENT: "enforced" },
+    });
+    expect(out).toMatch(/snap_benefit_amount\s+478/);
+    expect(out).toContain("certified (ledger fixture-us-ny-snap)");
   });
 
   it("accepts currency formatting in values", () => {

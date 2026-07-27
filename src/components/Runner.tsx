@@ -5,10 +5,12 @@ import { PresumptionEditor } from "@/components/PresumptionEditor";
 import { loadEngine } from "@/lib/engine/load";
 import type { CompiledProgramArtifact, ExecutionResponse, Period } from "@/lib/engine/types";
 import {
-  assertPackageCertified,
   collectClosureIds,
   findUncertified,
+  packageStatus,
+  resolveEnforcement,
   validateLedger,
+  type CertificationStatus,
   type CertifiedIndex,
 } from "@/lib/certified";
 import {
@@ -35,17 +37,27 @@ interface ProgramIndexEntry {
   jurisdiction: string;
   rules: number;
   provenance?: "envelope" | "legacy";
+  certification?: CertificationStatus;
   certified?: { ledger_id: string; certified_set_version: string };
 }
 
 /**
- * The served certification ledger. Fail closed: until it loads and
- * validates, no program does — and if it never does, the honest state is
- * "nothing servable", not a crash and not the uncertified catalog.
+ * The serving posture (default permissive, the launch posture): everything
+ * serves with its certification labeled. `enforced` is the hard cut — only
+ * packages whose provenance matches the served ledger load at all.
+ */
+const ENFORCEMENT = resolveEnforcement(process.env.NEXT_PUBLIC_AXIOM_CERTIFIED_ENFORCEMENT);
+
+/**
+ * The served certification ledger. Under permissive it is metadata — when
+ * absent, everything is simply "encoded — not certified". Under enforced
+ * it is the authority: until it loads and validates, no program does, and
+ * if it never does, the honest state is "nothing servable" — not a crash
+ * and not the uncertified catalog.
  */
 type LedgerState =
   | { kind: "loading" }
-  | { kind: "refused"; reason: string }
+  | { kind: "absent"; reason: string }
   | { kind: "ready"; index: CertifiedIndex };
 
 /** The downloadable determination: the exact shape `determine.mjs --json` prints. */
@@ -162,6 +174,7 @@ export function Runner() {
 
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [certification, setCertification] = useState<CertificationStatus | null>(null);
   const [determination, setDetermination] = useState<Determination | null>(null);
   const [runStamp, setRunStamp] = useState(0);
   const [elapsedMs, setElapsedMs] = useState<number | null>(null);
@@ -171,14 +184,15 @@ export function Runner() {
       .then((response) => response.json())
       .then((index: { programs: ProgramIndexEntry[] }) => {
         setPrograms(index.programs);
-        // The default id may not exist (e.g. an empty certified registry):
-        // land on whatever IS served rather than 404ing the default.
+        // The default id may not exist (e.g. an empty registry): land on
+        // whatever IS served rather than 404ing the default.
         if (index.programs.length > 0 && !index.programs.some((p) => p.id === "ny-snap")) {
           setProgramId(index.programs[0].id);
         }
       })
       .catch((cause) => setError(String(cause)));
-    // The served ledger is the load gate for every program below.
+    // The served ledger: the status authority (and, under enforced, the
+    // load gate) for every program below.
     fetch("/corpus/ledger.json")
       .then((response) => {
         if (!response.ok) throw new Error(`ledger not served (${response.status})`);
@@ -188,7 +202,7 @@ export function Runner() {
       .then((index) => setLedger({ kind: "ready", index }))
       .catch((cause) =>
         setLedger({
-          kind: "refused",
+          kind: "absent",
           reason: cause instanceof Error ? cause.message : String(cause),
         }),
       );
@@ -198,18 +212,23 @@ export function Runner() {
   }, []);
 
   // Load a program's artifact + descriptor, seeding the facts from its
-  // example — gated on the served ledger: certificate provenance must match
-  // it, and the artifact's node closure must be fully certified. Serving
-  // surface: refusals report counts, never node ids.
+  // example. Permissive (default): everything loads, its certification
+  // recomputed against the served ledger and labeled. Enforced: the hard
+  // cut — provenance must match the ledger and the closure must be fully
+  // certified, or the load refuses. Serving surface either way: refusals
+  // report counts, never node ids.
   useEffect(() => {
     let cancelled = false;
     loadSeq.current += 1;
     setPkg(null);
+    setCertification(null);
     setDetermination(null);
     setError(null);
     setElapsedMs(null);
     artifactRef.current = null;
-    if (ledger.kind !== "ready" || programs === null || programs.length === 0) return;
+    if (ledger.kind === "loading" || programs === null || programs.length === 0) return;
+    if (ENFORCEMENT === "enforced" && ledger.kind !== "ready") return;
+    const certifiedIndex = ledger.kind === "ready" ? ledger.index : null;
     const mustOk = (response: Response) => {
       if (!response.ok) throw new Error(`fetch failed (${response.status}): ${response.url}`);
       return response;
@@ -222,18 +241,26 @@ export function Runner() {
     ])
       .then(([artifactJson, descriptor]) => {
         if (cancelled) return;
-        assertPackageCertified(descriptor, ledger.index);
         const artifact = JSON.parse(artifactJson) as CompiledProgramArtifact;
-        const uncertified = findUncertified(
-          collectClosureIds(artifact, Object.keys(descriptor.defaults)),
-          ledger.index,
+        const status = packageStatus(
+          descriptor,
+          artifact,
+          Object.keys(descriptor.defaults),
+          certifiedIndex,
         );
-        if (uncertified.length > 0) {
+        if (ENFORCEMENT === "enforced" && status !== "certified") {
+          const uncertified = certifiedIndex
+            ? findUncertified(
+                collectClosureIds(artifact, Object.keys(descriptor.defaults)),
+                certifiedIndex,
+              ).length
+            : Object.keys(descriptor.defaults).length;
           throw new Error(
-            `refused: ${uncertified.length} node(s) in this package are not certified ` +
+            `refused: ${uncertified} node(s) in this package are not certified ` +
               "under the served ledger",
           );
         }
+        setCertification(status);
         artifactRef.current = artifactJson;
         setPkg(descriptor);
         setRefOverrides({});
@@ -362,21 +389,27 @@ export function Runner() {
   const facts = pkg ? keyFacts(pkg) : [];
   const editedCount = Object.keys(refOverrides).length;
 
-  // The honest empty state: an empty certified registry (or a ledger that
-  // refused to validate) serves nothing — say so instead of 404ing.
-  if (ledger.kind === "refused" || (programs !== null && programs.length === 0)) {
+  // The honest empty state: an empty registry serves nothing — and under
+  // enforced, so does a missing/invalid ledger. Say so instead of 404ing.
+  if (
+    (programs !== null && programs.length === 0) ||
+    (ENFORCEMENT === "enforced" && ledger.kind === "absent")
+  ) {
     return (
       <div className="panel p-5">
-        <p className="smallcaps text-[0.62rem] text-ink-secondary">Nothing certified to serve</p>
+        <p className="smallcaps text-[0.62rem] text-ink-secondary">Nothing to serve</p>
         <p className="mt-3 max-w-2xl text-[0.9rem] font-light leading-relaxed text-ink-secondary">
-          Programs are served only under a valid certification ledger, and the current one
-          certifies none of them. This is a state, not an error: the gate fails closed until a
-          ledger that covers a program&apos;s full closure is vendored.
+          {ENFORCEMENT === "enforced"
+            ? "Under enforced certification, programs serve only when a valid ledger vouches " +
+              "for their full closure — and right now none does. This is a state, not an " +
+              "error: the gate fails closed until such a ledger is vendored."
+            : "The registry is empty — no programs were vendored. This is a state, not an " +
+              "error."}
         </p>
         <p className="mt-3 font-mono text-[0.68rem] text-ink-muted">
-          {ledger.kind === "refused"
+          {ledger.kind === "absent"
             ? `└─ ${ledger.reason}`
-            : `└─ ledger ${ledger.kind === "ready" ? ledger.index.ledger.ledger_id : "…"} — 0 programs certified`}
+            : `└─ ledger ${ledger.kind === "ready" ? ledger.index.ledger.ledger_id : "…"} — 0 programs vendored`}
         </p>
       </div>
     );
@@ -441,12 +474,17 @@ export function Runner() {
           <p className="mt-2 font-mono text-[0.65rem] text-ink-muted">
             {entry.rules} rules ·{" "}
             {entry.provenance === "envelope" ? "engine-stamped provenance" : "hash-pinned"} ·{" "}
-            {/* The certificate line is the reason this program is visible at all. */}
-            {pkg?.certified
-              ? `certified (ledger ${pkg.certified.ledger_id})`
-              : error
-                ? "not certified — refused"
-                : "checking certification…"}{" "}
+            {/* Certification is a status every program wears, recomputed
+                against the served ledger — not taken from the descriptor. */}
+            {certification === "certified" && pkg?.certified ? (
+              <span className="text-success">certified (ledger {pkg.certified.ledger_id})</span>
+            ) : certification === "encoded" ? (
+              "encoded — not certified"
+            ) : error ? (
+              "refused"
+            ) : (
+              "checking certification…"
+            )}{" "}
             · executes in this tab
           </p>
         ) : null}

@@ -228,23 +228,40 @@ export default function Example() {
 
         <Step
           number="06"
-          title="Only certified law serves"
+          title="Certification is a status, not a gate"
           note={
             <p>
-              The catalog is exactly what the certification ledger vouches for — every
-              rule, parameter, and input in a program&apos;s closure carries a
-              verifier-issued certificate. Anything else is refused at vendor time and
-              again at load. No flag, no grace period.
+              Everything publishes; every program wears its certification status. NY SNAP
+              is certified — its full closure carries verifier certificates from the
+              vendored ledger. The rest serve labeled &quot;encoded — not certified&quot;:
+              published, on the certification queue, honest about it. Set{" "}
+              <code className="font-mono text-[0.82rem] text-ink">
+                AXIOM_CERTIFIED_ENFORCEMENT=enforced
+              </code>{" "}
+              for the hard cut, where only certified programs load at all.
             </p>
           }
         >
           <Record>
             <Cmd>bun scripts/determine.mjs --programs</Cmd>
-            <L>{dim("ny-snap   envelope   New York SNAP — monthly benefit — 122 rules (us-ny)")}</L>
+            <L>
+              {dim("ny-snap              ")}
+              {ok("certified")}
+              {dim("  New York SNAP — monthly benefit — 122 rules (us-ny)")}
+            </L>
+            <L>{dim("uk-universal-credit  encoded    UK Universal Credit — 51 rules (uk)")}</L>
+            <L>{dim("al-snap              encoded    Alabama SNAP — 242 rules (us-al)")}</L>
+            <L>{dim("… 11 more encoded programs")}</L>
             <L />
-            <Cmd>bun scripts/determine.mjs --program co-snap</Cmd>
-            <L>{no('error: Unknown program "co-snap".')}</L>
-            <L>{dim("# dropped from the registry: its closure is not certified by the vendored ledger")}</L>
+            <Cmd>bun scripts/determine.mjs --program al-snap</Cmd>
+            <L>{dim("Alabama SNAP (us-al)")}</L>
+            <L>{no("encoded — not certified")}</L>
+            <L />
+            <Cmd>
+              AXIOM_CERTIFIED_ENFORCEMENT=enforced bun scripts/determine.mjs --program
+              al-snap
+            </Cmd>
+            <L>{no("error: al-snap refused: package carries no certificate provenance")}</L>
           </Record>
         </Step>
 

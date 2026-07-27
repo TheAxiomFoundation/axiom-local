@@ -1,0 +1,176 @@
+{
+ "program_id": "ak-tanf",
+ "jurisdiction": "us-ak",
+ "title": "Alaska ATAP",
+ "provenance": "legacy",
+ "source": {
+  "repo": "TheAxiomFoundation/axiom-api",
+  "artifact_path": "data/runtime-artifacts/us-ak-tanf.compiled.json",
+  "artifact_sha256": "b82ffddd9e1e5eb1b32bd1ffee44797526e4022dafebfeedf627a99805855a6d",
+  "engine_version": "0.1.0",
+  "artifact_format_version": 1
+ },
+ "query": {
+  "entity_id": "family:1"
+ },
+ "entities": [
+  {
+   "entity": "Family",
+   "id_template": "family:1",
+   "count": 1
+  }
+ ],
+ "headline": [],
+ "outputs": {
+  "ak_atap": "us-ak:regulations/aac/title-7/chapter-45/45-525-payment-amount#ak_atap",
+  "ak_atap_eligible": "us-ak:regulations/aac/title-7/chapter-45/45-470-income-eligibility#ak_atap_eligible",
+  "ak_atap_maximum_payment": "us-ak:policies/dpa/atap/standards/2026/adult-included-maximum-payment#ak_atap_maximum_payment",
+  "ak_atap_need_standard": "us-ak:policies/dpa/atap/standards/2026/adult-included#ak_atap_need_standard"
+ },
+ "default_period": "2026-01",
+ "example": {
+  "household": {},
+  "people": {}
+ },
+ "defaults": {
+  "axiom:us-ak-tanf-fy-2026#input.all_other_eligibility_requirements_of_this_chapter_met": {
+   "name": "all_other_eligibility_requirements_of_this_chapter_met",
+   "entity": "Family",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ak-tanf-fy-2026#input.anticipated_paid_care_cost_for_dependent_children_two_or_older_included_in_atap": {
+   "name": "anticipated_paid_care_cost_for_dependent_children_two_or_older_included_in_atap",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ak-tanf-fy-2026#input.anticipated_paid_care_cost_for_dependent_children_under_two_included_in_atap": {
+   "name": "anticipated_paid_care_cost_for_dependent_children_under_two_included_in_atap",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ak-tanf-fy-2026#input.anticipated_paid_care_cost_for_incapacitated_parents_included_in_atap": {
+   "name": "anticipated_paid_care_cost_for_incapacitated_parents_included_in_atap",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ak-tanf-fy-2026#input.applicable_deductions_and_disregards_from_income_under_7_aac_45_475_to_45_500": {
+   "name": "applicable_deductions_and_disregards_from_income_under_7_aac_45_475_to_45_500",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ak-tanf-fy-2026#input.assistance_unit_size": {
+   "name": "assistance_unit_size",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ak-tanf-fy-2026#input.atap_overpayment_resulted_from_retention_of_child_support_payment": {
+   "name": "atap_overpayment_resulted_from_retention_of_child_support_payment",
+   "entity": "Family",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ak-tanf-fy-2026#input.care_disregard_displaced_by_7_aac_45_495": {
+   "name": "care_disregard_displaced_by_7_aac_45_495",
+   "entity": "Family",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ak-tanf-fy-2026#input.care_disregard_displaced_by_7_aac_45_500": {
+   "name": "care_disregard_displaced_by_7_aac_45_500",
+   "entity": "Family",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ak-tanf-fy-2026#input.cash_child_support_payments_actually_received_by_applicant_between_application_month_start_and_authorization": {
+   "name": "cash_child_support_payments_actually_received_by_applicant_between_application_month_start_and_authorization",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ak-tanf-fy-2026#input.cash_child_support_payments_actually_received_by_recipient_after_authorization_except_direct_retained_payments": {
+   "name": "cash_child_support_payments_actually_received_by_recipient_after_authorization_except_direct_retained_payments",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ak-tanf-fy-2026#input.child_support_payment_made_in_cash": {
+   "name": "child_support_payment_made_in_cash",
+   "entity": "Family",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ak-tanf-fy-2026#input.dependent_children_two_or_older_included_in_atap_count": {
+   "name": "dependent_children_two_or_older_included_in_atap_count",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ak-tanf-fy-2026#input.dependent_children_under_two_included_in_atap_count": {
+   "name": "dependent_children_under_two_included_in_atap_count",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ak-tanf-fy-2026#input.direct_child_support_payments_kept_by_recipient_after_authorization": {
+   "name": "direct_child_support_payments_kept_by_recipient_after_authorization",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ak-tanf-fy-2026#input.incapacitated_parents_included_in_atap_count": {
+   "name": "incapacitated_parents_included_in_atap_count",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ak-tanf-fy-2026#input.low_shelter_cost_reduction_under_7_aac_45_527_to_45_530": {
+   "name": "low_shelter_cost_reduction_under_7_aac_45_527_to_45_530",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ak-tanf-fy-2026#input.mandatory_recoupment_deduction_under_7_aac_45_570": {
+   "name": "mandatory_recoupment_deduction_under_7_aac_45_570",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ak-tanf-fy-2026#input.oldest_individual_age_in_assistance_unit": {
+   "name": "oldest_individual_age_in_assistance_unit",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ak-tanf-fy-2026#input.resources_within_limits_under_7_aac_45_280": {
+   "name": "resources_within_limits_under_7_aac_45_280",
+   "entity": "Family",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-ak-tanf-fy-2026#input.total_gross_monthly_income": {
+   "name": "total_gross_monthly_income",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ak-tanf-fy-2026#input.total_nonexempt_gross_monthly_income": {
+   "name": "total_nonexempt_gross_monthly_income",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-ak-tanf-fy-2026#input.total_nonexempt_resources_value_determined_under_7_aac_45_310": {
+   "name": "total_nonexempt_resources_value_determined_under_7_aac_45_310",
+   "entity": "Family",
+   "dtype": "decimal",
+   "value": 0
+  }
+ },
+ "certification": "encoded"
+}

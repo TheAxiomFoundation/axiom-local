@@ -80,6 +80,8 @@ describe("the vendored engine accepts the direct-compiled artifact", () => {
 describe("certificate provenance — the reason this program is servable at all", () => {
   it("carries a stamp that matches the vendored ledger identity", async () => {
     const certified = await validateLedger(ledgerRaw);
+    // The flagship's status is earned, not asserted: "certified".
+    expect(pkg.certification).toBe("certified");
     expect(pkg.certified).toBeDefined();
     expect(pkg.certified?.ledger_id).toBe(certified.ledger.ledger_id);
     expect(pkg.certified?.certified_set_version).toBe(

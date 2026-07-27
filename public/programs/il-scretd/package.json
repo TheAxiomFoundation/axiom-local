@@ -1,0 +1,195 @@
+{
+ "program_id": "il-scretd",
+ "jurisdiction": "us-il",
+ "title": "Illinois SCRETD",
+ "provenance": "legacy",
+ "source": {
+  "repo": "TheAxiomFoundation/axiom-api",
+  "artifact_path": "data/runtime-artifacts/us-il-scretd.compiled.json",
+  "artifact_sha256": "9cc6a9ea28e4e5124efc9a56cb9b9d538a95e18143f31aee567a4412c417611f",
+  "engine_version": "0.1.0",
+  "artifact_format_version": 1
+ },
+ "query": {
+  "entity_id": "person:1"
+ },
+ "entities": [
+  {
+   "entity": "Person",
+   "id_template": "person:1",
+   "count": 1
+  },
+  {
+   "entity": "Asset",
+   "id_template": "asset:1:{index}",
+   "count": 1
+  },
+  {
+   "entity": "Household",
+   "id_template": "household:1:{index}",
+   "count": 1
+  }
+ ],
+ "headline": [],
+ "outputs": {
+  "il_scretd_deferral_amount": "us-il:statutes/320/30/3#il_scretd_deferral_amount"
+ },
+ "default_period": "2026-01",
+ "example": {
+  "household": {},
+  "people": {}
+ },
+ "defaults": {
+  "axiom:us-il-scretd-fy-2026#input.all_joint_owners_gave_written_prior_approval_for_agreement": {
+   "name": "all_joint_owners_gave_written_prior_approval_for_agreement",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.application_filed_with_appropriate_collector_or_designated_official": {
+   "name": "application_filed_with_appropriate_collector_or_designated_official",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.application_on_department_prescribed_form_furnished_by_collector": {
+   "name": "application_on_department_prescribed_form_furnished_by_collector",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.application_on_or_before_march_1": {
+   "name": "application_on_or_before_march_1",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.application_specifies_deferral_scope_and_amount_if_partial": {
+   "name": "application_specifies_deferral_scope_and_amount_if_partial",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.property_has_separate_assessed_valuation": {
+   "name": "property_has_separate_assessed_valuation",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.real_estate_taxes_or_special_assessment_installments_payable_during_year": {
+   "name": "real_estate_taxes_or_special_assessment_installments_payable_during_year",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-il-scretd-fy-2026#input.requested_deferral_amount": {
+   "name": "requested_deferral_amount",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-il-scretd-fy-2026#input.senior_citizens_real_estate_deferred_tax_revolving_fund_available_amount": {
+   "name": "senior_citizens_real_estate_deferred_tax_revolving_fund_available_amount",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-il-scretd-fy-2026#input.tax_deferral_and_recovery_agreement_entered": {
+   "name": "tax_deferral_and_recovery_agreement_entered",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.taxpayer_certifies_owned_and_occupied_property_or_other_qualifying_property_in_state_for_at_least_last_3_years_except_temporary_nursing_or_sheltered_care_home_residence": {
+   "name": "taxpayer_certifies_owned_and_occupied_property_or_other_qualifying_property_in_state_for_at_least_last_3_years_except_temporary_nursing_or_sheltered_care_home_residence",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.taxpayer_eligible_for_low_income_senior_citizens_assessment_freeze_homestead_exemption": {
+   "name": "taxpayer_eligible_for_low_income_senior_citizens_assessment_freeze_homestead_exemption",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.taxpayer_equity_interest_in_property": {
+   "name": "taxpayer_equity_interest_in_property",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-il-scretd-fy-2026#input.taxpayer_filed_required_appraisal_and_appraiser_certificate": {
+   "name": "taxpayer_filed_required_appraisal_and_appraiser_certificate",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.taxpayer_or_agent_provided_sufficient_fire_or_casualty_insurance_evidence_for_total_deferred_taxes": {
+   "name": "taxpayer_or_agent_provided_sufficient_fire_or_casualty_insurance_evidence_for_total_deferred_taxes",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.taxpayer_will_be_65_or_older_by_june_1_of_tax_deferral_year": {
+   "name": "taxpayer_will_be_65_or_older_by_june_1_of_tax_deferral_year",
+   "entity": "Person",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.total_deferred_taxes_plus_interest_before_current_deferral": {
+   "name": "total_deferred_taxes_plus_interest_before_current_deferral",
+   "entity": "Person",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-il-scretd-fy-2026#input.property_is_income_producing": {
+   "name": "property_is_income_producing",
+   "entity": "Asset",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.property_is_land_and_buildings_or_covered_dwelling_unit": {
+   "name": "property_is_land_and_buildings_or_covered_dwelling_unit",
+   "entity": "Asset",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.property_not_disqualified_by_trust_rule": {
+   "name": "property_not_disqualified_by_trust_rule",
+   "entity": "Asset",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.property_subject_to_unpaid_real_estate_tax_lien_when_claim_filed": {
+   "name": "property_subject_to_unpaid_real_estate_tax_lien_when_claim_filed",
+   "entity": "Asset",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.taxpayer_occupies_property_as_residence": {
+   "name": "taxpayer_occupies_property_as_residence",
+   "entity": "Asset",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.taxpayer_or_taxpayer_and_spouse_own_or_are_purchasing_property_in_fee_simple_under_recorded_instrument": {
+   "name": "taxpayer_or_taxpayer_and_spouse_own_or_are_purchasing_property_in_fee_simple_under_recorded_instrument",
+   "entity": "Asset",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.taxpayer_temporarily_unoccupied_property_because_residing_not_more_than_one_year_in_licensed_nursing_home_care_act_facility": {
+   "name": "taxpayer_temporarily_unoccupied_property_because_residing_not_more_than_one_year_in_licensed_nursing_home_care_act_facility",
+   "entity": "Asset",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-il-scretd-fy-2026#input.household_income": {
+   "name": "household_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  }
+ },
+ "certification": "encoded"
+}

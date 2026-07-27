@@ -1,0 +1,1178 @@
+{
+  "artifact_format_version": 1,
+  "engine_version": "0.1.0",
+  "program": {
+    "extends": null,
+    "module": {
+      "summary": "Deterministic composition for us-ks/tanf at 2026-01. Outputs: ks_tanf_maximum_benefit, ks_tanf_before_proration, ks_tanf_prorated_cash_benefit, ks_tanf. Corpus: unversioned corpus."
+    },
+    "units": [
+      {
+        "name": "GBP",
+        "kind": "currency",
+        "minor_units": 2
+      },
+      {
+        "name": "USD",
+        "kind": "currency",
+        "minor_units": 2
+      },
+      {
+        "name": "EUR",
+        "kind": "currency",
+        "minor_units": 2
+      },
+      {
+        "name": "count",
+        "kind": "count"
+      },
+      {
+        "name": "person",
+        "kind": "count"
+      },
+      {
+        "name": "ratio",
+        "kind": "ratio"
+      },
+      {
+        "name": "status",
+        "kind": "custom",
+        "label": "judgment"
+      }
+    ],
+    "relations": [],
+    "parameters": [
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7410#tanf_basic_allowance_final_listed_person_count",
+        "name": "tanf_basic_allowance_final_listed_person_count",
+        "unit": null,
+        "indexed_by": null,
+        "versions": [
+          {
+            "effective_from": "0001-01-01",
+            "values": {
+              "0": {
+                "kind": "integer",
+                "value": 4
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7410#tanf_basic_allowance_each_additional_person",
+        "name": "tanf_basic_allowance_each_additional_person",
+        "unit": "USD",
+        "indexed_by": null,
+        "versions": [
+          {
+            "effective_from": "0001-01-01",
+            "values": {
+              "0": {
+                "kind": "integer",
+                "value": 61
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7410#tanf_energy_supplement_per_person_in_allowance",
+        "name": "tanf_energy_supplement_per_person_in_allowance",
+        "unit": "USD",
+        "indexed_by": null,
+        "versions": [
+          {
+            "effective_from": "0001-01-01",
+            "values": {
+              "0": {
+                "kind": "integer",
+                "value": 18
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7410#tanf_table_i_shelter_percentage",
+        "name": "tanf_table_i_shelter_percentage",
+        "unit": null,
+        "indexed_by": null,
+        "versions": [
+          {
+            "effective_from": "0001-01-01",
+            "values": {
+              "0": {
+                "kind": "decimal",
+                "value": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7410#tanf_table_ii_six_or_more_person_count",
+        "name": "tanf_table_ii_six_or_more_person_count",
+        "unit": null,
+        "indexed_by": null,
+        "versions": [
+          {
+            "effective_from": "0001-01-01",
+            "values": {
+              "0": {
+                "kind": "integer",
+                "value": 6
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7400/cash-proration-rounding#first_day_of_month",
+        "name": "first_day_of_month",
+        "unit": null,
+        "indexed_by": null,
+        "versions": [
+          {
+            "effective_from": "0001-01-01",
+            "values": {
+              "0": {
+                "kind": "integer",
+                "value": 1
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7400/cash-proration-rounding#inclusive_application_day_count",
+        "name": "inclusive_application_day_count",
+        "unit": null,
+        "indexed_by": null,
+        "versions": [
+          {
+            "effective_from": "0001-01-01",
+            "values": {
+              "0": {
+                "kind": "integer",
+                "value": 1
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7410#tanf_basic_allowance_by_person_count",
+        "name": "tanf_basic_allowance_by_person_count",
+        "unit": "USD",
+        "indexed_by": "assistance_plan_person_count",
+        "versions": [
+          {
+            "effective_from": "0001-01-01",
+            "values": {
+              "1": {
+                "kind": "integer",
+                "value": 132
+              },
+              "2": {
+                "kind": "integer",
+                "value": 217
+              },
+              "3": {
+                "kind": "integer",
+                "value": 294
+              },
+              "4": {
+                "kind": "integer",
+                "value": 362
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7410#tanf_shelter_allowance_by_group",
+        "name": "tanf_shelter_allowance_by_group",
+        "unit": "USD",
+        "indexed_by": "tanf_shelter_group_index",
+        "versions": [
+          {
+            "effective_from": "0001-01-01",
+            "values": {
+              "1": {
+                "kind": "integer",
+                "value": 92
+              },
+              "2": {
+                "kind": "integer",
+                "value": 92
+              },
+              "3": {
+                "kind": "integer",
+                "value": 97
+              },
+              "4": {
+                "kind": "integer",
+                "value": 109
+              },
+              "5": {
+                "kind": "integer",
+                "value": 135
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7410#tanf_table_ii_shelter_percentage_by_person_count",
+        "name": "tanf_table_ii_shelter_percentage_by_person_count",
+        "unit": null,
+        "indexed_by": "tanf_table_ii_shelter_percentage_person_count_band",
+        "versions": [
+          {
+            "effective_from": "0001-01-01",
+            "values": {
+              "1": {
+                "kind": "decimal",
+                "value": "0.6"
+              },
+              "2": {
+                "kind": "decimal",
+                "value": "0.5"
+              },
+              "3": {
+                "kind": "decimal",
+                "value": "0.4"
+              },
+              "4": {
+                "kind": "decimal",
+                "value": "0.35"
+              },
+              "5": {
+                "kind": "decimal",
+                "value": "0.3"
+              },
+              "6": {
+                "kind": "decimal",
+                "value": "0.2"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "derived": [
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7410#tanf_shelter_group_index",
+        "name": "tanf_shelter_group_index",
+        "entity": "TanfUnit",
+        "dtype": "integer",
+        "unit": null,
+        "period": "Month",
+        "source": "KEE SM 7411, shelter groups",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "if",
+          "condition": {
+            "kind": "comparison",
+            "left": {
+              "kind": "input",
+              "name": "shelter_group_i_applies"
+            },
+            "op": "eq",
+            "right": {
+              "kind": "literal",
+              "value": {
+                "kind": "bool",
+                "value": true
+              }
+            }
+          },
+          "then_expr": {
+            "kind": "literal",
+            "value": {
+              "kind": "integer",
+              "value": 1
+            }
+          },
+          "else_expr": {
+            "kind": "if",
+            "condition": {
+              "kind": "comparison",
+              "left": {
+                "kind": "input",
+                "name": "shelter_group_ii_applies"
+              },
+              "op": "eq",
+              "right": {
+                "kind": "literal",
+                "value": {
+                  "kind": "bool",
+                  "value": true
+                }
+              }
+            },
+            "then_expr": {
+              "kind": "literal",
+              "value": {
+                "kind": "integer",
+                "value": 2
+              }
+            },
+            "else_expr": {
+              "kind": "if",
+              "condition": {
+                "kind": "comparison",
+                "left": {
+                  "kind": "input",
+                  "name": "shelter_group_iii_applies"
+                },
+                "op": "eq",
+                "right": {
+                  "kind": "literal",
+                  "value": {
+                    "kind": "bool",
+                    "value": true
+                  }
+                }
+              },
+              "then_expr": {
+                "kind": "literal",
+                "value": {
+                  "kind": "integer",
+                  "value": 3
+                }
+              },
+              "else_expr": {
+                "kind": "if",
+                "condition": {
+                  "kind": "comparison",
+                  "left": {
+                    "kind": "input",
+                    "name": "shelter_group_iv_applies"
+                  },
+                  "op": "eq",
+                  "right": {
+                    "kind": "literal",
+                    "value": {
+                      "kind": "bool",
+                      "value": true
+                    }
+                  }
+                },
+                "then_expr": {
+                  "kind": "literal",
+                  "value": {
+                    "kind": "integer",
+                    "value": 4
+                  }
+                },
+                "else_expr": {
+                  "kind": "if",
+                  "condition": {
+                    "kind": "comparison",
+                    "left": {
+                      "kind": "input",
+                      "name": "shelter_group_v_applies"
+                    },
+                    "op": "eq",
+                    "right": {
+                      "kind": "literal",
+                      "value": {
+                        "kind": "bool",
+                        "value": true
+                      }
+                    }
+                  },
+                  "then_expr": {
+                    "kind": "literal",
+                    "value": {
+                      "kind": "integer",
+                      "value": 5
+                    }
+                  },
+                  "else_expr": {
+                    "kind": "sub",
+                    "left": {
+                      "kind": "literal",
+                      "value": {
+                        "kind": "integer",
+                        "value": 0
+                      }
+                    },
+                    "right": {
+                      "kind": "literal",
+                      "value": {
+                        "kind": "integer",
+                        "value": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7410#tanf_table_ii_shelter_percentage_person_count_band",
+        "name": "tanf_table_ii_shelter_percentage_person_count_band",
+        "entity": "TanfUnit",
+        "dtype": "integer",
+        "unit": null,
+        "period": "Month",
+        "source": "KEE SM 7411, Table II person-count rows",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "if",
+          "condition": {
+            "kind": "comparison",
+            "left": {
+              "kind": "input",
+              "name": "assistance_plan_person_count"
+            },
+            "op": "gte",
+            "right": {
+              "kind": "parameter_lookup",
+              "parameter": "tanf_table_ii_six_or_more_person_count",
+              "index": {
+                "kind": "literal",
+                "value": {
+                  "kind": "integer",
+                  "value": 0
+                }
+              }
+            }
+          },
+          "then_expr": {
+            "kind": "parameter_lookup",
+            "parameter": "tanf_table_ii_six_or_more_person_count",
+            "index": {
+              "kind": "literal",
+              "value": {
+                "kind": "integer",
+                "value": 0
+              }
+            }
+          },
+          "else_expr": {
+            "kind": "input",
+            "name": "assistance_plan_person_count"
+          }
+        }
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7410#tanf_basic_allowance",
+        "name": "tanf_basic_allowance",
+        "entity": "TanfUnit",
+        "dtype": "decimal",
+        "unit": "USD",
+        "period": "Month",
+        "source": "KEE SM 7411, basic allowances",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "if",
+          "condition": {
+            "kind": "comparison",
+            "left": {
+              "kind": "input",
+              "name": "assistance_plan_person_count"
+            },
+            "op": "lte",
+            "right": {
+              "kind": "parameter_lookup",
+              "parameter": "tanf_basic_allowance_final_listed_person_count",
+              "index": {
+                "kind": "literal",
+                "value": {
+                  "kind": "integer",
+                  "value": 0
+                }
+              }
+            }
+          },
+          "then_expr": {
+            "kind": "parameter_lookup",
+            "parameter": "tanf_basic_allowance_by_person_count",
+            "index": {
+              "kind": "input",
+              "name": "assistance_plan_person_count"
+            }
+          },
+          "else_expr": {
+            "kind": "add",
+            "items": [
+              {
+                "kind": "parameter_lookup",
+                "parameter": "tanf_basic_allowance_by_person_count",
+                "index": {
+                  "kind": "parameter_lookup",
+                  "parameter": "tanf_basic_allowance_final_listed_person_count",
+                  "index": {
+                    "kind": "literal",
+                    "value": {
+                      "kind": "integer",
+                      "value": 0
+                    }
+                  }
+                }
+              },
+              {
+                "kind": "mul",
+                "left": {
+                  "kind": "sub",
+                  "left": {
+                    "kind": "input",
+                    "name": "assistance_plan_person_count"
+                  },
+                  "right": {
+                    "kind": "parameter_lookup",
+                    "parameter": "tanf_basic_allowance_final_listed_person_count",
+                    "index": {
+                      "kind": "literal",
+                      "value": {
+                        "kind": "integer",
+                        "value": 0
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "kind": "parameter_lookup",
+                  "parameter": "tanf_basic_allowance_each_additional_person",
+                  "index": {
+                    "kind": "literal",
+                    "value": {
+                      "kind": "integer",
+                      "value": 0
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7410#tanf_shelter_allowance",
+        "name": "tanf_shelter_allowance",
+        "entity": "TanfUnit",
+        "dtype": "decimal",
+        "unit": "USD",
+        "period": "Month",
+        "source": "KEE SM 7411, shelter allowances",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "if",
+          "condition": {
+            "kind": "comparison",
+            "left": {
+              "kind": "derived",
+              "name": "tanf_shelter_group_index"
+            },
+            "op": "eq",
+            "right": {
+              "kind": "sub",
+              "left": {
+                "kind": "literal",
+                "value": {
+                  "kind": "integer",
+                  "value": 0
+                }
+              },
+              "right": {
+                "kind": "literal",
+                "value": {
+                  "kind": "integer",
+                  "value": 1
+                }
+              }
+            }
+          },
+          "then_expr": {
+            "kind": "literal",
+            "value": {
+              "kind": "decimal",
+              "value": "0"
+            }
+          },
+          "else_expr": {
+            "kind": "parameter_lookup",
+            "parameter": "tanf_shelter_allowance_by_group",
+            "index": {
+              "kind": "derived",
+              "name": "tanf_shelter_group_index"
+            }
+          }
+        }
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7410#tanf_table_i_applies",
+        "name": "tanf_table_i_applies",
+        "entity": "TanfUnit",
+        "dtype": "judgment",
+        "unit": null,
+        "period": "Month",
+        "source": "KEE SM 7411, Table I use cases",
+        "source_url": null,
+        "semantics": "judgment",
+        "expr": {
+          "kind": "or",
+          "items": [
+            {
+              "kind": "or",
+              "items": [
+                {
+                  "kind": "or",
+                  "items": [
+                    {
+                      "kind": "comparison",
+                      "left": {
+                        "kind": "input",
+                        "name": "all_persons_in_home_in_same_assistance_plan"
+                      },
+                      "op": "eq",
+                      "right": {
+                        "kind": "literal",
+                        "value": {
+                          "kind": "bool",
+                          "value": true
+                        }
+                      }
+                    },
+                    {
+                      "kind": "comparison",
+                      "left": {
+                        "kind": "input",
+                        "name": "only_excluded_person_is_qualifying_ssi_recipient_or_joint_custody_child"
+                      },
+                      "op": "eq",
+                      "right": {
+                        "kind": "literal",
+                        "value": {
+                          "kind": "bool",
+                          "value": true
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "kind": "comparison",
+                  "left": {
+                    "kind": "input",
+                    "name": "shared_living_arrangement_is_commercial_bona_fide_landlord_tenant"
+                  },
+                  "op": "eq",
+                  "right": {
+                    "kind": "literal",
+                    "value": {
+                      "kind": "bool",
+                      "value": true
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "comparison",
+              "left": {
+                "kind": "input",
+                "name": "specialized_living_commercial_board_room_or_room_only_arrangement"
+              },
+              "op": "eq",
+              "right": {
+                "kind": "literal",
+                "value": {
+                  "kind": "bool",
+                  "value": true
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7410#tanf_table_ii_applies",
+        "name": "tanf_table_ii_applies",
+        "entity": "TanfUnit",
+        "dtype": "judgment",
+        "unit": null,
+        "period": "Month",
+        "source": "KEE SM 7411, Table II use cases",
+        "source_url": null,
+        "semantics": "judgment",
+        "expr": {
+          "kind": "and",
+          "items": [
+            {
+              "kind": "comparison",
+              "left": {
+                "kind": "input",
+                "name": "shared_living_arrangement_with_person_not_in_budget_plan"
+              },
+              "op": "eq",
+              "right": {
+                "kind": "literal",
+                "value": {
+                  "kind": "bool",
+                  "value": true
+                }
+              }
+            },
+            {
+              "kind": "not",
+              "item": {
+                "kind": "derived",
+                "name": "tanf_table_i_applies"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7410#ks_tanf_maximum_benefit",
+        "name": "ks_tanf_maximum_benefit",
+        "entity": "TanfUnit",
+        "dtype": "decimal",
+        "unit": "USD",
+        "period": "Month",
+        "source": "KEE SM 7411, standardized tables for TANF eligibility and payment",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "if",
+          "condition": {
+            "kind": "derived",
+            "name": "tanf_table_i_applies"
+          },
+          "then_expr": {
+            "kind": "add",
+            "items": [
+              {
+                "kind": "derived",
+                "name": "tanf_basic_allowance"
+              },
+              {
+                "kind": "mul",
+                "left": {
+                  "kind": "derived",
+                  "name": "tanf_shelter_allowance"
+                },
+                "right": {
+                  "kind": "parameter_lookup",
+                  "parameter": "tanf_table_i_shelter_percentage",
+                  "index": {
+                    "kind": "literal",
+                    "value": {
+                      "kind": "integer",
+                      "value": 0
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "else_expr": {
+            "kind": "if",
+            "condition": {
+              "kind": "derived",
+              "name": "tanf_table_ii_applies"
+            },
+            "then_expr": {
+              "kind": "add",
+              "items": [
+                {
+                  "kind": "derived",
+                  "name": "tanf_basic_allowance"
+                },
+                {
+                  "kind": "mul",
+                  "left": {
+                    "kind": "derived",
+                    "name": "tanf_shelter_allowance"
+                  },
+                  "right": {
+                    "kind": "parameter_lookup",
+                    "parameter": "tanf_table_ii_shelter_percentage_by_person_count",
+                    "index": {
+                      "kind": "derived",
+                      "name": "tanf_table_ii_shelter_percentage_person_count_band"
+                    }
+                  }
+                }
+              ]
+            },
+            "else_expr": {
+              "kind": "literal",
+              "value": {
+                "kind": "decimal",
+                "value": "0"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7400/cash-proration-rounding#remaining_days_in_application_month",
+        "name": "remaining_days_in_application_month",
+        "entity": "Household",
+        "dtype": "decimal",
+        "unit": null,
+        "period": "Month",
+        "source": "KEESM 7401, Proration computation",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "add",
+          "items": [
+            {
+              "kind": "sub",
+              "left": {
+                "kind": "input",
+                "name": "days_in_month"
+              },
+              "right": {
+                "kind": "input",
+                "name": "application_day_of_month"
+              }
+            },
+            {
+              "kind": "parameter_lookup",
+              "parameter": "inclusive_application_day_count",
+              "index": {
+                "kind": "literal",
+                "value": {
+                  "kind": "integer",
+                  "value": 0
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7400/cash-proration-rounding#cash_proration_applies",
+        "name": "cash_proration_applies",
+        "entity": "Household",
+        "dtype": "judgment",
+        "unit": null,
+        "period": "Month",
+        "source": "KEESM 7401 and 7401.2, Cash proration applicability",
+        "source_url": null,
+        "semantics": "judgment",
+        "expr": {
+          "kind": "and",
+          "items": [
+            {
+              "kind": "and",
+              "items": [
+                {
+                  "kind": "and",
+                  "items": [
+                    {
+                      "kind": "and",
+                      "items": [
+                        {
+                          "kind": "and",
+                          "items": [
+                            {
+                              "kind": "comparison",
+                              "left": {
+                                "kind": "input",
+                                "name": "application_day_of_month"
+                              },
+                              "op": "gt",
+                              "right": {
+                                "kind": "parameter_lookup",
+                                "parameter": "first_day_of_month",
+                                "index": {
+                                  "kind": "literal",
+                                  "value": {
+                                    "kind": "integer",
+                                    "value": 0
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "kind": "not",
+                              "item": {
+                                "kind": "comparison",
+                                "left": {
+                                  "kind": "input",
+                                  "name": "assistance_suspended_and_reinstated_in_month_following_one_month_suspension"
+                                },
+                                "op": "eq",
+                                "right": {
+                                  "kind": "literal",
+                                  "value": {
+                                    "kind": "bool",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "kind": "not",
+                          "item": {
+                            "kind": "comparison",
+                            "left": {
+                              "kind": "input",
+                              "name": "assistance_reinstated_after_required_information_or_cooperation_provided_in_month_following_closure"
+                            },
+                            "op": "eq",
+                            "right": {
+                              "kind": "literal",
+                              "value": {
+                                "kind": "bool",
+                                "value": true
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "not",
+                      "item": {
+                        "kind": "comparison",
+                        "left": {
+                          "kind": "input",
+                          "name": "cash_review_or_application_returned_in_month_following_end_of_review_period"
+                        },
+                        "op": "eq",
+                        "right": {
+                          "kind": "literal",
+                          "value": {
+                            "kind": "bool",
+                            "value": true
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "kind": "not",
+                  "item": {
+                    "kind": "comparison",
+                    "left": {
+                      "kind": "input",
+                      "name": "cash_application_filed_in_response_to_sanction_notice_with_cooperation_within_45_days_and_received_in_month_following_closure"
+                    },
+                    "op": "eq",
+                    "right": {
+                      "kind": "literal",
+                      "value": {
+                        "kind": "bool",
+                        "value": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "not",
+              "item": {
+                "kind": "comparison",
+                "left": {
+                  "kind": "input",
+                  "name": "tanf_case_reopened_in_month_following_effective_date_of_closure"
+                },
+                "op": "eq",
+                "right": {
+                  "kind": "literal",
+                  "value": {
+                    "kind": "bool",
+                    "value": true
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7400/cash-proration-rounding#cash_benefit_after_proration",
+        "name": "cash_benefit_after_proration",
+        "entity": "Household",
+        "dtype": "decimal",
+        "unit": "USD",
+        "period": "Month",
+        "source": "KEESM 7401, Cash proration computation",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "if",
+          "condition": {
+            "kind": "derived",
+            "name": "cash_proration_applies"
+          },
+          "then_expr": {
+            "kind": "max",
+            "items": [
+              {
+                "kind": "literal",
+                "value": {
+                  "kind": "decimal",
+                  "value": "0"
+                }
+              },
+              {
+                "kind": "mul",
+                "left": {
+                  "kind": "div",
+                  "left": {
+                    "kind": "derived",
+                    "name": "monthly_cash_benefit_before_proration"
+                  },
+                  "right": {
+                    "kind": "input",
+                    "name": "days_in_month"
+                  }
+                },
+                "right": {
+                  "kind": "derived",
+                  "name": "remaining_days_in_application_month"
+                }
+              }
+            ]
+          },
+          "else_expr": {
+            "kind": "max",
+            "items": [
+              {
+                "kind": "literal",
+                "value": {
+                  "kind": "decimal",
+                  "value": "0"
+                }
+              },
+              {
+                "kind": "derived",
+                "name": "monthly_cash_benefit_before_proration"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "us-ks:policies/dcf/keesm/keesm7400/cash-proration-rounding#rounded_cash_payment",
+        "name": "rounded_cash_payment",
+        "entity": "Household",
+        "dtype": "decimal",
+        "unit": "USD",
+        "period": "Month",
+        "source": "KEESM 7402, Cash rounding",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "floor",
+          "value": {
+            "kind": "derived",
+            "name": "cash_benefit_after_proration"
+          }
+        }
+      },
+      {
+        "name": "ks_tanf_before_proration",
+        "entity": "TanfUnit",
+        "dtype": "decimal",
+        "unit": "USD",
+        "period": "Month",
+        "source": "axiom-programs/us-ks/tanf/fy-2026 pre-proration bridge",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "derived",
+          "name": "ks_tanf_maximum_benefit"
+        }
+      },
+      {
+        "name": "monthly_cash_benefit_before_proration",
+        "entity": "Household",
+        "dtype": "decimal",
+        "unit": "USD",
+        "period": "Month",
+        "source": "axiom-programs/us-ks/tanf/fy-2026 KEESM 7401 input bridge",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "derived",
+          "name": "ks_tanf_before_proration"
+        }
+      },
+      {
+        "name": "ks_tanf_prorated_cash_benefit",
+        "entity": "Household",
+        "dtype": "decimal",
+        "unit": "USD",
+        "period": "Month",
+        "source": "axiom-programs/us-ks/tanf/fy-2026 proration bridge",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "derived",
+          "name": "cash_benefit_after_proration"
+        }
+      },
+      {
+        "name": "ks_tanf",
+        "entity": "Household",
+        "dtype": "decimal",
+        "unit": "USD",
+        "period": "Month",
+        "source": "axiom-programs/us-ks/tanf/fy-2026 cash payment composition",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "derived",
+          "name": "rounded_cash_payment"
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "evaluation_order": [
+      "cash_proration_applies",
+      "remaining_days_in_application_month",
+      "tanf_basic_allowance",
+      "tanf_shelter_group_index",
+      "tanf_shelter_allowance",
+      "tanf_table_i_applies",
+      "tanf_table_ii_applies",
+      "tanf_table_ii_shelter_percentage_person_count_band",
+      "ks_tanf_maximum_benefit",
+      "ks_tanf_before_proration",
+      "monthly_cash_benefit_before_proration",
+      "cash_benefit_after_proration",
+      "ks_tanf_prorated_cash_benefit",
+      "rounded_cash_payment",
+      "ks_tanf"
+    ],
+    "fast_path": {
+      "strategy": "generic_bulk",
+      "compatible": true,
+      "blockers": []
+    },
+    "provenance": {
+      "corpus": {
+        "repo": "rulespec-us",
+        "sha": "dfd646bf8363bc67a01c6c9c792db7d5d8ebd1a9",
+        "dirty": false
+      },
+      "spec_path": "programs/us-ks/tanf/fy-2026.yaml",
+      "spec_sha256": "111e7dd91b43c082d50abd6914425271e2031ed1be88fb0cd49f84d7f0e07fde",
+      "composer_version": "0.1.0",
+      "engine_version": "0.1.0"
+    }
+  }
+}

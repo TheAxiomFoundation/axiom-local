@@ -2,7 +2,7 @@
  * Run any vendored program locally — same engine, same composed artifacts,
  * same request path as the page, from your terminal:
  *
- *   bun scripts/determine.mjs --programs                     # list certified programs
+ *   bun scripts/determine.mjs --programs                     # the catalog, with statuses
  *   bun scripts/determine.mjs                                # ny-snap example ($478)
  *   bun scripts/determine.mjs --program <id>                 # switch programs
  *   bun scripts/determine.mjs --set snap_gross_monthly_earned_income=2400
@@ -14,9 +14,11 @@
  *
  * Every program starts from its descriptor's example case; --set/--people
  * override slots by name. No Rust toolchain, no network: the wasm engine
- * and the artifacts are checked into this repo. Only programs certified by
- * the vendored ledger (public/corpus/ledger.json) will run — anything
- * without matching certificate provenance refuses, by design.
+ * and the artifacts are checked into this repo. Certification is a status,
+ * not a gate: every determination is labeled "certified (ledger …)" or
+ * "encoded — not certified" against the vendored ledger
+ * (public/corpus/ledger.json). Set AXIOM_CERTIFIED_ENFORCEMENT=enforced
+ * for the hard cut — uncertified programs then refuse to load.
  */
 
 // This script imports the repo's TypeScript directly, which needs Bun.
@@ -38,9 +40,14 @@ import { fileURLToPath } from "node:url";
 const { buildPackageRequest } = await import("../src/lib/goldenPath.ts");
 const { applyWhatIf } = await import("../src/lib/whatIf.ts");
 const { buildDisplayTree } = await import("../src/lib/trace.ts");
-const { assertPackageCertified, collectClosureIds, findUncertified, validateLedger } = await import(
-  "../src/lib/certified.ts"
-);
+const {
+  assertPackageCertified,
+  collectClosureIds,
+  findUncertified,
+  packageStatus,
+  resolveEnforcement,
+  validateLedger,
+} = await import("../src/lib/certified.ts");
 
 const require = createRequire(import.meta.url);
 const engine = require("../engine/pkg-node/axiom_rules_engine_wasm.js");
@@ -99,11 +106,11 @@ async function main() {
 
   if (has("programs")) {
     if (index.length === 0) {
-      console.log("no certified programs — the vendored ledger serves nothing");
+      console.log("no programs vendored — the registry is empty");
     }
     for (const program of index) {
       console.log(
-        `${program.id.padEnd(20)} ${(program.provenance ?? "envelope").padEnd(9)} ${program.title} — ${program.rules} rules (${program.jurisdiction})`,
+        `${program.id.padEnd(20)} ${(program.certification ?? "encoded").padEnd(10)} ${program.title} — ${program.rules} rules (${program.jurisdiction})`,
       );
     }
     return;
@@ -118,33 +125,48 @@ async function main() {
   let artifactJson = readFileSync(join(programDir, "artifact.json"), "utf8");
   const pkg = JSON.parse(readFileSync(join(programDir, "package.json"), "utf8"));
 
-  // The certified-node gate: this CLI is a serving surface, so a package
-  // whose certificate provenance is missing or does not match the served
-  // ledger refuses to load — and refusals report counts, never node ids.
-  let certified;
+  // Certification status/gate: this CLI is a serving surface, so refusal
+  // reasons report counts, never node ids. Permissive (the default and
+  // launch posture) serves everything with the status labeled; enforced
+  // is the hard cut — a package without matching certificate provenance
+  // and a fully certified closure refuses to load.
+  const enforcement = resolveEnforcement(process.env.AXIOM_CERTIFIED_ENFORCEMENT);
+  let certified = null;
   try {
     certified = await validateLedger(JSON.parse(readFileSync(ledgerFile, "utf8")));
   } catch (error) {
-    fail(
-      `nothing servable — public/corpus/ledger.json is missing or invalid ` +
-        `(${error instanceof Error ? error.message : error})`,
-    );
+    if (enforcement === "enforced") {
+      fail(
+        `nothing servable — public/corpus/ledger.json is missing or invalid ` +
+          `(${error instanceof Error ? error.message : error})`,
+      );
+    }
   }
-  try {
-    assertPackageCertified(pkg, certified);
-  } catch (error) {
-    fail(`${programId} ${error instanceof Error ? error.message : error}`);
-  }
-  const uncertified = findUncertified(
-    collectClosureIds(JSON.parse(artifactJson), Object.keys(pkg.defaults)),
+  const certification = packageStatus(
+    pkg,
+    JSON.parse(artifactJson),
+    Object.keys(pkg.defaults),
     certified,
   );
-  if (uncertified.length > 0) {
+  if (enforcement === "enforced" && certification !== "certified") {
+    try {
+      assertPackageCertified(pkg, certified);
+    } catch (error) {
+      fail(`${programId} ${error instanceof Error ? error.message : error}`);
+    }
+    const uncertified = findUncertified(
+      collectClosureIds(JSON.parse(artifactJson), Object.keys(pkg.defaults)),
+      certified,
+    );
     fail(
       `refused: ${uncertified.length} node(s) in ${programId} are not certified under the ` +
         `served ledger (${certified.ledger.ledger_id})`,
     );
   }
+  const certificationLine =
+    certification === "certified"
+      ? `certified (ledger ${pkg.certified.ledger_id})`
+      : "encoded — not certified";
 
   if (has("slots")) {
     for (const slot of Object.values(pkg.defaults)) {
@@ -281,7 +303,7 @@ async function main() {
 
   console.log(`\n${pkg.title} (${pkg.jurisdiction})`);
   console.log(`period ${request.queries[0].period.start}`);
-  console.log(`certified (ledger ${pkg.certified.ledger_id})`);
+  console.log(certificationLine);
   for (const [slot, v] of Object.entries(answers.household)) console.log(`  ${slot} = ${v}`);
   for (const [slot, values] of Object.entries(answers.people)) {
     if (values.length) console.log(`  ${slot} = ${values.join(", ")}`);

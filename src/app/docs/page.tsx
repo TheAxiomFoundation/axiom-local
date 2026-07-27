@@ -112,9 +112,11 @@ export default function Docs() {
                       {program.title} <span className="text-ink-muted">({program.jurisdiction})</span>
                     </td>
                     <td className="px-3 py-2">
-                      <span className="text-success">
-                        certified · {program.certified.ledger_id}
-                      </span>
+                      {program.certification === "certified" ? (
+                        <span className="text-success">certified</span>
+                      ) : (
+                        <span className="text-ink-muted">encoded</span>
+                      )}
                     </td>
                     <td className="px-3 py-2 text-right text-ink-secondary">{program.rules}</td>
                     <td className="px-3 py-2 text-right text-ink-secondary">{program.inputs}</td>
@@ -129,14 +131,19 @@ export default function Docs() {
             ) plus a descriptor (
             <code className="font-mono text-[0.8rem] text-ink">package.json</code>) declaring
             its inputs, screening presumptions, entities and relations, example case,
-            sha-256 pin, and <em>certificate provenance</em>. Only certified programs
-            exist here at all: the vendor pipeline refuses any program whose node closure
-            — every rule, parameter, relation, and input — is not vouched for by the
-            vendored certification ledger (
+            sha-256 pin, and <em>certification status</em>. Certification is a status, not
+            a gate: <em>certified</em> means the program&apos;s full node closure — every
+            rule, parameter, relation, and input — is vouched for by the vendored
+            certification ledger (
             <code className="font-mono text-[0.8rem] text-ink">public/corpus/ledger.json</code>
-            ), and the loader re-checks the stamp against the served ledger on every run.
-            There is no bypass flag. New York SNAP additionally carries an end-to-end
-            parity pin ($478 for the canonical two-person household).
+            ), with per-output certificates in the descriptor; <em>encoded</em> means it is
+            served from a compiled graph without that backing — published, labeled, and on
+            the certification queue. Almost nothing is certified yet; that honesty is the
+            point. Set{" "}
+            <code className="font-mono text-[0.8rem] text-ink">AXIOM_CERTIFIED_ENFORCEMENT=enforced</code>{" "}
+            for the hard cut, where uncertified programs refuse to vendor and to load. New
+            York SNAP is the flagship: certified end to end under the (fixture) ledger,
+            with a parity pin ($478 for the canonical two-person household).
           </p>
         </Section>
 

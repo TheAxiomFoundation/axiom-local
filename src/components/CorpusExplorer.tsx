@@ -6,7 +6,11 @@ import { loadEngine } from "@/lib/engine/load";
 import type { CompiledProgramArtifact, ExecutionResponse } from "@/lib/engine/types";
 import {
   assertArtifactCertified,
+  collectClosureIds,
+  findUncertified,
+  resolveEnforcement,
   validateLedger,
+  type CertificationStatus,
   type CertifiedIndex,
 } from "@/lib/certified";
 import {
@@ -28,11 +32,15 @@ import {
  * VALID (well-formed, cited, from the pinned corpus commit) but not
  * parity-PINNED like the cataloged programs — the provenance line says so.
  *
- * Every slice passes the certified-node gate before it renders: a closure
- * with ANY uncertified node refuses, and the refusal names the ids — this
- * explorer is dev tooling, the one surface where naming them is allowed
- * (src/lib/certified.ts). No ledger, no slicing: fail closed.
+ * Certification is a status on every slice: the closure is checked against
+ * the served ledger and labeled "certified (ledger …)" or "encoded — not
+ * certified". Under permissive (default, the launch posture) that is all
+ * it is; under enforced a closure with ANY uncertified node refuses, and
+ * the refusal names the ids — this explorer is dev tooling, the one
+ * surface where naming them is allowed (src/lib/certified.ts).
  */
+
+const ENFORCEMENT = resolveEnforcement(process.env.NEXT_PUBLIC_AXIOM_CERTIFIED_ENFORCEMENT);
 
 interface SearchHit {
   target: string;
@@ -46,6 +54,7 @@ interface Slice {
   artifactJson: string;
   artifact: CompiledProgramArtifact;
   pkg: GoldenPackage;
+  certification: CertificationStatus;
   closureSize: number;
   corrected: number;
   admitted: number;
@@ -56,9 +65,10 @@ type ManifestState =
   | { kind: "idle" }
   | { kind: "loading" }
   | { kind: "missing" }
-  /** Corpus present but no valid ledger — nothing sliceable, fail closed. */
+  /** Corpus present but no valid ledger — under ENFORCED nothing slices. */
   | { kind: "uncertified"; reason: string }
-  | { kind: "ready"; manifest: CorpusManifest; certified: CertifiedIndex };
+  /** `certified` is null when the ledger is absent (permissive only). */
+  | { kind: "ready"; manifest: CorpusManifest; certified: CertifiedIndex | null };
 
 export function CorpusExplorer() {
   const [manifestState, setManifestState] = useState<ManifestState>({ kind: "idle" });
@@ -84,17 +94,21 @@ export function CorpusExplorer() {
         if (!response.ok) throw new Error(`manifest ${response.status}`);
         return response.json() as Promise<CorpusManifest>;
       }),
-      // The ledger travels with the corpus; without it nothing slices.
+      // The ledger travels with the corpus. Permissive: absent means every
+      // slice is simply "encoded". Enforced: absent means nothing slices.
       fetch("/corpus/ledger.json")
         .then((response) => {
           if (!response.ok) throw new Error(`ledger not served (${response.status})`);
           return response.json();
         })
         .then((raw) => validateLedger(raw))
-        .catch((cause) => {
-          throw new Error(
-            `uncertified: ${cause instanceof Error ? cause.message : String(cause)}`,
-          );
+        .catch((cause): CertifiedIndex | null => {
+          if (ENFORCEMENT === "enforced") {
+            throw new Error(
+              `uncertified: ${cause instanceof Error ? cause.message : String(cause)}`,
+            );
+          }
+          return null;
         }),
     ])
       .then(([manifest, certified]) => setManifestState({ kind: "ready", manifest, certified }))
@@ -183,10 +197,12 @@ export function CorpusExplorer() {
         const artifact = JSON.parse(artifactJson) as CompiledProgramArtifact;
         const commit = manifestState.manifest.sources[0]?.commit ?? "unknown";
         const { pkg } = synthesizePackage(artifact, root, commit);
-        // The certified-node gate, before anything renders: refuse a slice
-        // whose closure carries ANY uncertified node. Naming the ids is
-        // allowed here (dev tooling) and nowhere servable.
-        assertArtifactCertified(artifact, Object.keys(pkg.defaults), manifestState.certified);
+        // The certified-node gate, ENFORCED mode only: refuse a slice whose
+        // closure carries ANY uncertified node before anything renders.
+        // Naming the ids is allowed here (dev tooling) and nowhere servable.
+        if (ENFORCEMENT === "enforced" && manifestState.certified) {
+          assertArtifactCertified(artifact, Object.keys(pkg.defaults), manifestState.certified);
+        }
         if (Object.keys(pkg.outputs).length === 0) {
           setError(
             `${root} defines ${artifact.program.parameters.length} parameters and no executable ` +
@@ -195,13 +211,26 @@ export function CorpusExplorer() {
           return;
         }
         const { corrected, admitted } = probeFixpoint(engine, artifactJson, artifact, pkg);
-        // Probe-admitted refs are rendered in the editor too — re-gate them.
-        assertArtifactCertified(artifact, Object.keys(pkg.defaults), manifestState.certified);
+        if (ENFORCEMENT === "enforced" && manifestState.certified) {
+          // Probe-admitted refs are rendered in the editor too — re-gate.
+          assertArtifactCertified(artifact, Object.keys(pkg.defaults), manifestState.certified);
+        }
+        // The status label, recomputed over the final defaults (permissive
+        // shows it; enforced only ever reaches here with "certified").
+        const certification: CertificationStatus =
+          manifestState.certified &&
+          findUncertified(
+            collectClosureIds(artifact, Object.keys(pkg.defaults)),
+            manifestState.certified,
+          ).length === 0
+            ? "certified"
+            : "encoded";
         setSlice({
           root,
           artifactJson,
           artifact,
           pkg,
+          certification,
           closureSize: closure.length,
           corrected,
           admitted,
@@ -290,8 +319,8 @@ export function CorpusExplorer() {
         ) : null}
         {manifestState.kind === "uncertified" ? (
           <p className="mt-3 font-mono text-[0.72rem] text-ink-muted">
-            corpus not certified — nothing is sliceable without a valid ledger
-            (public/corpus/ledger.json): {manifestState.reason}
+            corpus not certified — under enforced certification nothing is sliceable without
+            a valid ledger (public/corpus/ledger.json): {manifestState.reason}
           </p>
         ) : null}
         {manifestState.kind === "loading" ? (
@@ -432,9 +461,16 @@ export function CorpusExplorer() {
         <p className="mt-4 font-mono text-[0.68rem] text-ink-muted">
           └─ valid slice, compiled in this tab from corpus{" "}
           {corpusSource ? `${corpusSource.repo}@${corpusSource.commit.slice(0, 7)}` : "(unknown)"}
-          {" · certified (ledger "}
-          {manifestState.kind === "ready" ? manifestState.certified.ledger.ledger_id : "…"}
-          {")"}
+          {" · "}
+          {slice.certification === "certified" &&
+          manifestState.kind === "ready" &&
+          manifestState.certified ? (
+            <span className="text-success">
+              certified (ledger {manifestState.certified.ledger.ledger_id})
+            </span>
+          ) : (
+            "encoded — not certified"
+          )}
           {slice.corrected + slice.admitted > 0
             ? ` (${slice.corrected} attributions corrected, ${slice.admitted} inputs admitted by probe)`
             : ""}{" "}

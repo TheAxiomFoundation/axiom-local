@@ -22,7 +22,7 @@ import type {
   RelationRecord,
   ScalarValue,
 } from "./engine/types";
-import type { CertifiedProvenance } from "./certified";
+import type { CertificationStatus, CertifiedProvenance } from "./certified";
 
 export interface PackageDefault {
   name: string;
@@ -66,8 +66,15 @@ export interface GoldenPackage {
   /** "envelope": engine-stamped artifact; "legacy": pre-envelope, hash-pinned only. */
   provenance?: "envelope" | "legacy";
   /**
-   * Certificate provenance stamped at vendor time. Its ABSENCE is a load
-   * refusal: nothing uncertified is servable (src/lib/certified.ts).
+   * Launch-taxonomy status stamped at vendor time: "certified" when the
+   * full closure is in the ledger, "encoded" otherwise. A claim — the
+   * loader recomputes the truth (packageStatus in src/lib/certified.ts).
+   */
+  certification?: CertificationStatus;
+  /**
+   * Certificate provenance, stamped only when certification was earned.
+   * Under ENFORCED serving its absence is a load refusal; under
+   * permissive it is the difference between the two status labels.
    */
   certified?: CertifiedProvenance;
   source: {

@@ -1,0 +1,328 @@
+{
+  "artifact_format_version": 1,
+  "engine_version": "0.1.0",
+  "program": {
+    "extends": null,
+    "module": {
+      "summary": "Deterministic composition for us/payroll/oasdi-wage-tax at 2026. Outputs: oasdi_wage_tax. Corpus: unversioned corpus."
+    },
+    "units": [
+      {
+        "name": "GBP",
+        "kind": "currency",
+        "minor_units": 2
+      },
+      {
+        "name": "USD",
+        "kind": "currency",
+        "minor_units": 2
+      },
+      {
+        "name": "EUR",
+        "kind": "currency",
+        "minor_units": 2
+      },
+      {
+        "name": "count",
+        "kind": "count"
+      },
+      {
+        "name": "person",
+        "kind": "count"
+      },
+      {
+        "name": "ratio",
+        "kind": "ratio"
+      },
+      {
+        "name": "status",
+        "kind": "custom",
+        "label": "judgment"
+      }
+    ],
+    "relations": [],
+    "parameters": [
+      {
+        "id": "us:statutes/26/3101/a#oasdi_wage_tax_rate",
+        "name": "oasdi_wage_tax_rate",
+        "unit": null,
+        "indexed_by": null,
+        "versions": [
+          {
+            "effective_from": "1990-01-01",
+            "values": {
+              "0": {
+                "kind": "decimal",
+                "value": "0.062"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "derived": [
+      {
+        "id": "us:statutes/26/3101/a#oasdi_wage_tax",
+        "name": "oasdi_wage_tax",
+        "entity": "Person",
+        "dtype": "decimal",
+        "unit": "USD",
+        "period": "Year",
+        "source": "26 USC 3101(a)",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "mul",
+          "left": {
+            "kind": "parameter_lookup",
+            "parameter": "oasdi_wage_tax_rate",
+            "index": {
+              "kind": "literal",
+              "value": {
+                "kind": "integer",
+                "value": 0
+              }
+            }
+          },
+          "right": {
+            "kind": "input",
+            "name": "wages"
+          }
+        }
+      },
+      {
+        "id": "us:statutes/26/3121/a/1#successor_employer_base_continuity_applies",
+        "name": "successor_employer_base_continuity_applies",
+        "entity": "Payment",
+        "dtype": "judgment",
+        "unit": null,
+        "period": "Year",
+        "source": "26 USC 3121(a)(1), second sentence",
+        "source_url": null,
+        "semantics": "judgment",
+        "expr": {
+          "kind": "and",
+          "items": [
+            {
+              "kind": "and",
+              "items": [
+                {
+                  "kind": "or",
+                  "items": [
+                    {
+                      "kind": "comparison",
+                      "left": {
+                        "kind": "input",
+                        "name": "successor_employer_acquired_substantially_all_trade_or_business_property_from_predecessor_during_calendar_year"
+                      },
+                      "op": "eq",
+                      "right": {
+                        "kind": "literal",
+                        "value": {
+                          "kind": "bool",
+                          "value": true
+                        }
+                      }
+                    },
+                    {
+                      "kind": "comparison",
+                      "left": {
+                        "kind": "input",
+                        "name": "successor_employer_acquired_substantially_all_property_used_in_separate_unit_of_predecessor_trade_or_business_during_calendar_year"
+                      },
+                      "op": "eq",
+                      "right": {
+                        "kind": "literal",
+                        "value": {
+                          "kind": "bool",
+                          "value": true
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "kind": "comparison",
+                  "left": {
+                    "kind": "input",
+                    "name": "individual_employed_by_successor_immediately_after_acquisition"
+                  },
+                  "op": "eq",
+                  "right": {
+                    "kind": "literal",
+                    "value": {
+                      "kind": "bool",
+                      "value": true
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "comparison",
+              "left": {
+                "kind": "input",
+                "name": "individual_employed_by_predecessor_immediately_before_acquisition"
+              },
+              "op": "eq",
+              "right": {
+                "kind": "literal",
+                "value": {
+                  "kind": "bool",
+                  "value": true
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "us:statutes/26/3121/a/1#predecessor_remuneration_counted_for_successor_base",
+        "name": "predecessor_remuneration_counted_for_successor_base",
+        "entity": "Payment",
+        "dtype": "decimal",
+        "unit": "USD",
+        "period": "Year",
+        "source": "26 USC 3121(a)(1), second sentence",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "if",
+          "condition": {
+            "kind": "derived",
+            "name": "successor_employer_base_continuity_applies"
+          },
+          "then_expr": {
+            "kind": "input",
+            "name": "predecessor_remuneration_other_than_succeeding_paragraphs_paid_or_considered_paid_to_individual_before_acquisition_during_calendar_year"
+          },
+          "else_expr": {
+            "kind": "literal",
+            "value": {
+              "kind": "decimal",
+              "value": "0"
+            }
+          }
+        }
+      },
+      {
+        "id": "us:statutes/26/3121/a/1#remuneration_counted_toward_oasdi_base_before_payment",
+        "name": "remuneration_counted_toward_oasdi_base_before_payment",
+        "entity": "Payment",
+        "dtype": "decimal",
+        "unit": "USD",
+        "period": "Year",
+        "source": "26 USC 3121(a)(1)",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "add",
+          "items": [
+            {
+              "kind": "input",
+              "name": "remuneration_other_than_succeeding_paragraphs_paid_to_individual_by_employer_during_calendar_year_before_payment"
+            },
+            {
+              "kind": "derived",
+              "name": "predecessor_remuneration_counted_for_successor_base"
+            }
+          ]
+        }
+      },
+      {
+        "id": "us:statutes/26/3121/a/1#remaining_oasdi_contribution_and_benefit_base_before_payment",
+        "name": "remaining_oasdi_contribution_and_benefit_base_before_payment",
+        "entity": "Payment",
+        "dtype": "decimal",
+        "unit": "USD",
+        "period": "Year",
+        "source": "26 USC 3121(a)(1)",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "max",
+          "items": [
+            {
+              "kind": "literal",
+              "value": {
+                "kind": "decimal",
+                "value": "0"
+              }
+            },
+            {
+              "kind": "sub",
+              "left": {
+                "kind": "input",
+                "name": "contribution_and_benefit_base_under_section_230_of_social_security_act"
+              },
+              "right": {
+                "kind": "derived",
+                "name": "remuneration_counted_toward_oasdi_base_before_payment"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "us:statutes/26/3121/a/1#oasdi_wage_base_excess_excluded_remuneration",
+        "name": "oasdi_wage_base_excess_excluded_remuneration",
+        "entity": "Payment",
+        "dtype": "decimal",
+        "unit": "USD",
+        "period": "Year",
+        "source": "26 USC 3121(a)(1), first sentence",
+        "source_url": null,
+        "semantics": "scalar",
+        "expr": {
+          "kind": "max",
+          "items": [
+            {
+              "kind": "literal",
+              "value": {
+                "kind": "decimal",
+                "value": "0"
+              }
+            },
+            {
+              "kind": "sub",
+              "left": {
+                "kind": "input",
+                "name": "remuneration_paid_to_individual_by_employer_with_respect_to_employment"
+              },
+              "right": {
+                "kind": "derived",
+                "name": "remaining_oasdi_contribution_and_benefit_base_before_payment"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "evaluation_order": [
+      "oasdi_wage_tax",
+      "successor_employer_base_continuity_applies",
+      "predecessor_remuneration_counted_for_successor_base",
+      "remuneration_counted_toward_oasdi_base_before_payment",
+      "remaining_oasdi_contribution_and_benefit_base_before_payment",
+      "oasdi_wage_base_excess_excluded_remuneration"
+    ],
+    "fast_path": {
+      "strategy": "generic_bulk",
+      "compatible": true,
+      "blockers": []
+    },
+    "provenance": {
+      "corpus": {
+        "repo": "rulespec-us",
+        "sha": "dfd646bf8363bc67a01c6c9c792db7d5d8ebd1a9",
+        "dirty": false
+      },
+      "spec_path": "programs/us/payroll/oasdi-wage-tax/fy-2026.yaml",
+      "spec_sha256": "0031f1081a4ffbe121e4c4d405a20c9abe5d50d8e9be6717e0d02ca85ad117df",
+      "composer_version": "0.1.0",
+      "engine_version": "0.1.0"
+    }
+  }
+}

@@ -1,18 +1,29 @@
 /**
- * The certified-node serving gate: only nodes with a durable legal id that a
- * verifier-issued certification ledger vouches for are ever served — not
- * their content, not their formulas, not even their legal ids. There is no
- * bypass flag and no grace period; a missing or invalid ledger serves
- * NOTHING (axiom-api docs/certified-serving.md).
+ * Certified-node serving: certification is a STATUS on every served node,
+ * and — under enforcement — a gate (axiom-api docs/certified-serving.md,
+ * "The launch taxonomy" / "Enforcement modes").
+ *
+ * Two postures, selected by AXIOM_CERTIFIED_ENFORCEMENT (default
+ * `permissive`, the launch posture):
+ *
+ * - `permissive` — everything serves exactly as if the gate did not
+ *   exist, while the certification machinery keeps running underneath:
+ *   certificates stamp onto whatever IS certified, and every surface
+ *   labels what it shows — "certified (ledger …)" or "encoded — not
+ *   certified". Almost nothing is certified yet; publishing that
+ *   honestly is the point.
+ * - `enforced` — the hard cut: only nodes the ledger vouches for are
+ *   servable — not their content, not their formulas, not even their
+ *   legal ids. No bypass flag inside this mode, no grace period; a
+ *   missing or invalid ledger serves NOTHING.
  *
  * The ledger (`axiom-certified-ledger/1`) is a committed artifact, synced
  * from axiom-api: data/certified-nodes.json is the vendor-time source, and
  * scripts/build-corpus.mjs copies it to public/corpus/ledger.json — the one
  * spelling every serving surface (Runner, CorpusExplorer, determine.mjs)
  * checks against. Programs vendored by scripts/build-packages.mjs carry a
- * `certified` provenance stamp bound to the ledger identity; a package
- * whose stamp is missing or does not match the served ledger refuses to
- * load.
+ * `certification` status, plus a `certified` provenance stamp bound to the
+ * ledger identity when (and only when) their full closure certifies.
  *
  * Two contexts, two disclosure rules: build tooling and the corpus
  * explorer are dev surfaces and MAY name uncertified ids in refusals (you
@@ -23,6 +34,30 @@
 import type { CompiledProgramArtifact } from "./engine/types";
 
 export const LEDGER_FORMAT = "axiom-certified-ledger/1";
+
+export type CertifiedEnforcement = "permissive" | "enforced";
+
+/**
+ * The serving posture. Permissive is the default and the launch posture;
+ * a typo is neither — better to die loudly than to enforce (or not
+ * enforce) by accident.
+ */
+export function resolveEnforcement(raw: string | undefined | null): CertifiedEnforcement {
+  if (raw === "permissive" || raw === "enforced") return raw;
+  if (raw !== undefined && raw !== null && raw !== "") {
+    throw new Error(`unknown enforcement mode "${raw}" (expected permissive|enforced)`);
+  }
+  return "permissive";
+}
+
+/**
+ * The launch taxonomy, as far as this repo can see it: `certified` means
+ * the package's full node closure is in the ledger; `encoded` means it is
+ * served from a compiled graph without (complete) certification. The
+ * `validated`/`pending` tiers live on axiom-api's status artifacts and
+ * have no local source of truth yet.
+ */
+export type CertificationStatus = "certified" | "encoded";
 
 export interface CertifiedEntry {
   legal_id: string;
@@ -179,9 +214,34 @@ export function certifiedStamp(
 }
 
 /**
- * The load-time gate on a vendored package: its stamp must exist, be
- * well-formed, and match the SERVED ledger's identity exactly. Serving
- * surface — refusal reasons never name node ids.
+ * The load-time STATUS of a package against the served ledger — the
+ * permissive-mode counterpart of assertPackageCertified. The vendored
+ * `certification` field is a claim; this recomputes the truth: certified
+ * iff the stamp exists, matches the served ledger identity, and the
+ * artifact's closure has no uncertified node. Anything less — including
+ * no ledger at all — is "encoded", never an error.
+ */
+export function packageStatus(
+  pkg: { program_id?: string; certified?: CertifiedProvenance },
+  artifact: CompiledProgramArtifact,
+  inputRefs: Iterable<string>,
+  index: CertifiedIndex | null,
+): CertificationStatus {
+  if (!index || !pkg.certified) return "encoded";
+  try {
+    assertPackageCertified(pkg, index);
+  } catch {
+    return "encoded";
+  }
+  return findUncertified(collectClosureIds(artifact, inputRefs), index).length === 0
+    ? "certified"
+    : "encoded";
+}
+
+/**
+ * The load-time gate on a vendored package (ENFORCED mode): its stamp
+ * must exist, be well-formed, and match the SERVED ledger's identity
+ * exactly. Serving surface — refusal reasons never name node ids.
  */
 export function assertPackageCertified(
   pkg: { program_id?: string; certified?: CertifiedProvenance },

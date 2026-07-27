@@ -1,0 +1,98 @@
+{
+ "program_id": "az-snap",
+ "jurisdiction": "us-az",
+ "title": "Arizona SNAP",
+ "provenance": "legacy",
+ "source": {
+  "repo": "TheAxiomFoundation/axiom-api",
+  "artifact_path": "data/runtime-artifacts/us-az-snap.compiled.json",
+  "artifact_sha256": "d1c68083dad263de8a1309fc3b3c9c95f22896d03443033c244e1de9e47dd6a8",
+  "engine_version": null,
+  "artifact_format_version": null
+ },
+ "query": {
+  "entity_id": "household:1"
+ },
+ "entities": [
+  {
+   "entity": "Household",
+   "id_template": "household:1",
+   "count": 1
+  }
+ ],
+ "headline": [],
+ "outputs": {
+  "snap_benefit_amount": "snap_benefit",
+  "snap_net_income": "us-az:policies/des/faa5/na-eligibility-and-benefit-determination/fy-2026-benefit-calculation#snap_net_income",
+  "snap_gross_monthly_income": "us-az:policies/des/faa5/na-eligibility-and-benefit-determination/fy-2026-benefit-calculation#snap_gross_monthly_income",
+  "snap_eligible": "us-az:policies/des/faa5/na-eligibility-and-benefit-determination/fy-2026-benefit-calculation#snap_eligible"
+ },
+ "default_period": "2026-01",
+ "example": {
+  "household": {},
+  "people": {}
+ },
+ "defaults": {
+  "axiom:us-az-snap-fy-2026#input.budgetary_unit_participant_count": {
+   "name": "budgetary_unit_participant_count",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 1
+  },
+  "axiom:us-az-snap-fy-2026#input.initial_month_proration_applies": {
+   "name": "initial_month_proration_applies",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": false
+  },
+  "axiom:us-az-snap-fy-2026#input.minimum_na_allotment": {
+   "name": "minimum_na_allotment",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 24
+  },
+  "axiom:us-az-snap-fy-2026#input.na_budgetary_unit_is_eligible": {
+   "name": "na_budgetary_unit_is_eligible",
+   "entity": "Household",
+   "dtype": "bool",
+   "value": true
+  },
+  "axiom:us-az-snap-fy-2026#input.na_net_income": {
+   "name": "na_net_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-az-snap-fy-2026#input.prorated_initial_month_na_benefit": {
+   "name": "prorated_initial_month_na_benefit",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-az-snap-fy-2026#input.snap_excess_shelter_deduction_for_net_income": {
+   "name": "snap_excess_shelter_deduction_for_net_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-az-snap-fy-2026#input.snap_gross_monthly_earned_income": {
+   "name": "snap_gross_monthly_earned_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-az-snap-fy-2026#input.snap_total_monthly_unearned_income": {
+   "name": "snap_total_monthly_unearned_income",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 0
+  },
+  "axiom:us-az-snap-fy-2026#input.thrifty_food_plan_amount_for_budgetary_unit_size": {
+   "name": "thrifty_food_plan_amount_for_budgetary_unit_size",
+   "entity": "Household",
+   "dtype": "decimal",
+   "value": 292
+  }
+ },
+ "certification": "encoded"
+}

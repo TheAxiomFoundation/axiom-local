@@ -3,7 +3,7 @@
  * covers everything discovery can see, the example case executes cleanly
  * through the page's own request path, and every declared output answers.
  * Program-specific values are pinned only where a reference suite pins them
- * (co-snap, in goldenPath.test.ts).
+ * (ny-snap, in goldenPath.test.ts).
  */
 
 import { createRequire } from "node:module";
@@ -25,6 +25,7 @@ const index = JSON.parse(readFileSync(join(programsDir, "index.json"), "utf8")) 
     id: string;
     title: string;
     provenance: "envelope" | "legacy";
+    certification: "certified" | "encoded";
     certified?: { ledger_id: string; certified_set_version: string };
   }[];
 };
@@ -32,18 +33,25 @@ const lock = JSON.parse(readFileSync(join(__dirname, "..", "corpus.lock.json"), 
   ledger: { ledger_id: string; certified_set_version: string };
 };
 
-it("the registry serves at least one certified program", () => {
-  // Under the certified gate the catalog is exactly what the ledger
-  // covers — currently the NY SNAP direct-compile closure. An empty
-  // registry would be a valid (honest) state, but this repo ships a
-  // ledger that certifies it, so an empty registry here means the vendor
-  // pipeline regressed.
-  expect(index.programs.length).toBeGreaterThanOrEqual(1);
+it("the registry publishes the full catalog — certified AND encoded", () => {
+  // Certification is a status, not a gate (the launch posture): the
+  // registry carries the flagship certified program plus everything else
+  // that compiles, labeled "encoded". A single-program registry here means
+  // the permissive vendor pipeline regressed to the hard cut.
+  expect(index.programs.length).toBeGreaterThan(1);
+  expect(index.programs.some((entry) => entry.certification === "certified")).toBe(true);
+  expect(index.programs.some((entry) => entry.certification === "encoded")).toBe(true);
 });
 
-it("every registry entry carries the vendored ledger's identity", () => {
+it("every entry wears a status; only certified ones carry ledger identity", () => {
   for (const entry of index.programs) {
-    expect(entry.certified, entry.id).toEqual(lock.ledger);
+    expect(["certified", "encoded"], entry.id).toContain(entry.certification);
+    if (entry.certification === "certified") {
+      expect(entry.certified, entry.id).toEqual(lock.ledger);
+    } else {
+      // An encoded entry must not wear certified identity it did not earn.
+      expect(entry.certified, entry.id).toBeUndefined();
+    }
   }
 });
 
@@ -74,7 +82,11 @@ for (const entry of index.programs) {
       }
     });
 
-    it("carries certificate provenance matching its registry entry", () => {
+    it("carries the certification status and provenance its registry entry claims", () => {
+      expect(pkg.certification).toBe(entry.certification);
+      // Certified: descriptor stamp matches the registry identity.
+      // Encoded: no stamp — a certificate that was not earned must not
+      // appear anywhere.
       expect(pkg.certified?.ledger_id).toBe(entry.certified?.ledger_id);
       expect(pkg.certified?.certified_set_version).toBe(entry.certified?.certified_set_version);
     });

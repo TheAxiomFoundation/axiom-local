@@ -2,22 +2,27 @@
  * Vendors runtime packages into public/programs/ — one directory per
  * program, plus an index.json manifest the page and CLI read.
  *
- * Every candidate passes the CERTIFIED-NODE GATE before anything is
- * written: the artifact's full node closure (derived rules, parameters,
- * relations, and the input refs the descriptor addresses the dataset
- * with) must be certified by the vendored ledger, or the program is
- * refused and dropped from the registry — uncertified law is not
- * servable, so it is not vendorable either. Admitted packages carry a
- * `certified` provenance stamp the runtime loader re-checks against
- * public/corpus/ledger.json. Build stderr may name uncertified ids;
- * serving surfaces never do.
+ * Certification is a STATUS on every vendored program, and — under
+ * `--enforcement enforced` — a gate:
  *
- * For each admitted program this emits:
+ * - `permissive` (default, the launch posture): EVERY program that
+ *   compiles/exists vendors, stamped `certification: "certified"` (with
+ *   full `certified` provenance) only where the artifact's node closure —
+ *   derived rules, parameters, relations, and the input refs the
+ *   descriptor addresses the dataset with — is fully in the ledger;
+ *   everything else vendors as `certification: "encoded"`, labeled, never
+ *   dropped.
+ * - `enforced`: the hard cut — a program whose closure is not fully
+ *   certified is refused and dropped from the registry; uncertified law
+ *   is not servable, so it is not vendorable either. Build stderr may
+ *   name uncertified ids; serving surfaces never do.
+ *
+ * For each vendored program this emits:
  *   public/programs/<id>/artifact.json   — the artifact, byte-identical
  *   public/programs/<id>/package.json    — descriptor: per-input screening
  *     defaults keyed by durable ref, entity/relation plan, headline
  *     questions, example household, optional what-if, output ids, sha-256,
- *     certified provenance.
+ *     certification status (+ certified provenance when earned).
  *
  * The pipeline per program:
  *   1. discover inputs with the page's own discovery (src/lib/program.ts)
@@ -25,15 +30,16 @@
  *      text inputs also collect their enum options), else legacy registry
  *      dtype (dates), else discovery flavor
  *   3. entity attribution corrected by engine probes to a fixpoint
- *   4. the certified-node gate, then a final clean execution with the
- *      example answers, asserted here
+ *   4. the certification status/gate, then a final clean execution with
+ *      the example answers, asserted here
  *
- * Usage: bun scripts/build-packages.mjs [--ledger <path>] [<axiom-api-checkout>]
+ * Usage: bun scripts/build-packages.mjs [--ledger <path>]
+ *          [--enforcement permissive|enforced] [<axiom-api-checkout>]
  *
- * --ledger defaults to data/certified-nodes.json (the synced ledger copy).
- * Without an axiom-api checkout only the corpus-direct programs are
- * evaluated — the api-sourced candidates cannot even be read, which under
- * fail-closed rules means they do not vendor.
+ * --ledger defaults to data/certified-nodes.json (the synced ledger copy);
+ * --enforcement defaults to $AXIOM_CERTIFIED_ENFORCEMENT, else permissive.
+ * Without an axiom-api checkout the api-sourced candidates cannot even be
+ * read and do not vendor in either mode.
  */
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -46,6 +52,9 @@ import { moduleUrl, probeFixpoint, resolveClosure, synthesizePackage } from "../
 import {
   assertArtifactCertified,
   certifiedStamp,
+  collectClosureIds,
+  findUncertified,
+  resolveEnforcement,
   validateLedger,
 } from "../src/lib/certified.ts";
 
@@ -56,6 +65,7 @@ const requireCjs = createRequire(import.meta.url);
 const engine = requireCjs("../engine/pkg-node/axiom_rules_engine_wasm.js");
 
 let ledgerPath = join(here, "..", "data", "certified-nodes.json");
+let enforcementRaw = process.env.AXIOM_CERTIFIED_ENFORCEMENT;
 let apiCheckout = null;
 {
   const args = process.argv.slice(2);
@@ -63,38 +73,76 @@ let apiCheckout = null;
     if (args[i] === "--ledger") {
       ledgerPath = args[i + 1];
       i += 1;
+    } else if (args[i] === "--enforcement") {
+      enforcementRaw = args[i + 1];
+      i += 1;
     } else {
       apiCheckout = args[i];
     }
   }
 }
+const enforcement = resolveEnforcement(enforcementRaw);
 
-// The gate's authority: a ledger that does not validate wholesale vendors
-// nothing (validateLedger throws and the build dies before touching disk).
-const certified = await validateLedger(JSON.parse(readFileSync(ledgerPath, "utf8")));
-console.log(
-  `ledger ${certified.ledger.ledger_id}: ${certified.ledger.entries.length} certified nodes, ` +
-    `set ${certified.setVersion}${certified.ledger.fixture ? " (FIXTURE)" : ""}`,
-);
-
-/**
- * The gate, applied to a finished descriptor: the closure is the artifact's
- * nodes plus the dataset refs in pkg.defaults (that is how the artifact
- * addresses its inputs — prefix or per-slot legal ids alike, they all end
- * up as defaults keys). Throws naming the uncertified ids; the caller
- * routes that to stderr and drops the program.
- */
-function gateAndStamp(pkg, artifact) {
-  assertArtifactCertified(artifact, Object.keys(pkg.defaults), certified);
-  pkg.certified = certifiedStamp(certified, pkg.outputs);
+// The status authority. Enforced: a ledger that does not validate vendors
+// nothing (the build dies before touching disk). Permissive: the ledger is
+// metadata — fail soft, vendor everything as "encoded".
+let certified = null;
+try {
+  certified = await validateLedger(JSON.parse(readFileSync(ledgerPath, "utf8")));
+  console.log(
+    `ledger ${certified.ledger.ledger_id}: ${certified.ledger.entries.length} certified nodes, ` +
+      `set ${certified.setVersion}${certified.ledger.fixture ? " (FIXTURE)" : ""} — ` +
+      `enforcement ${enforcement}`,
+  );
+} catch (error) {
+  if (enforcement === "enforced") throw error;
+  console.error(
+    `ledger unavailable (${error instanceof Error ? error.message : error}) — ` +
+      "permissive: vendoring with nothing certified",
+  );
 }
 
-/** The registry entry's certified identity — what index.json carries. */
-function certifiedIndexEntry() {
-  return {
-    ledger_id: certified.ledger.ledger_id,
-    certified_set_version: certified.setVersion,
-  };
+/**
+ * The status/gate, applied to a finished descriptor: the closure is the
+ * artifact's nodes plus the dataset refs in pkg.defaults (that is how the
+ * artifact addresses its inputs — prefix or per-slot legal ids alike, they
+ * all end up as defaults keys). Fully certified → stamp status + full
+ * provenance. Anything less: enforced throws naming the uncertified ids
+ * (the caller routes that to stderr and drops the program); permissive
+ * labels the package "encoded" and vendors it anyway.
+ */
+function certify(pkg, artifact) {
+  const missing = certified
+    ? findUncertified(collectClosureIds(artifact, Object.keys(pkg.defaults)), certified)
+    : null;
+  if (certified && missing.length === 0) {
+    pkg.certification = "certified";
+    pkg.certified = certifiedStamp(certified, pkg.outputs);
+    return "certified";
+  }
+  if (enforcement === "enforced") {
+    // Enforced guarantees a validated ledger (see the load above); throw
+    // through the shared gate so the refusal names the ids exactly as the
+    // enforced tests pin it.
+    assertArtifactCertified(artifact, Object.keys(pkg.defaults), certified);
+    throw new Error("unreachable: enforced gate passed after status said otherwise");
+  }
+  pkg.certification = "encoded";
+  return "encoded";
+}
+
+/** The registry entry's certification block — what index.json carries. */
+function certificationIndexEntry(pkg) {
+  if (pkg.certification === "certified" && certified) {
+    return {
+      certification: "certified",
+      certified: {
+        ledger_id: certified.ledger.ledger_id,
+        certified_set_version: certified.setVersion,
+      },
+    };
+  }
+  return { certification: "encoded" };
 }
 
 /**
@@ -477,8 +525,10 @@ function buildDirectProgram(config) {
     pkg.outputs[name] = rule.id;
   }
 
-  // The gate — before anything executes as "the program" or reaches disk.
-  gateAndStamp(pkg, artifact);
+  // The status/gate — before anything executes as "the program" or
+  // reaches disk.
+  const status = certify(pkg, artifact);
+  console.log(`   certification: ${status}`);
 
   // Final assertion: example executes clean; pins hold when configured.
   const answers = { ...config.example, refOverrides: {} };
@@ -504,7 +554,7 @@ function buildDirectProgram(config) {
     title: config.title,
     jurisdiction: config.jurisdiction,
     provenance: "envelope",
-    certified: certifiedIndexEntry(),
+    ...certificationIndexEntry(pkg),
     inputs: Object.keys(pkg.defaults).length,
     rules: artifact.program.derived.length,
     parameters: artifact.program.parameters.length,
@@ -741,8 +791,8 @@ function buildProgram(config) {
     }
   }
 
-  // The gate — nothing uncertified reaches disk or the registry.
-  gateAndStamp(pkg, artifact);
+  // The status/gate — enforced drops uncertified programs here.
+  console.log(`   certification: ${certify(pkg, artifact)}`);
 
   const dir = join(outRoot, config.id);
   mkdirSync(dir, { recursive: true });
@@ -752,7 +802,7 @@ function buildProgram(config) {
     id: config.id,
     title: config.title,
     jurisdiction: config.jurisdiction,
-    certified: certifiedIndexEntry(),
+    ...certificationIndexEntry(pkg),
     inputs: discovered.length,
     rules: artifact.program.derived.length,
     parameters: artifact.program.parameters.length,
@@ -885,10 +935,11 @@ function buildLegacyProgram(config) {
   }
   if (admitted) console.log(`   ${admitted} inputs admitted by probe`);
 
-  // The gate — legacy artifacts address inputs under a synthetic `axiom:`
-  // prefix, which no ledger can certify; they fail here by construction
-  // until re-cut with durable input ids upstream.
-  gateAndStamp(pkg, artifact);
+  // The status/gate — legacy artifacts address inputs under a synthetic
+  // `axiom:` prefix, which no ledger can certify: "encoded" by
+  // construction under permissive, refused under enforced, until re-cut
+  // with durable input ids upstream.
+  console.log(`   certification: ${certify(pkg, artifact)}`);
 
   const dir = join(outRoot, config.id);
   mkdirSync(dir, { recursive: true });
@@ -899,7 +950,7 @@ function buildLegacyProgram(config) {
     title: config.title,
     jurisdiction: entry.jurisdiction,
     provenance: "legacy",
-    certified: certifiedIndexEntry(),
+    ...certificationIndexEntry(pkg),
     inputs: Object.keys(pkg.defaults).length,
     rules: artifact.program.derived.length,
     parameters: artifact.program.parameters.length,
@@ -946,7 +997,12 @@ if (!apiCheckout) {
   }
 }
 writeFileSync(join(outRoot, "index.json"), JSON.stringify({ programs: index }, null, 1));
+const counts = index.reduce((acc, entry) => {
+  acc[entry.certification] = (acc[entry.certification] ?? 0) + 1;
+  return acc;
+}, {});
 console.log(
-  `\nwrote ${outRoot}/index.json with ${index.length} program(s) under ledger ` +
-    `${certified.ledger.ledger_id}`,
+  `\nwrote ${outRoot}/index.json with ${index.length} program(s) ` +
+    `(${counts.certified ?? 0} certified, ${counts.encoded ?? 0} encoded) — ` +
+    `enforcement ${enforcement}, ledger ${certified ? certified.ledger.ledger_id : "(none)"}`,
 );

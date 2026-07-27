@@ -43,11 +43,12 @@ derived rules, 65 statutory parameters, 143 inputs — composed from:
 Provenance travels with it: the descriptor pins the artifact's sha-256, the
 corpus commit, the compiling engine version, and the artifact format version
 — and its **certificate provenance**: the ledger id, the certified-set
-version, and one verifier certificate per output. Only certified nodes are
-ever served (`data/certified-nodes.json`, served as
-`public/corpus/ledger.json`); a program whose closure the ledger does not
-fully certify is refused at vendor time and again at load. No flag, no
-grace period.
+version, and one verifier certificate per output. Certification is a status
+every program wears (`data/certified-nodes.json`, served as
+`public/corpus/ledger.json`): NY SNAP is the one program whose full closure
+the ledger certifies today; everything else serves labeled "encoded — not
+certified". Under `AXIOM_CERTIFIED_ENFORCEMENT=enforced` the status becomes
+the gate — uncertified programs refuse to vendor and to load.
 
 ## Screening presumptions
 

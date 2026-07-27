@@ -1,13 +1,15 @@
 /**
  * Corpus slicing, end to end against the vendored nodejs wasm build:
- * resolve a closure from the generated manifest, compile it, gate it
+ * resolve a closure from the generated manifest, compile it, check it
  * against the certification ledger, synthesize a descriptor, probe to a
  * fixpoint, execute. Skipped when public/corpus/ has not been generated
  * (it is gitignored; CI runs without it).
  *
- * The gate cuts both ways and both are asserted here: the certified root
- * slices and runs; roots whose closure carries ANY uncertified node
- * refuse, naming the ids (dev-tooling context).
+ * Both postures are asserted here: under PERMISSIVE (the default) every
+ * root slices and runs, wearing its certification status; under ENFORCED
+ * (assertArtifactCertified — pinned explicitly, so the gate cannot rot
+ * while it waits behind the launch switch) a root whose closure carries
+ * ANY uncertified node refuses, naming the ids (dev-tooling context).
  */
 import { createRequire } from "node:module";
 import { existsSync, readFileSync } from "node:fs";
@@ -16,6 +18,8 @@ import { describe, expect, it } from "vitest";
 import type { CompiledProgramArtifact } from "../src/lib/engine/types";
 import {
   assertArtifactCertified,
+  collectClosureIds,
+  findUncertified,
   validateLedger,
   type CertifiedIndex,
 } from "../src/lib/certified";
@@ -109,7 +113,7 @@ describe.skipIf(!haveCorpus)("corpus slicing under the certified gate", async ()
   });
 
   for (const root of UNCERTIFIED_ROOTS) {
-    it(`refuses the uncertified root ${root}, naming the ids`, () => {
+    it(`ENFORCED: refuses the uncertified root ${root}, naming the ids`, () => {
       const { artifactJson, artifact } = compileAt(root);
       const { pkg } = synthesizePackage(artifact, root, manifest.sources[0].commit);
       expect(artifactJson.length).toBeGreaterThan(0);
@@ -125,6 +129,31 @@ describe.skipIf(!haveCorpus)("corpus slicing under the certified gate", async ()
       }
     });
   }
+
+  it("PERMISSIVE: an uncertified root slices, runs, and wears the encoded label", () => {
+    // The explorer's default path: no refusal — compile, probe, execute,
+    // and compute the status the provenance line shows.
+    const root = UNCERTIFIED_ROOTS[0];
+    const { artifactJson, artifact } = compileAt(root);
+    const { pkg } = synthesizePackage(artifact, root, manifest.sources[0].commit);
+    probeFixpoint(engine, artifactJson, artifact, pkg);
+    const certification =
+      findUncertified(collectClosureIds(artifact, Object.keys(pkg.defaults)), certified)
+        .length === 0
+        ? "certified"
+        : "encoded";
+    expect(certification).toBe("encoded");
+
+    const request = buildPackageRequest({
+      pkg,
+      answers: { household: {}, people: {}, refOverrides: {} },
+    });
+    const response = JSON.parse(engine.execute(artifactJson, JSON.stringify(request)));
+    const outputs = response.results[0].outputs;
+    for (const id of Object.values(pkg.outputs)) {
+      expect(outputs[id], `output ${id} present`).toBeDefined();
+    }
+  });
 
   /**
    * The whole thesis in one test: a slice compiled from corpus source,

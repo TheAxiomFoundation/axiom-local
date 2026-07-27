@@ -35,26 +35,32 @@ the id it came from.
 
 The page ships **composed compiled artifacts** — the same versioned release
 units the hosted engine executes, provenance and sha-256 shown on the page —
-and serves ONLY what the **certification ledger** vouches for. Every node a
-program can surface (rules, parameters, relations, inputs) must carry a
-verifier-issued certificate in the vendored ledger
+and every program wears its **certification status**. Certification is a
+status, not a gate (the launch posture, matching axiom-api): *certified*
+means the program's full node closure — rules, parameters, relations,
+inputs — carries verifier-issued certificates in the vendored ledger
 (`data/certified-nodes.json`, served as `public/corpus/ledger.json`);
-`scripts/build-packages.mjs` refuses to vendor anything less, and the
-runtime loader re-checks the stamp on every load. There is no bypass flag.
-The current ledger certifies the New York SNAP direct-compile closure:
+*encoded* means it is served from a compiled graph without that backing —
+published, labeled, and on the certification queue. Almost nothing is
+certified yet; publishing that honestly is the point. Set
+`AXIOM_CERTIFIED_ENFORCEMENT=enforced` for the hard cut, where uncertified
+programs refuse to vendor and to load.
 
-| Program | Rules | Inputs | Law |
-|---|---|---|---|
-| New York SNAP (the golden path) | 122 | 143 | 7 USC 2011–2036 · 7 CFR 273 · 18 NYCRR 385–387 |
+The flagship is certified end to end under the current (fixture) ledger:
+
+| Program | Status | Rules | Inputs | Law |
+|---|---|---|---|---|
+| New York SNAP (the golden path) | **certified** | 122 | 143 | 7 USC 2011–2036 · 7 CFR 273 · 18 NYCRR 385–387 |
+| 13 more — AL/AZ/CA/NC/SC/TN SNAP, AK/CO/KS/TX TANF, IL SCRETD, US OASDI, UK UC | encoded | — | — | see `--programs` |
 
 The landing page embeds the runner: state the facts, run — for the canonical
-two-person household ($1,200 monthly earned income, $900 shelter costs) it
-computes a **$478 monthly benefit**, matching the value axiom-api's parity
-suite pins for the same facts. Every determination is downloadable as the
-same JSON `scripts/determine.mjs --json` prints, byte for byte.
+two-person household ($1,200 monthly earned income, $900 shelter costs) NY
+SNAP computes a **$478 monthly benefit**, matching the value axiom-api's
+parity suite pins for the same facts. Every determination is downloadable as
+the same JSON `scripts/determine.mjs --json` prints, byte for byte.
 `scripts/build-packages.mjs` admits new artifacts (descriptor generation is
-engine-probed; see the DIRECT_PROGRAMS / PROGRAMS configs) — but only with a
-ledger that certifies their full closure.
+engine-probed; see the DIRECT_PROGRAMS / PROGRAMS configs), stamping
+certificates wherever the ledger covers a full closure.
 
 A handful of headline questions carry the curated determinations; every
 program's remaining inputs take **screening presumptions**, all of them
@@ -67,12 +73,13 @@ walkthrough.
 Beyond the catalog, the landing page carries the **corpus explorer**: search every
 encoded rule across the served RuleSpec corpus, slice at any target
 (a statute section, a regulation paragraph), and the import closure is
-fetched, compiled in the tab, and run — no bundle required. The certified
-gate applies here too: a slice whose closure touches any uncertified node
-refuses, naming the missing ids (the explorer is dev tooling — the one
-surface allowed to name them). Slices are valid and cited but not
-parity-pinned; the provenance line says which corpus commit and ledger.
-Generate the corpus locally with
+fetched, compiled in the tab, and run — no bundle required. Slices wear the
+same certification status as the catalog; under
+`AXIOM_CERTIFIED_ENFORCEMENT=enforced` a slice whose closure touches any
+uncertified node refuses, naming the missing ids (the explorer is dev
+tooling — the one surface allowed to name them). Slices are valid and cited
+but not parity-pinned; the provenance line says which corpus commit and
+ledger. Generate the corpus locally with
 `bun scripts/build-corpus.mjs <rulespec-us checkout>`.
 
 The page is deliberately lean: reading and dissecting rule text is the Axiom
@@ -138,7 +145,7 @@ cd axiom-local && bun install
 bun run dev          # http://localhost:3000
 
 # Or the same determination straight from your terminal:
-bun scripts/determine.mjs --programs                        # the certified catalog
+bun scripts/determine.mjs --programs                        # the catalog, with statuses
 bun scripts/determine.mjs                                   # $478, the pinned case
 bun scripts/determine.mjs --set snap_gross_monthly_earned_income=2400   # ineligible
 bun scripts/determine.mjs --people member_age=42,9,70

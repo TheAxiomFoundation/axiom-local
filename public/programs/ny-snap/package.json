@@ -967,6 +967,7 @@
   "value": "0.3",
   "label": "The earned-income deduction rate — 7 USC 2014(e)(2)"
  },
+ "certification": "certified",
  "certified": {
   "ledger_id": "fixture-us-ny-snap",
   "certified_set_version": "38f528641fae55b7d795edd9",

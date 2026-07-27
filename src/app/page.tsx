@@ -40,10 +40,12 @@ export default function Home() {
           Underneath the cataloged programs is the whole encoded corpus: every statute,
           regulation, and manual section is a target you can slice at directly. Search by
           rule name or citation and the import closure is fetched, compiled to an artifact
-          in this tab, and run. Only certified closures serve: a slice touching any node
-          the certification ledger does not vouch for refuses, and says which ids are
-          missing. Slices are valid and cited but not parity-pinned; the provenance line
-          says which corpus commit and ledger they came from.
+          in this tab, and run — Colorado&apos;s ABAWD clock, New York&apos;s work
+          requirements, a single deduction table. Every slice wears its certification
+          status — &quot;certified&quot; when the ledger vouches for its full closure,
+          &quot;encoded — not certified&quot; otherwise. Slices are valid and cited but
+          not parity-pinned; the provenance line says which corpus commit and ledger they
+          came from.
         </p>
         <div className="mt-6">
           <CorpusExplorer />
@@ -77,8 +79,9 @@ export default function Home() {
         </Record>
         <p className="mt-2 font-mono text-[0.68rem] text-ink-muted">
           └─ 122 rules of 7 USC, 7 CFR 273, and 18 NYCRR 385–387, executed locally — $478
-          is pinned by this repo&apos;s tests, and every node served carries a certificate
-          from the vendored ledger
+          is pinned by this repo&apos;s tests. NY SNAP is the flagship: its full closure is
+          certified by the vendored (fixture) ledger; everything else serves labeled
+          &quot;encoded — not certified&quot;
         </p>
 
         <p className="mt-9 max-w-2xl text-[0.95rem] font-light leading-relaxed text-ink-secondary">
@@ -103,7 +106,7 @@ export default function Home() {
             </Cmd>
             <Cmd>
               bun scripts/determine.mjs --programs
-              {dim("                     # the certified catalog")}
+              {dim("                     # the catalog, with statuses")}
             </Cmd>
             <Cmd>
               bun scripts/determine.mjs --json
@@ -146,12 +149,12 @@ export default function Home() {
         <div className="panel overflow-x-auto">
           <table className="w-full font-mono text-[0.72rem]">
             <tbody>
-              {/* The registry is certified-only by construction; an empty
-                  ledger means an honestly empty catalog, not a broken one. */}
+              {/* An empty registry is an honestly empty catalog, not a
+                  broken one. */}
               {index.programs.length === 0 ? (
                 <tr>
                   <td className="px-3 py-2 text-ink-muted">
-                    nothing certified to serve — the vendored ledger certifies no program
+                    nothing vendored — the registry is empty
                   </td>
                 </tr>
               ) : null}
@@ -160,9 +163,12 @@ export default function Home() {
                   <td className="px-3 py-2 text-ink">{program.id}</td>
                   <td className="px-3 py-2 text-ink-muted">{program.jurisdiction}</td>
                   <td className="px-3 py-2 text-ink-muted">
-                    <span className="text-success">
-                      certified · {program.certified.ledger_id}
-                    </span>
+                    {/* Certification is a status every program wears. */}
+                    {program.certification === "certified" ? (
+                      <span className="text-success">certified</span>
+                    ) : (
+                      "encoded"
+                    )}
                   </td>
                   <td className="px-3 py-2 text-right text-ink-secondary">
                     {program.rules} rules · {program.inputs} inputs

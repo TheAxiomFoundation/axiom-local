@@ -1,9 +1,13 @@
 /**
- * The certified-node gate, exercised the way an attacker (or a stale
- * pipeline) would hit it: malformed ledgers refuse wholesale, a program
- * stripped from the ledger neither vendors nor loads, and nothing
- * uncertified — not even a legal id — leaks into the rendered registry or
- * a vendored descriptor.
+ * The certification machinery, in both postures. ENFORCED (pinned
+ * explicitly, so the gate cannot rot behind the launch switch): malformed
+ * ledgers refuse wholesale, a program stripped from the ledger neither
+ * vendors nor loads, and nothing uncertified — not even a legal id —
+ * leaks into the rendered registry or a vendored descriptor. PERMISSIVE
+ * (the default and launch posture): everything vendors and loads wearing
+ * an honest status — "certified" only where the closure fully certifies,
+ * "encoded" everywhere else — and the one-flag flip restores every
+ * refusal.
  *
  * The mutant world is built from two tiny RuleSpec programs compiled by
  * the real engine: one whose closure a mini-ledger fully certifies, one
@@ -23,6 +27,8 @@ import {
   certifiedStamp,
   collectClosureIds,
   findUncertified,
+  packageStatus,
+  resolveEnforcement,
   validateLedger,
   type CertifiedEntry,
 } from "@/lib/certified";
@@ -122,6 +128,27 @@ describe("ledger validation", () => {
 });
 
 // ---------------------------------------------------------------------------
+// Enforcement modes: permissive is the default; a typo is neither
+// ---------------------------------------------------------------------------
+
+describe("enforcement resolution", () => {
+  it("defaults to permissive — the launch posture", () => {
+    expect(resolveEnforcement(undefined)).toBe("permissive");
+    expect(resolveEnforcement(null)).toBe("permissive");
+    expect(resolveEnforcement("")).toBe("permissive");
+  });
+
+  it("accepts exactly the two modes", () => {
+    expect(resolveEnforcement("permissive")).toBe("permissive");
+    expect(resolveEnforcement("enforced")).toBe("enforced");
+  });
+
+  it("dies loudly on a typo rather than enforcing (or not) by accident", () => {
+    expect(() => resolveEnforcement("enfroced")).toThrow(/unknown enforcement mode/);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // The mutant world: one certified program, one the ledger never heard of
 // ---------------------------------------------------------------------------
 
@@ -163,7 +190,7 @@ const worldLedger = () =>
   ledgerOf(entriesFor(collectClosureIds(certifiedWorld.artifact, certifiedWorld.inputRefs)));
 
 describe("mutant: a program stripped from the ledger", () => {
-  it("(a) fails vendoring — the gate refuses, naming the missing ids", async () => {
+  it("(a, ENFORCED) fails vendoring — the gate refuses, naming the missing ids", async () => {
     const index = await worldLedger();
     // The certified program passes the exact gate the vendor script runs…
     assertArtifactCertified(certifiedWorld.artifact, certifiedWorld.inputRefs, index);
@@ -172,6 +199,28 @@ describe("mutant: a program stripped from the ledger", () => {
     expect(() =>
       assertArtifactCertified(uncertifiedWorld.artifact, uncertifiedWorld.inputRefs, index),
     ).toThrow(/uncertified-benefit#uncertified_secret_benefit/);
+  });
+
+  it("(a, PERMISSIVE) vendors anyway, wearing the encoded status — no stamp it did not earn", async () => {
+    const index = await worldLedger();
+    // The vendor script's permissive certify() in miniature: status from
+    // the closure check, full provenance only where it comes back clean.
+    const statusOf = (world: { artifact: CompiledProgramArtifact; inputRefs: string[] }) =>
+      findUncertified(collectClosureIds(world.artifact, world.inputRefs), index).length === 0
+        ? "certified"
+        : "encoded";
+    expect(statusOf(certifiedWorld)).toBe("certified");
+    expect(statusOf(uncertifiedWorld)).toBe("encoded");
+    // And the loader's recomputation agrees: an encoded package with no
+    // stamp is served as encoded, never upgraded.
+    expect(
+      packageStatus(
+        { program_id: "uncertified-example" },
+        uncertifiedWorld.artifact,
+        uncertifiedWorld.inputRefs,
+        index,
+      ),
+    ).toBe("encoded");
   });
 
   it("(b) refuses at load when package certificate provenance is stale or mismatched", async () => {
@@ -211,6 +260,31 @@ describe("mutant: a program stripped from the ledger", () => {
       certified: { ...vendored.certified!, certified_set_version: "f".repeat(24) },
     };
     expect(() => assertPackageCertified(tampered, index)).toThrow(/stale/);
+  });
+
+  it("packageStatus recomputes the truth — stamps are claims, not upgrades", async () => {
+    const index = await worldLedger();
+    const outputs = { benefit: `${EXAMPLE_ROOT_TARGET}#snap_regular_month_allotment` };
+    const stamped = { program_id: "example", certified: certifiedStamp(index, outputs) };
+    expect(
+      packageStatus(stamped, certifiedWorld.artifact, certifiedWorld.inputRefs, index),
+    ).toBe("certified");
+    // A stale stamp downgrades to encoded (permissive never refuses)…
+    const stale = {
+      ...stamped,
+      certified: { ...stamped.certified, certified_set_version: "0".repeat(24) },
+    };
+    expect(packageStatus(stale, certifiedWorld.artifact, certifiedWorld.inputRefs, index)).toBe(
+      "encoded",
+    );
+    // …a valid stamp on an uncertified closure does too (no self-blessing)…
+    expect(
+      packageStatus(stamped, uncertifiedWorld.artifact, uncertifiedWorld.inputRefs, index),
+    ).toBe("encoded");
+    // …and no ledger at all means nothing is certified.
+    expect(
+      packageStatus(stamped, certifiedWorld.artifact, certifiedWorld.inputRefs, null),
+    ).toBe("encoded");
   });
 });
 
@@ -260,10 +334,10 @@ function idTokens(value: unknown, into: Set<string> = new Set()): Set<string> {
 }
 
 describe("leak scan", () => {
-  it("a fixture registry vendored under the gate never mentions the uncertified program", async () => {
+  it("ENFORCED: a fixture registry vendored under the gate never mentions the uncertified program", async () => {
     const index = await worldLedger();
-    // The vendor pipeline in miniature: gate each candidate, stamp and
-    // register the admitted, drop the refused.
+    // The enforced vendor pipeline in miniature: gate each candidate,
+    // stamp and register the admitted, drop the refused.
     const registry: unknown[] = [];
     const descriptors: unknown[] = [];
     for (const [id, world, outputs] of [
@@ -276,7 +350,7 @@ describe("leak scan", () => {
         descriptors.push({ program_id: id, outputs, defaults: world.inputRefs, certified });
         registry.push({ id, certified: { ledger_id: certified.ledger_id } });
       } catch {
-        // dropped — exactly what the vendor script does
+        // dropped — exactly what the enforced vendor script does
       }
     }
     const rendered = JSON.stringify({ programs: registry, descriptors });
@@ -288,28 +362,46 @@ describe("leak scan", () => {
     }
   });
 
-  it("the shipped registry and every vendored descriptor carry only certified ids", async () => {
+  it("PERMISSIVE (shipped): certificates only where earned; certified descriptors carry only certified ids", async () => {
+    // The shipped registry is permissive — encoded programs legitimately
+    // name uncertified (even synthetic) ids, because publishing them IS
+    // the posture. The invariant that must still hold: no certificate
+    // provenance appears anywhere it was not earned, and a
+    // certified-labeled descriptor's every id is in the ledger.
     const index = await validateLedger(
       JSON.parse(readFileSync(join(__dirname, "..", "data", "certified-nodes.json"), "utf8")),
     );
     const programsDir = join(__dirname, "..", "public", "programs");
     const registry = JSON.parse(readFileSync(join(programsDir, "index.json"), "utf8")) as {
-      programs: { id: string }[];
+      programs: { id: string; certification: "certified" | "encoded" }[];
     };
-    const documents: unknown[] = [registry];
+    expect(registry.programs.length).toBeGreaterThan(1);
     for (const entry of registry.programs) {
-      documents.push(
-        JSON.parse(readFileSync(join(programsDir, entry.id, "package.json"), "utf8")),
-      );
-    }
-    for (const document of documents) {
-      const serialized = JSON.stringify(document);
-      expect(serialized).not.toContain("axiom:");
-      for (const token of idTokens(document)) {
-        expect(index.byId.has(token), token).toBe(true);
+      const descriptor = JSON.parse(
+        readFileSync(join(programsDir, entry.id, "package.json"), "utf8"),
+      ) as GoldenPackage;
+      if (entry.certification === "certified") {
+        const serialized = JSON.stringify(descriptor);
+        expect(serialized).not.toContain("axiom:");
+        for (const token of idTokens(descriptor)) {
+          expect(index.byId.has(token), `${entry.id}: ${token}`).toBe(true);
+        }
+        expect(descriptor.certified?.ledger_id).toBe(index.ledger.ledger_id);
+      } else {
+        // Encoded: labeled, and carrying no certificate it did not earn.
+        expect(descriptor.certification).toBe("encoded");
+        expect(descriptor.certified).toBeUndefined();
+        expect(JSON.stringify(descriptor)).not.toContain("fixture-cert-");
       }
     }
-    // And nothing beyond the registry survives on disk to be served.
+    // The registry itself mentions certificates nowhere beyond the earned
+    // identity blocks.
+    for (const entry of registry.programs) {
+      if (entry.certification !== "certified") {
+        expect(JSON.stringify(entry)).not.toContain("ledger_id");
+      }
+    }
+    // And disk matches the registry exactly — nothing unlisted is served.
     const onDisk = readdirSync(programsDir).filter((name) => name !== "index.json");
     expect(onDisk.sort()).toEqual(registry.programs.map((entry) => entry.id).sort());
   });
