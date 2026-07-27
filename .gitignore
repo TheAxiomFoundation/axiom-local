@@ -23,3 +23,4 @@ public/corpus/
 *.tsbuildinfo
 *.log
 scratch/
+.vercel
