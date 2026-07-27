@@ -19,10 +19,10 @@ export function SiteNav({ current }: { current: "start" | "example" | "docs" | "
       className="flex flex-wrap items-center gap-x-5 gap-y-1 font-mono text-[0.75rem] tracking-wide"
       aria-label="Pages"
     >
-      {link("/", "Get started", "start")}
-      {link("/docs/", "References", "docs")}
+      {link("/", "Run", "start")}
+      {link("/run/", "Explore the graph", "run")}
       {link("/example/", "Example", "example")}
-      {link("/run/", "Run", "run")}
+      {link("/docs/", "References", "docs")}
       <a
         href="https://github.com/TheAxiomFoundation/axiom-local"
         target="_blank"

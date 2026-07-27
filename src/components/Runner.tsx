@@ -283,6 +283,13 @@ export function Runner() {
               onChange={(ref, value) =>
                 setRefOverrides((previous) => ({ ...previous, [ref]: value }))
               }
+              onClear={(ref) =>
+                setRefOverrides((previous) => {
+                  const next = { ...previous };
+                  delete next[ref];
+                  return next;
+                })
+              }
             />
           </div>
         ) : null}

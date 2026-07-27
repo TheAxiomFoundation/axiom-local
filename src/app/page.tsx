@@ -32,7 +32,7 @@ export default function Home() {
           style={{ textDecoration: "none" }}
           className="panel mt-6 block p-5 transition-colors hover:border-accent"
         >
-          <p className="smallcaps text-[0.62rem] text-accent">slice the whole graph →</p>
+          <p className="smallcaps text-[0.62rem] text-accent">explore the graph →</p>
           <p className="mt-2 max-w-2xl text-[0.92rem] font-light text-ink-secondary">
             Beyond the cataloged programs: search every encoded rule — Colorado&apos;s ABAWD
             clock, New York&apos;s work requirements — and compile any citation into a

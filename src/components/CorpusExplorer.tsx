@@ -330,6 +330,13 @@ export function CorpusExplorer() {
               onChange={(ref, value) =>
                 setOverrides((previous) => ({ ...previous, [ref]: value }))
               }
+              onClear={(ref) =>
+                setOverrides((previous) => {
+                  const next = { ...previous };
+                  delete next[ref];
+                  return next;
+                })
+              }
             />
           </div>
 
