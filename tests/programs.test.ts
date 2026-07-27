@@ -11,6 +11,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import type { CompiledProgramArtifact, EngineBindings, ExecutionResponse } from "@/lib/engine/types";
+import { collectStructuralDemands } from "@/lib/corpus";
 import { discoverInputs } from "@/lib/program";
 import { buildPackageRequest, type GoldenPackage } from "@/lib/goldenPath";
 import { buildDisplayTree } from "@/lib/trace";
@@ -48,6 +49,17 @@ for (const entry of index.programs) {
       const declared = new Set(Object.keys(pkg.defaults));
       for (const input of discoverInputs(artifact)) {
         expect(declared.has(input.ref), input.ref).toBe(true);
+      }
+    });
+
+    it("no division-denominator input carries a zero presumption", () => {
+      // A zero presumption in a denominator traps the whole program with
+      // "division by zero" the moment a visitor edits a related field.
+      const { denominators } = collectStructuralDemands(artifact);
+      for (const slot of Object.values(pkg.defaults)) {
+        if (!denominators.has(slot.name)) continue;
+        if (slot.dtype !== "decimal" && slot.dtype !== "integer") continue;
+        expect(Number(slot.value), `${slot.name} presumes 0`).not.toBe(0);
       }
     });
 

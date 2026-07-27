@@ -1215,19 +1215,19 @@
    "name": "certification_period_month_count",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-sc-snap-fy-2026#input.certification_period_months": {
    "name": "certification_period_months",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-sc-snap-fy-2026#input.certification_period_months_remaining": {
    "name": "certification_period_months_remaining",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-sc-snap-fy-2026#input.change_in_household_circumstances_not_required_to_be_reported": {
    "name": "change_in_household_circumstances_not_required_to_be_reported",
@@ -1683,7 +1683,7 @@
    "name": "days_in_month",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-sc-snap-fy-2026#input.days_since_agency_action_or_inaction": {
    "name": "days_since_agency_action_or_inaction",
@@ -1881,7 +1881,7 @@
    "name": "educational_income_intended_coverage_month_count",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-sc-snap-fy-2026#input.educational_income_received_this_month": {
    "name": "educational_income_received_this_month",
@@ -2097,7 +2097,7 @@
    "name": "fluctuating_expense_averaging_period_month_count",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-sc-snap-fy-2026#input.form_contains_household_address": {
    "name": "form_contains_household_address",
@@ -3831,7 +3831,7 @@
    "name": "household_member_count",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-sc-snap-fy-2026#input.household_member_disqualified_for_ipv_or_remaining_benefits_reduced_or_terminated_to_reflect_disqualification": {
    "name": "household_member_disqualified_for_ipv_or_remaining_benefits_reduced_or_terminated_to_reflect_disqualification",
@@ -5097,7 +5097,7 @@
    "name": "less_often_than_monthly_expense_averaging_period_month_count",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-sc-snap-fy-2026#input.less_than_ten_days_between_information_request_and_last_day_of_month": {
    "name": "less_than_ten_days_between_information_request_and_last_day_of_month",
@@ -5901,13 +5901,13 @@
    "name": "persons_actually_paying_or_contributing_to_shared_expense_count",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-sc-snap-fy-2026#input.persons_whom_combined_wage_intended_to_cover_count": {
    "name": "persons_whom_combined_wage_intended_to_cover_count",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-sc-snap-fy-2026#input.portion_of_uncertain_exact_income_anticipated_with_reasonable_certainty": {
    "name": "portion_of_uncertain_exact_income_anticipated_with_reasonable_certainty",
@@ -6345,7 +6345,7 @@
    "name": "representative_pay_date_count",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-sc-snap-fy-2026#input.representative_pay_total": {
    "name": "representative_pay_total",
@@ -6585,7 +6585,7 @@
    "name": "self_employment_averaging_month_count",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-sc-snap-fy-2026#input.separate_eligibility_and_expiration_notices_sent": {
    "name": "separate_eligibility_and_expiration_notices_sent",
@@ -14619,7 +14619,7 @@
    "name": "working_members_and_child_count",
    "entity": "Person",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-sc-snap-fy-2026#input.would_have_fulfilled_abawd_work_requirement_but_for_missed_hours": {
    "name": "would_have_fulfilled_abawd_work_requirement_but_for_missed_hours",
@@ -17481,13 +17481,13 @@
    "name": "months_business_has_operated",
    "entity": "Business",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-sc-snap-fy-2026#input.months_income_intended_to_cover": {
    "name": "months_income_intended_to_cover",
    "entity": "Business",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-sc-snap-fy-2026#input.schedule_c_line_1_gross_receipts_or_sales": {
    "name": "schedule_c_line_1_gross_receipts_or_sales",

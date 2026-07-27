@@ -40,6 +40,52 @@ if (!apiCheckout) {
 }
 
 /**
+ * Inputs the expressions divide by (anywhere in the denominator subtree,
+ * one level through derived rules). A zero screening presumption on these
+ * traps the engine ("division by zero") the moment the visitor edits any
+ * field on the same path — presume 1 instead. Deliberately div-only: the
+ * corpus slicer also guards rate/wage comparisons, but curated descriptors
+ * may rely on a vacuous comparison pass as a screening position (co-snap's
+ * work-requirement presumptions do). Mirrors src/lib/corpus.ts.
+ */
+function zeroUnsafeInputs(artifact) {
+  const unsafe = new Set();
+  const derivedByName = new Map(artifact.program.derived.map((rule) => [rule.name, rule]));
+  function collectInputs(node, depth) {
+    if (Array.isArray(node)) return node.forEach((item) => collectInputs(item, depth));
+    if (!node || typeof node !== "object") return;
+    if (node.kind === "input" || node.kind === "input_or_else") unsafe.add(node.name);
+    if (node.kind === "derived" && depth > 0) {
+      const rule = derivedByName.get(node.name);
+      if (rule) collectInputs(rule.expr, depth - 1);
+    }
+    for (const value of Object.values(node)) collectInputs(value, depth);
+  }
+  function walk(node) {
+    if (Array.isArray(node)) return node.forEach((item) => walk(item));
+    if (!node || typeof node !== "object") return;
+    if (node.kind === "div") collectInputs(node.right, 1);
+    for (const value of Object.values(node)) walk(value);
+  }
+  for (const derived of artifact.program.derived) walk(derived.expr);
+  return unsafe;
+}
+
+/** Presume 1 for zero-valued slots the expressions cannot take a 0 for. */
+function guardZeroUnsafeDefaults(artifact, defaults, label) {
+  const unsafe = zeroUnsafeInputs(artifact);
+  let guarded = 0;
+  for (const slot of Object.values(defaults)) {
+    if (!unsafe.has(slot.name)) continue;
+    if ((slot.dtype === "decimal" || slot.dtype === "integer") && Number(slot.value) === 0) {
+      slot.value = "1";
+      guarded += 1;
+    }
+  }
+  if (guarded) console.log(`   ${label}: ${guarded} zero-unsafe defaults presumed 1`);
+}
+
+/**
  * Per-program admission config. `entities` is the instantiation plan —
  * every entity kind the artifact's inputs mention must appear (kinds left
  * out get a single `<kind>:1` instance automatically). `example` is the
@@ -302,6 +348,7 @@ function buildProgram(config) {
     defaults[input.ref] = entry;
   }
   console.log(`   defaults: ${matched} from registry, ${discovered.length - matched} inferred`);
+  guardZeroUnsafeDefaults(artifact, defaults, config.id);
 
   // Auto-add single instances for entity kinds the config doesn't plan.
   const planned = new Set(config.entities.map((entity) => entity.entity));
@@ -473,6 +520,7 @@ function buildLegacyProgram(config) {
       };
     }
     if (entityBlock.count_from) countFrom = entityBlock.count_from;
+    // (defaults guarded below, after all entity blocks are read)
     entities.push({
       entity: entityBlock.entity,
       id_template: entityBlock.id_template,
@@ -490,6 +538,8 @@ function buildLegacyProgram(config) {
         : {}),
     });
   }
+
+  guardZeroUnsafeDefaults(artifact, defaults, config.id);
 
   const outputs = {};
   for (const name of entry.default_outputs) {

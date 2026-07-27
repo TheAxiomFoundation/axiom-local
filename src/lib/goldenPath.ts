@@ -98,7 +98,7 @@ export interface GoldenAnswers {
 /**
  * axiom-api's interval convention for these artifacts: month start to the
  * first day of the next month (exclusive end). The pinned parity values were
- * produced through this shape, so the playground reproduces it exactly.
+ * produced through this shape, so this repo reproduces it exactly.
  */
 export function packageMonthInterval(period: string): Interval {
   const match = /^(\d{4})-(\d{2})$/.exec(period);
@@ -131,6 +131,36 @@ export function packageFact(value: unknown, dtype: string): ScalarValue {
   if (dtype === "text") return { kind: "text", value: String(value) };
   const numeric = typeof value === "number" ? value : Number(String(value).replace(/[$,\s]/g, ""));
   return { kind: "decimal", value: String(Number.isFinite(numeric) ? numeric : 0) };
+}
+
+/**
+ * Answers that would silently coerce to 0: non-numeric text supplied for a
+ * decimal/integer slot. packageFact's forgiving coercion is right for
+ * presumed defaults, but a typo the visitor typed ("12oo") must be rejected
+ * loudly, not computed as $0.
+ */
+export function findInvalidNumericAnswers(pkg: GoldenPackage, answers: GoldenAnswers): string[] {
+  const problems: string[] = [];
+  const numeric = (dtype: string) => dtype === "decimal" || dtype === "integer";
+  const bad = (value: string) =>
+    value.trim() !== "" && !Number.isFinite(Number(value.replace(/[$,\s]/g, "")));
+  const byName = new Map<string, PackageDefault>();
+  for (const slot of Object.values(pkg.defaults)) byName.set(slot.name, slot);
+
+  for (const [name, value] of Object.entries(answers.household)) {
+    const slot = byName.get(name);
+    if (slot && numeric(slot.dtype) && bad(value)) problems.push(`${name} = "${value}"`);
+  }
+  for (const [name, values] of Object.entries(answers.people ?? {})) {
+    const slot = byName.get(name);
+    if (!slot || !numeric(slot.dtype)) continue;
+    for (const value of values) if (bad(value)) problems.push(`${name} = "${value}"`);
+  }
+  for (const [ref, value] of Object.entries(answers.refOverrides ?? {})) {
+    const slot = pkg.defaults[ref];
+    if (slot && numeric(slot.dtype) && bad(value)) problems.push(`${slot.name} = "${value}"`);
+  }
+  return problems;
 }
 
 function renderTemplate(template: string, index: number): string {

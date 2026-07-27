@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 /** The three streams, always one click apart. */
-export function SiteNav({ current }: { current: "start" | "example" | "docs" }) {
+export function SiteNav({ current }: { current: "start" | "example" | "docs" | "run" }) {
   const link = (href: string, label: string, key: string) =>
     current === key ? (
       <span className="border-b border-accent pb-0.5 text-accent">{label}</span>
@@ -22,8 +22,9 @@ export function SiteNav({ current }: { current: "start" | "example" | "docs" }) 
       {link("/", "Get started", "start")}
       {link("/docs/", "References", "docs")}
       {link("/example/", "Example", "example")}
+      {link("/run/", "Run", "run")}
       <a
-        href="https://github.com/TheAxiomFoundation/axiom-playground"
+        href="https://github.com/TheAxiomFoundation/axiom-local"
         target="_blank"
         rel="noreferrer"
         style={{ textDecoration: "none" }}

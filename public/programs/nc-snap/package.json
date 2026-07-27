@@ -176,7 +176,7 @@
    "name": "applicable_minimum_wage",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-nc-snap-fy-2026#input.applicant_available_income_statement_documented": {
    "name": "applicant_available_income_statement_documented",
@@ -548,7 +548,7 @@
    "name": "current_federal_minimum_wage",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-nc-snap-fy-2026#input.current_fns_allotment_amount": {
    "name": "current_fns_allotment_amount",
@@ -1916,7 +1916,7 @@
    "name": "number_of_times_income_was_received",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-nc-snap-fy-2026#input.office_visit_to_report_change_on_day": {
    "name": "office_visit_to_report_change_on_day",
@@ -3602,7 +3602,7 @@
    "name": "contract_income_intended_period_month_count",
    "entity": "Person",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-nc-snap-fy-2026#input.contract_income_is_hourly_or_piecework": {
    "name": "contract_income_is_hourly_or_piecework",
@@ -8678,7 +8678,7 @@
    "name": "potential_fns_unit_member_count",
    "entity": "Person",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-nc-snap-fy-2026#input.poverty_level_for_other_household_members": {
    "name": "poverty_level_for_other_household_members",
@@ -9380,7 +9380,7 @@
    "name": "sponsored_alien_count",
    "entity": "Person",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-nc-snap-fy-2026#input.sponsored_alien_exempt_from_sponsor_deeming": {
    "name": "sponsored_alien_exempt_from_sponsor_deeming",
@@ -11264,7 +11264,7 @@
    "name": "certification_period_month_count",
    "entity": "Payment",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-nc-snap-fy-2026#input.child_for_whom_payment_is_received_is_in_fns_unit": {
    "name": "child_for_whom_payment_is_received_is_in_fns_unit",
@@ -11312,7 +11312,7 @@
    "name": "contract_income_period_month_count",
    "entity": "Payment",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-nc-snap-fy-2026#input.contract_income_received_less_than_annually_but_not_monthly_or_converted": {
    "name": "contract_income_received_less_than_annually_but_not_monthly_or_converted",
@@ -11474,7 +11474,7 @@
    "name": "educational_assistance_intended_period_month_count",
    "entity": "Payment",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-nc-snap-fy-2026#input.educational_assistance_room_and_board_amount_for_intended_period": {
    "name": "educational_assistance_room_and_board_amount_for_intended_period",
@@ -11906,7 +11906,7 @@
    "name": "intended_fns_and_non_fns_member_count",
    "entity": "Payment",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-nc-snap-fy-2026#input.intended_fns_unit_member_count": {
    "name": "intended_fns_unit_member_count",
@@ -14324,7 +14324,7 @@
    "name": "remaining_months_in_current_certification_period_including_reported_month",
    "entity": "Payment",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-nc-snap-fy-2026#input.rent_amount_is_hud_recoupment_for_prior_underpayment": {
    "name": "rent_amount_is_hud_recoupment_for_prior_underpayment",

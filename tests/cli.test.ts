@@ -33,6 +33,13 @@ describe("bun scripts/determine.mjs", () => {
     expect(out).toContain("holds");
   });
 
+  it("pins the /example page's three-person transcript: --people member_age=42,9,70 → 717", () => {
+    // The example page shows this exact transcript; a drift here means the
+    // page is lying about what a visitor's machine will print.
+    const out = run("--people", "member_age=42,9,70");
+    expect(out).toMatch(/snap_allotment\s+717/);
+  });
+
   it("amends the law with --what-if and says so", () => {
     const out = run("--what-if", "snap_earned_income_deduction_rate_for_net_income=0.3");
     expect(out).toContain("AMENDED LAW");

@@ -5,7 +5,7 @@ import { ProvenanceFooter } from "@/components/ProvenanceFooter";
 import { Cmd, L, Record, dim, id, kw, no, num, ok, pin } from "@/components/terminal";
 
 export const metadata: Metadata = {
-  title: "Example — Axiom playground",
+  title: "Example — Axiom local",
   description:
     "One household, start to finish: run a statutory determination locally, change the facts, amend the law, follow the citations, switch programs, integrate the JSON.",
 };
@@ -65,8 +65,8 @@ export default function Example() {
           }
         >
           <Record>
-            <Cmd>git clone https://github.com/TheAxiomFoundation/axiom-playground</Cmd>
-            <Cmd>cd axiom-playground && bun install</Cmd>
+            <Cmd>git clone https://github.com/TheAxiomFoundation/axiom-local</Cmd>
+            <Cmd>cd axiom-local && bun install</Cmd>
           </Record>
         </Step>
 
@@ -142,7 +142,7 @@ export default function Example() {
             <Cmd>bun scripts/determine.mjs --people member_age=42,9,70</Cmd>
             <L>
               {"  snap_allotment    "}
-              {num("785")}
+              {num("717")}
               {"   "}
               {dim("# household of three")}
             </L>

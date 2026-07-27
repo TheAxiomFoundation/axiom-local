@@ -71,7 +71,7 @@
    "name": "days_in_month",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-ks-tanf-fy-2026#input.tanf_case_reopened_in_month_following_effective_date_of_closure": {
    "name": "tanf_case_reopened_in_month_following_effective_date_of_closure",

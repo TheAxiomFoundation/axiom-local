@@ -813,7 +813,7 @@
    "name": "income_intended_cover_months",
    "entity": "Household",
    "dtype": "decimal",
-   "value": "0"
+   "value": "1"
   },
   "us-co:regulations/10-ccr-2506-1/4.402.2#input.household_derives_annual_income_from_self_employment": {
    "name": "household_derives_annual_income_from_self_employment",
@@ -855,7 +855,7 @@
    "name": "educational_income_intended_cover_months",
    "entity": "Household",
    "dtype": "decimal",
-   "value": "0"
+   "value": "1"
   },
   "us-co:regulations/10-ccr-2506-1/4.402.2#input.household_elects_to_average_fluctuating_income": {
    "name": "household_elects_to_average_fluctuating_income",
@@ -873,7 +873,7 @@
    "name": "fluctuating_income_intended_cover_months",
    "entity": "Household",
    "dtype": "decimal",
-   "value": "0"
+   "value": "1"
   },
   "us-co:regulations/10-ccr-2506-1/4.402.2#input.known_income_from_previous_months": {
    "name": "known_income_from_previous_months",
@@ -885,7 +885,7 @@
    "name": "known_previous_month_count",
    "entity": "Household",
    "dtype": "integer",
-   "value": "0"
+   "value": "1"
   },
   "us-co:regulations/10-ccr-2506-1/4.403.2#input.boarder_payments_for_room_meals_and_shelter_contributions": {
    "name": "boarder_payments_for_room_meals_and_shelter_contributions",
@@ -1023,7 +1023,7 @@
    "name": "self_employment_months",
    "entity": "Household",
    "dtype": "decimal",
-   "value": "0"
+   "value": "1"
   },
   "us-co:regulations/10-ccr-2506-1/4.403.12#input.self_employment_income_is_from_new_source": {
    "name": "self_employment_income_is_from_new_source",
@@ -1035,7 +1035,7 @@
    "name": "self_employment_business_months_in_operation",
    "entity": "Household",
    "dtype": "decimal",
-   "value": "0"
+   "value": "1"
   },
   "us-co:regulations/10-ccr-2506-1/4.403.12#input.self_employment_income_period_months": {
    "name": "self_employment_income_period_months",
@@ -1083,7 +1083,7 @@
    "name": "farm_loss_period_months",
    "entity": "Household",
    "dtype": "decimal",
-   "value": "0"
+   "value": "1"
   },
   "us-co:regulations/10-ccr-2506-1/4.403.12#input.other_self_employment_income": {
    "name": "other_self_employment_income",
@@ -1455,7 +1455,7 @@
    "name": "intended_beneficiary_count",
    "entity": "Household",
    "dtype": "integer",
-   "value": "0"
+   "value": "1"
   },
   "us-co:regulations/10-ccr-2506-1/4.405#input.child_lives_with_parent_or_under_parental_control": {
    "name": "child_lives_with_parent_or_under_parental_control",
@@ -2451,7 +2451,7 @@
    "name": "household_size_including_disqualified_members",
    "entity": "Household",
    "dtype": "integer",
-   "value": "0"
+   "value": "1"
   },
   "us-co:regulations/10-ccr-2506-1/4.411#input.disqualified_member_earned_income": {
    "name": "disqualified_member_earned_income",
@@ -2517,7 +2517,7 @@
    "name": "total_people_paying_or_contributing_to_shared_expenses",
    "entity": "Household",
    "dtype": "decimal",
-   "value": "0"
+   "value": "1"
   },
   "us-co:regulations/10-ccr-2506-1/4.411#input.household_share_of_combined_wage_can_be_identified": {
    "name": "household_share_of_combined_wage_can_be_identified",
@@ -2547,7 +2547,7 @@
    "name": "total_people_covered_by_combined_wage_count",
    "entity": "Household",
    "dtype": "integer",
-   "value": "0"
+   "value": "1"
   },
   "us-co:regulations/10-ccr-2506-1/4.407.31#input.household_incurred_or_anticipated_heating_or_cooling_costs_separate_from_rent_or_mortgage": {
    "name": "household_incurred_or_anticipated_heating_or_cooling_costs_separate_from_rent_or_mortgage",

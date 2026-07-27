@@ -8508,7 +8508,7 @@
    "name": "number_of_real_property_owners",
    "entity": "Asset",
    "dtype": "integer",
-   "value": "0"
+   "value": "1"
   },
   "us-fl:policies/dcf/ess-program-policy-manual/1600-assets-fs-tca/page-5#input.individual_owns_share_of_real_property": {
    "name": "individual_owns_share_of_real_property",
@@ -9906,7 +9906,7 @@
    "name": "joint_account_owner_count",
    "entity": "Asset",
    "dtype": "integer",
-   "value": "0"
+   "value": "1"
   },
   "us-fl:policies/dcf/ess-program-policy-manual/1600-assets-fs-tca/page-21#input.individual_has_legal_title_to_real_property": {
    "name": "individual_has_legal_title_to_real_property",
@@ -9966,7 +9966,7 @@
    "name": "real_property_owner_count",
    "entity": "Asset",
    "dtype": "integer",
-   "value": "0"
+   "value": "1"
   },
   "us-fl:policies/dcf/ess-program-policy-manual/1600-assets-fs-tca/page-21#input.asset_is_part_of_unprobated_estate": {
    "name": "asset_is_part_of_unprobated_estate",
@@ -11280,7 +11280,7 @@
    "name": "close_corporation_total_number_of_shares",
    "entity": "Asset",
    "dtype": "integer",
-   "value": "0"
+   "value": "1"
   },
   "us-fl:policies/dcf/ess-program-policy-manual/1600-assets-fs-tca/page-32#input.asset_is_mutual_fund_share": {
    "name": "asset_is_mutual_fund_share",
@@ -12318,7 +12318,7 @@
    "name": "months_income_intended_to_cover",
    "entity": "Household",
    "dtype": "decimal",
-   "value": "0"
+   "value": "1"
   },
   "us-fl:policies/dcf/ess-program-policy-manual/2600-calculation-of-benefits/page-14#input.self_employment_enterprise_in_existence_less_than_year": {
    "name": "self_employment_enterprise_in_existence_less_than_year",
@@ -12336,7 +12336,7 @@
    "name": "months_business_has_been_in_operation",
    "entity": "Household",
    "dtype": "decimal",
-   "value": "0"
+   "value": "1"
   },
   "us-fl:policies/dcf/ess-program-policy-manual/2600-calculation-of-benefits/page-14#input.vehicle_used_for_transportation_to_see_customers": {
    "name": "vehicle_used_for_transportation_to_see_customers",
@@ -12390,7 +12390,7 @@
    "name": "self_employment_income_averaging_months",
    "entity": "Household",
    "dtype": "decimal",
-   "value": "0"
+   "value": "1"
   },
   "us-fl:policies/dcf/ess-program-policy-manual/2600-calculation-of-benefits/page-15#input.anticipated_capital_gains_next_12_months": {
    "name": "anticipated_capital_gains_next_12_months",
@@ -12576,7 +12576,7 @@
    "name": "number_of_assistance_group_members_working",
    "entity": "Person",
    "dtype": "integer",
-   "value": "0"
+   "value": "1"
   },
   "us-fl:policies/dcf/ess-program-policy-manual/2600-calculation-of-benefits/page-16#input.income_received_under_employment_contract_less_than_one_year": {
    "name": "income_received_under_employment_contract_less_than_one_year",
@@ -12594,7 +12594,7 @@
    "name": "months_contract_income_intended_to_cover",
    "entity": "Person",
    "dtype": "decimal",
-   "value": "0"
+   "value": "1"
   },
   "us-fl:policies/dcf/ess-program-policy-manual/2600-calculation-of-benefits/page-16#input.person_is_school_employee": {
    "name": "person_is_school_employee",

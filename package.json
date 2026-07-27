@@ -1,5 +1,5 @@
 {
-  "name": "axiom-playground",
+  "name": "axiom-local",
   "version": "0.1.0",
   "private": true,
   "description": "RuleSpec executing in your browser — no data leaves the page",

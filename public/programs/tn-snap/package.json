@@ -2644,7 +2644,7 @@
    "name": "months_in_certification_period",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-tn-snap-fy-2026#input.months_lost_before_county_discovery_or_notification": {
    "name": "months_lost_before_county_discovery_or_notification",
@@ -2668,7 +2668,7 @@
    "name": "months_remaining_in_current_certification_period_based_on_verification_and_effective_change",
    "entity": "Household",
    "dtype": "decimal",
-   "value": 0
+   "value": "1"
   },
   "axiom:us-tn-snap-fy-2026#input.months_since_end_of_federal_review_period": {
    "name": "months_since_end_of_federal_review_period",
