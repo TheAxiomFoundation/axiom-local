@@ -88,6 +88,24 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Generate the corpus from the locked commit
+        # public/corpus/ is gitignored (32MB of YAML), but the /run explorer
+        # is advertised on the landing page — production must serve it. The
+        # lock file pins exactly which corpus commit ships.
+        run: |
+          repo=$(python3 -c "import json;print(json.load(open('corpus.lock.json'))['sources'][0]['repo'])")
+          commit=$(python3 -c "import json;print(json.load(open('corpus.lock.json'))['sources'][0]['commit'])")
+          git init -q .corpus-src
+          git -C .corpus-src remote add origin "https://github.com/${repo}.git"
+          git -C .corpus-src fetch -q --depth 1 origin "$commit"
+          git -C .corpus-src checkout -q FETCH_HEAD
+          bun scripts/build-corpus.mjs .corpus-src
+          test -f public/corpus/manifest.json
+          grep -q "axiom-local.corpus.v1" public/corpus/manifest.json
+          # The regenerated lock must match the committed one — otherwise the
+          # checkout is not the corpus that was reviewed.
+          git diff --exit-code corpus.lock.json
+
       - name: Pull Vercel project settings
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -120,8 +138,10 @@ jobs:
           url="${{ steps.stage.outputs.url }}"
           hdr=()
           if [ -n "$BYPASS" ]; then hdr=(-H "x-vercel-protection-bypass: $BYPASS"); fi
-          curl -fsS "${hdr[@]}" "$url/" | grep -q "Axiom playground"
+          curl -fsS "${hdr[@]}" "$url/" | grep -q "Axiom local"
           curl -fsS "${hdr[@]}" -o /dev/null "$url/engine/axiom_rules_engine_wasm_bg.wasm"
+          # The corpus explorer must be alive on the staged deployment.
+          curl -fsS "${hdr[@]}" "$url/corpus/manifest.json" | head -c 200 | grep -q "axiom-local.corpus.v1"
           # The golden-path package must arrive intact: same sha-256 the
           # descriptor pins, so the page's provenance line shows "= pinned".
           pinned=$(python3 -c "import json;print(json.load(open('public/programs/co-snap/package.json'))['source']['artifact_sha256'])")
@@ -141,7 +161,11 @@ jobs:
       - name: Smoke production
         env:
           BYPASS: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+          # Repo variable PRODUCTION_URL overrides; the fallback is the
+          # current Vercel project domain (project not yet renamed from
+          # axiom-playground — update the variable when it is).
+          PROD_URL: ${{ vars.PRODUCTION_URL || 'https://axiom-playground.vercel.app' }}
         run: |
           hdr=()
           if [ -n "$BYPASS" ]; then hdr=(-H "x-vercel-protection-bypass: $BYPASS"); fi
-          curl -fsS "${hdr[@]}" "https://axiom-playground.vercel.app/" | grep -q "Axiom playground"
+          curl -fsS "${hdr[@]}" "$PROD_URL/" | grep -q "Axiom local"
