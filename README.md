@@ -1,4 +1,4 @@
-# Axiom playground
+# Axiom local
 
 Law that runs on your machine. This repo is the local Axiom distribution —
 the [Axiom rules engine](https://github.com/TheAxiomFoundation/axiom-rules-engine)'s
@@ -13,7 +13,7 @@ in your home, what you earn, what you pay in rent. The usual way to put that
 calculation on the web is a server API — which means those facts travel to, and
 are processed on, someone else's machine.
 
-This playground exists to demonstrate that they don't have to. The RuleSpec
+This repo exists to demonstrate that they don't have to. The RuleSpec
 compiler and evaluator are compiled to WebAssembly and shipped to the browser as
 a static asset. The statute text is delivered to the page once; your answers are
 assembled into the engine's dataset *in the tab*, handed to the wasm module *in
@@ -44,32 +44,32 @@ shown on the page — selectable from the program panel:
 | Federal individual income tax | 137 | 184 | 26 USC 1, 24, 32, 55, 63, 151… |
 | Florida Temporary Cash Assistance | 831 | 2,113 | 45 CFR · FL 65A-4 |
 
-The page lands on Colorado SNAP: for the canonical two-person household —
-$1,200 monthly earned income, $900 shelter costs — it computes a **$478
-monthly allotment** and **$226.50 net income**, the exact values axiom-api's
-parity suite pins. The determination runs on load, so the page lands already
-alive; switching programs lands on that program's example case, computed.
-`scripts/build-packages.mjs` admits new artifacts (descriptor generation is
-engine-probed; see the PROGRAMS config).
+The landing page embeds the runner: pick any of the vendored programs, state
+the facts, run — for the canonical Colorado SNAP two-person household
+($1,200 monthly earned income, $900 shelter costs) it computes a **$478
+monthly allotment**, the exact value axiom-api's parity suite pins. Every
+determination is downloadable as the same JSON `scripts/determine.mjs --json`
+prints, byte for byte. `scripts/build-packages.mjs` admits new artifacts
+(descriptor generation is engine-probed; see the PROGRAMS config).
 
-A handful of headline questions carry each determination; the program's
-remaining inputs take **screening presumptions**, every one inspectable and overridable
-from the program panel — a presumption is a legal position, so the page treats
-it as one. A one-click **what-if** amends the earned-income deduction rate
-(7 USC 2014(e)(2), 20% → 30%) inside the artifact and re-runs the same
-household under amended law, in the tab. See
-[docs/golden-path.md](docs/golden-path.md) for the full walkthrough.
+A handful of headline questions carry the curated determinations; every
+program's remaining inputs take **screening presumptions**, all of them
+inspectable and editable in the presumption editor — a presumption is a legal
+position, so the page treats it as one. The CLI's `--what-if` amends a
+statutory parameter inside the artifact and re-runs the same household under
+amended law. See [docs/golden-path.md](docs/golden-path.md) for the full
+walkthrough.
 
-A **guided tour** (`?tour=landed` … `?tour=exit`, dismissable, deep-linkable)
-walks a first-time visitor from the landed verdict to the exit ramps: the
-Axiom app to read every rule beside its source law, the local run for
-engineers, the parity suite for domain experts who want to challenge the
-encoding. (The hosted API and MCP are deliberately not surfaced — they are
-not launch entry points.)
+Beyond the catalog, `/run` carries the **corpus explorer**: search every
+encoded rule across the served RuleSpec corpus, slice at any target
+(a statute section, a regulation paragraph), and the import closure is
+fetched, compiled in the tab, and run — no bundle required. Slices are
+valid and cited but not parity-pinned; the provenance line says which.
+Generate the corpus locally with
+`bun scripts/build-corpus.mjs <rulespec-us checkout>`.
 
 The page is deliberately lean: reading and dissecting rule text is the Axiom
-app's job, and compile-your-own-RuleSpec belongs to this repo's engine tests
-and the npm package — the page carries the execution story only.
+app's job — this repo carries the execution story.
 
 ## Architecture
 
@@ -83,9 +83,8 @@ and the npm package — the page carries the execution story only.
     descriptors (defaults, headline questions, provenance), emitted by
     `scripts/build-packages.mjs` and pinned by the test suite;
     `public/programs/index.json` is the registry the page and CLI read.
-    Four startup requests per program (engine js + wasm once, then package
-    descriptor + artifact); the network sentinel re-arms after each program
-    loads, and determinations never fetch.
+    The engine (js + wasm) loads once, each program costs one descriptor +
+    one artifact fetch, and determinations never fetch.
   - `engine/pkg-node/` — the `--target nodejs` build, loaded by the test suite.
 
   Checking the built packages in means **CI and any host need no Rust toolchain**;
@@ -125,8 +124,8 @@ hash-pinned artifacts are checked in, so a clone runs the whole thing
 offline with no Rust toolchain. Requires [Bun](https://bun.sh) only.
 
 ```sh
-git clone https://github.com/TheAxiomFoundation/axiom-playground
-cd axiom-playground && bun install
+git clone https://github.com/TheAxiomFoundation/axiom-local
+cd axiom-local && bun install
 
 # The page, with hot reload:
 bun run dev          # http://localhost:3000
