@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { CopyButton } from "./CopyButton";
+
 /**
  * The record: terminal output set like a court transcript — numbered lines
  * in a gutter, a thin caption bar. Shared by all three pages; the visual
@@ -16,13 +18,20 @@ export function Record({
   children: ReactNode;
 }) {
   return (
-    <div className="record">
+    <div className="record relative">
       {caption ? (
         <div className="record-caption">
           <span>{caption}</span>
-          {aside ? <span>{aside}</span> : null}
+          <span className="flex items-center gap-3">
+            {aside ? <span>{aside}</span> : null}
+            <CopyButton />
+          </span>
         </div>
-      ) : null}
+      ) : (
+        <div className="absolute right-3 top-2 z-10">
+          <CopyButton />
+        </div>
+      )}
       <div className="record-body">{children}</div>
     </div>
   );
@@ -33,13 +42,14 @@ export function L({ children }: { children?: ReactNode }) {
   return <div className="rec-line">{children ?? " "}</div>;
 }
 
-/** A command line: muted prompt, bright command. */
+/** A command line: muted prompt, bright command. Marked data-cmd so the
+ * copy button can copy commands without the surrounding output lines. */
 export function Cmd({ children }: { children: ReactNode }) {
   return (
-    <L>
+    <div className="rec-line" data-cmd="">
       <span className="select-none text-code-comment">$ </span>
       {children}
-    </L>
+    </div>
   );
 }
 
