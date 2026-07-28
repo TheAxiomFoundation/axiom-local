@@ -34,6 +34,7 @@ import {
   envelopeFilename,
   type DeterminationEnvelope,
 } from "@/lib/envelope";
+import { withBase } from "@/lib/basePath";
 
 /**
  * The subtree IS the unit — there is no program registry. Every module in
@@ -109,13 +110,13 @@ export function CorpusExplorer() {
     if (manifestState.kind !== "idle") return;
     setManifestState({ kind: "loading" });
     Promise.all([
-      fetch("/corpus/manifest.json").then((response) => {
+      fetch(withBase("/corpus/manifest.json")).then((response) => {
         if (!response.ok) throw new Error(`manifest ${response.status}`);
         return response.json() as Promise<CorpusManifest>;
       }),
       // The ledger travels with the corpus. Permissive: absent means every
       // slice is simply "encoded". Enforced: absent means nothing slices.
-      fetch("/corpus/ledger.json")
+      fetch(withBase("/corpus/ledger.json"))
         .then((response) => {
           if (!response.ok) throw new Error(`ledger not served (${response.status})`);
           return response.json();
@@ -231,7 +232,7 @@ export function CorpusExplorer() {
         const closure = resolveClosure(manifestState.manifest, root);
         const texts = await Promise.all(
           closure.map((target) =>
-            fetch(moduleUrl(target)).then((response) => {
+            fetch(withBase(moduleUrl(target))).then((response) => {
               if (!response.ok) throw new Error(`fetch ${target}: ${response.status}`);
               return response.text();
             }),

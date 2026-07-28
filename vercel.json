@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "next build && rm -rf serve && mkdir -p serve/local && cp -a out/. serve/local/",
+  "outputDirectory": "serve",
+  "trailingSlash": true,
+  "redirects": [
+    { "source": "/", "destination": "/local/", "permanent": false }
+  ]
+}

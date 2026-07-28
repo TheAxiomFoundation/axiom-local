@@ -57,8 +57,6 @@ jobs:
         run: |
           test -f out/index.html
           test -f out/engine/axiom_rules_engine_wasm_bg.wasm
-          test -f out/programs/co-snap/artifact.json
-          test -f out/programs/co-snap/package.json
 
   deploy:
     name: stage · smoke · promote
@@ -89,9 +87,9 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Generate the corpus from the locked commit
-        # public/corpus/ is gitignored (32MB of YAML), but the graph explorer
-        # is advertised on the landing page — production must serve it. The
-        # lock file pins exactly which corpus commit ships.
+        # public/corpus/ is gitignored (32MB of YAML), but the subtree
+        # catalog IS the product — production must serve it. The lock file
+        # pins exactly which corpus commit ships.
         run: |
           repo=$(python3 -c "import json;print(json.load(open('corpus.lock.json'))['sources'][0]['repo'])")
           commit=$(python3 -c "import json;print(json.load(open('corpus.lock.json'))['sources'][0]['commit'])")
@@ -138,18 +136,15 @@ jobs:
           url="${{ steps.stage.outputs.url }}"
           hdr=()
           if [ -n "$BYPASS" ]; then hdr=(-H "x-vercel-protection-bypass: $BYPASS"); fi
-          curl -fsS "${hdr[@]}" "$url/" | grep -q "Axiom local"
-          curl -fsS "${hdr[@]}" -o /dev/null "$url/engine/axiom_rules_engine_wasm_bg.wasm"
-          # The corpus explorer must be alive on the staged deployment.
-          curl -fsS "${hdr[@]}" "$url/corpus/manifest.json" | head -c 200 | grep -q "axiom-local.corpus.v1"
-          # The golden-path package must arrive intact: same sha-256 the
-          # descriptor pins, so the page's provenance line shows "= pinned".
-          pinned=$(python3 -c "import json;print(json.load(open('public/programs/co-snap/package.json'))['source']['artifact_sha256'])")
-          served=$(curl -fsS "${hdr[@]}" "$url/programs/co-snap/artifact.json" | shasum -a 256 | cut -d' ' -f1)
-          if [ "$pinned" != "$served" ]; then
-            echo "::error::Served artifact sha-256 ($served) does not match the descriptor pin ($pinned)"
-            exit 1
-          fi
+          curl -fsS "${hdr[@]}" "$url/local/" | grep -q "Axiom local"
+          curl -fsS "${hdr[@]}" -o /dev/null "$url/local/engine/axiom_rules_engine_wasm_bg.wasm"
+          # The subtree catalog must be alive on the staged deployment:
+          # the manifest (with its precomputed headline titles) and the
+          # golden subtree's module yaml both answer under the prefix.
+          manifest=$(curl -fsS "${hdr[@]}" "$url/local/corpus/manifest.json")
+          echo "$manifest" | head -c 200 | grep -q "axiom-local.corpus.v1"
+          echo "$manifest" | grep -q '"headline":"snap_monthly_allotment"'
+          curl -fsS "${hdr[@]}" "$url/local/corpus/modules/us/regulations/7-cfr/273/10.yaml" | grep -q "snap_monthly_allotment"
 
       - name: Promote
         env:
@@ -171,7 +166,7 @@ jobs:
           # The domain alias can lag the promote by a few seconds — retry
           # before declaring production broken.
           for attempt in 1 2 3 4 5 6; do
-            if curl -fsS "${hdr[@]}" "$PROD_URL/" | grep -q "Axiom local"; then exit 0; fi
+            if curl -fsS "${hdr[@]}" "$PROD_URL/local/" | grep -q "Axiom local"; then exit 0; fi
             echo "attempt $attempt: production not serving yet, retrying in 10s"
             sleep 10
           done

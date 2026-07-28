@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   // calculation runs in the visitor's browser. There is no server component
   // to this product — that is the point.
   output: "export",
+  // Mounted at axiom.org/local via the site project's rewrite; keep in sync
+  // with BASE_PATH in src/lib/basePath.ts.
+  basePath: "/local",
   // /example/ and /docs/ resolve as directories in the static export
   trailingSlash: true,
 };
