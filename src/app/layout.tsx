@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 // Both families are downloaded at build time and self-hosted from the
@@ -31,7 +32,16 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-5PB7KEWV38"
+        />
+        <Script id="ga-init">
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config","G-5PB7KEWV38");`}
+        </Script>
+      </body>
     </html>
   );
 }
