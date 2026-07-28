@@ -138,14 +138,14 @@ jobs:
           url="${{ steps.stage.outputs.url }}"
           hdr=()
           if [ -n "$BYPASS" ]; then hdr=(-H "x-vercel-protection-bypass: $BYPASS"); fi
-          curl -fsS "${hdr[@]}" "$url/" | grep -q "Axiom local"
-          curl -fsS "${hdr[@]}" -o /dev/null "$url/engine/axiom_rules_engine_wasm_bg.wasm"
+          curl -fsS "${hdr[@]}" "$url/local/" | grep -q "Axiom local"
+          curl -fsS "${hdr[@]}" -o /dev/null "$url/local/engine/axiom_rules_engine_wasm_bg.wasm"
           # The corpus explorer must be alive on the staged deployment.
-          curl -fsS "${hdr[@]}" "$url/corpus/manifest.json" | head -c 200 | grep -q "axiom-local.corpus.v1"
+          curl -fsS "${hdr[@]}" "$url/local/corpus/manifest.json" | head -c 200 | grep -q "axiom-local.corpus.v1"
           # The golden-path package must arrive intact: same sha-256 the
           # descriptor pins, so the page's provenance line shows "= pinned".
           pinned=$(python3 -c "import json;print(json.load(open('public/programs/co-snap/package.json'))['source']['artifact_sha256'])")
-          served=$(curl -fsS "${hdr[@]}" "$url/programs/co-snap/artifact.json" | shasum -a 256 | cut -d' ' -f1)
+          served=$(curl -fsS "${hdr[@]}" "$url/local/programs/co-snap/artifact.json" | shasum -a 256 | cut -d' ' -f1)
           if [ "$pinned" != "$served" ]; then
             echo "::error::Served artifact sha-256 ($served) does not match the descriptor pin ($pinned)"
             exit 1
@@ -171,7 +171,7 @@ jobs:
           # The domain alias can lag the promote by a few seconds — retry
           # before declaring production broken.
           for attempt in 1 2 3 4 5 6; do
-            if curl -fsS "${hdr[@]}" "$PROD_URL/" | grep -q "Axiom local"; then exit 0; fi
+            if curl -fsS "${hdr[@]}" "$PROD_URL/local/" | grep -q "Axiom local"; then exit 0; fi
             echo "attempt $attempt: production not serving yet, retrying in 10s"
             sleep 10
           done

@@ -12,6 +12,7 @@ import {
   type PackageDefault,
   type PackageHeadline,
 } from "@/lib/goldenPath";
+import { withBase } from "@/lib/basePath";
 
 /**
  * The runner, shaped like the thing it produces: a filing. Three acts —
@@ -147,7 +148,7 @@ export function Runner() {
   const [elapsedMs, setElapsedMs] = useState<number | null>(null);
 
   useEffect(() => {
-    fetch("/programs/index.json")
+    fetch(withBase("/programs/index.json"))
       .then((response) => response.json())
       .then((index: { programs: ProgramIndexEntry[] }) => setPrograms(index.programs))
       .catch((cause) => setError(String(cause)));
@@ -170,8 +171,8 @@ export function Runner() {
       return response;
     };
     Promise.all([
-      fetch(`/programs/${programId}/artifact.json`).then((response) => mustOk(response).text()),
-      fetch(`/programs/${programId}/package.json`).then(
+      fetch(withBase(`/programs/${programId}/artifact.json`)).then((response) => mustOk(response).text()),
+      fetch(withBase(`/programs/${programId}/package.json`)).then(
         (response) => mustOk(response).json() as Promise<GoldenPackage>,
       ),
     ])
