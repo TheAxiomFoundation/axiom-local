@@ -1,4 +1,5 @@
 import { SiteNav } from "./SiteNav";
+import { withBase } from "@/lib/basePath";
 
 /**
  * Editorial masthead: a quiet top bar (wordmark left, streams right), then
@@ -23,7 +24,7 @@ export function Masthead({
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logos/axiom-foundation.svg"
+              src={withBase("/logos/axiom-foundation.svg")}
               alt="Axiom Foundation"
               width={100}
               className="block h-auto w-full"

@@ -19,9 +19,9 @@ export function loadEngine(): Promise<EngineModule> {
     const glue = (await import(
       /* webpackIgnore: true */
       // @ts-expect-error — runtime URL import of the vendored web wasm glue
-      "/engine/axiom_rules_engine_wasm.js"
+      "/local/engine/axiom_rules_engine_wasm.js"
     )) as { default: (path: { module_or_path: string }) => Promise<unknown> } & EngineModule;
-    await glue.default({ module_or_path: "/engine/axiom_rules_engine_wasm_bg.wasm" });
+    await glue.default({ module_or_path: "/local/engine/axiom_rules_engine_wasm_bg.wasm" });
     return glue;
   })();
   return enginePromise;

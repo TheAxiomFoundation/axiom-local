@@ -16,6 +16,7 @@ import {
   findInvalidNumericAnswers,
   type GoldenPackage,
 } from "@/lib/goldenPath";
+import { withBase } from "@/lib/basePath";
 
 /**
  * The graph, not the bundles: search every rule in the served corpus, slice
@@ -66,7 +67,7 @@ export function CorpusExplorer() {
   const ensureManifest = useCallback(() => {
     if (manifestState.kind !== "idle") return;
     setManifestState({ kind: "loading" });
-    fetch("/corpus/manifest.json")
+    fetch(withBase("/corpus/manifest.json"))
       .then((response) => {
         if (!response.ok) throw new Error(String(response.status));
         return response.json() as Promise<CorpusManifest>;
@@ -136,7 +137,7 @@ export function CorpusExplorer() {
         const closure = resolveClosure(manifestState.manifest, root);
         const texts = await Promise.all(
           closure.map((target) =>
-            fetch(moduleUrl(target)).then((response) => {
+            fetch(withBase(moduleUrl(target))).then((response) => {
               if (!response.ok) throw new Error(`fetch ${target}: ${response.status}`);
               return response.text();
             }),
