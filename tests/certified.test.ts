@@ -15,8 +15,6 @@
  */
 
 import { createRequire } from "node:module";
-import { readFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import type { CompiledProgramArtifact, EngineBindings } from "@/lib/engine/types";
 import {
@@ -34,7 +32,6 @@ import {
 } from "@/lib/certified";
 import { EXAMPLE_MODULES, EXAMPLE_ROOT_TARGET, FEDERAL_TARGET } from "@/lib/example";
 import { discoverInputs } from "@/lib/program";
-import type { GoldenPackage } from "@/lib/goldenPath";
 
 const require = createRequire(import.meta.url);
 const engine = require("../engine/pkg-node/axiom_rules_engine_wasm.js") as EngineBindings;
@@ -247,21 +244,6 @@ describe("mutant: a program stripped from the ledger", () => {
     expect(() => assertPackageCertified(stale, index)).toThrow(/stale/);
   });
 
-  it("(b, shipped) the real vendored ny-snap refuses under a tampered stamp", async () => {
-    const vendored = JSON.parse(
-      readFileSync(join(__dirname, "..", "public", "programs", "ny-snap", "package.json"), "utf8"),
-    ) as GoldenPackage;
-    const index = await validateLedger(
-      JSON.parse(readFileSync(join(__dirname, "..", "data", "certified-nodes.json"), "utf8")),
-    );
-    expect(() => assertPackageCertified(vendored, index)).not.toThrow();
-    const tampered = {
-      ...vendored,
-      certified: { ...vendored.certified!, certified_set_version: "f".repeat(24) },
-    };
-    expect(() => assertPackageCertified(tampered, index)).toThrow(/stale/);
-  });
-
   it("packageStatus recomputes the truth — stamps are claims, not upgrades", async () => {
     const index = await worldLedger();
     const outputs = { benefit: `${EXAMPLE_ROOT_TARGET}#snap_regular_month_allotment` };
@@ -362,47 +344,4 @@ describe("leak scan", () => {
     }
   });
 
-  it("PERMISSIVE (shipped): certificates only where earned; certified descriptors carry only certified ids", async () => {
-    // The shipped registry is permissive — encoded programs legitimately
-    // name uncertified (even synthetic) ids, because publishing them IS
-    // the posture. The invariant that must still hold: no certificate
-    // provenance appears anywhere it was not earned, and a
-    // certified-labeled descriptor's every id is in the ledger.
-    const index = await validateLedger(
-      JSON.parse(readFileSync(join(__dirname, "..", "data", "certified-nodes.json"), "utf8")),
-    );
-    const programsDir = join(__dirname, "..", "public", "programs");
-    const registry = JSON.parse(readFileSync(join(programsDir, "index.json"), "utf8")) as {
-      programs: { id: string; certification: "certified" | "encoded" }[];
-    };
-    expect(registry.programs.length).toBeGreaterThan(1);
-    for (const entry of registry.programs) {
-      const descriptor = JSON.parse(
-        readFileSync(join(programsDir, entry.id, "package.json"), "utf8"),
-      ) as GoldenPackage;
-      if (entry.certification === "certified") {
-        const serialized = JSON.stringify(descriptor);
-        expect(serialized).not.toContain("axiom:");
-        for (const token of idTokens(descriptor)) {
-          expect(index.byId.has(token), `${entry.id}: ${token}`).toBe(true);
-        }
-        expect(descriptor.certified?.ledger_id).toBe(index.ledger.ledger_id);
-      } else {
-        // Encoded: labeled, and carrying no certificate it did not earn.
-        expect(descriptor.certification).toBe("encoded");
-        expect(descriptor.certified).toBeUndefined();
-        expect(JSON.stringify(descriptor)).not.toContain("fixture-cert-");
-      }
-    }
-    // The registry itself mentions certificates nowhere beyond the earned
-    // identity blocks.
-    for (const entry of registry.programs) {
-      if (entry.certification !== "certified") {
-        expect(JSON.stringify(entry)).not.toContain("ledger_id");
-      }
-    }
-    // And disk matches the registry exactly — nothing unlisted is served.
-    const onDisk = readdirSync(programsDir).filter((name) => name !== "index.json");
-    expect(onDisk.sort()).toEqual(registry.programs.map((entry) => entry.id).sort());
-  });
 });

@@ -1,6 +1,7 @@
 /**
- * Vendors the RuleSpec corpus into public/corpus/ — the graph the explorer
- * slices, as opposed to the pre-composed bundles under public/programs/.
+ * Vendors the RuleSpec corpus into public/corpus/ — the graph everything
+ * slices. The subtree is the unit this repo serves; there are no
+ * pre-composed program bundles.
  *
  * For every `format: rulespec/v1` module in a rulespec checkout this emits
  *   public/corpus/modules/<jurisdiction>/<path>.yaml   — byte-identical
@@ -8,6 +9,12 @@
  *   public/corpus/manifest.json — per module: canonical target, module-level
  *   imports (fragments stripped), rule names; plus the corpus commit so a
  *   slice's provenance line can say exactly which corpus it came from.
+ *
+ * Axiom-authored composition/pipeline modules (isCompositionPath in
+ * src/lib/corpus.ts) ARE vendored: import closures — including the
+ * ny-snap flagship's — cannot resolve without them. They are excluded
+ * downstream instead: never listed in the explorer, refused as slice
+ * roots (assertSliceableRoot).
  *
  * public/corpus/ is gitignored: 30+ MB of YAML belongs in a checkout or a
  * content-addressed bucket (docs/artifact-distribution.md), never in git.

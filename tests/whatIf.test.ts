@@ -1,84 +1,60 @@
 /**
- * The "change the law" step: amending the earned-income deduction rate
- * inside the compiled artifact must move the same household's benefit,
- * and current law must survive untouched in the original string.
+ * The "change the law" step, on a corpus slice: amending the earned-income
+ * deduction rate inside the compiled 7 CFR 273.10 artifact must move the
+ * same household's allotment, and current law must survive untouched in
+ * the original string.
  */
 
-import { createRequire } from "node:module";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import type { EngineBindings, ExecutionResponse } from "@/lib/engine/types";
-import { buildPackageRequest, type GoldenPackage } from "@/lib/goldenPath";
+import type { ExecutionResponse } from "@/lib/engine/types";
+import { buildPackageRequest } from "@/lib/goldenPath";
 import { applyWhatIf } from "@/lib/whatIf";
-
-const require = createRequire(import.meta.url);
-const engine = require("../engine/pkg-node/axiom_rules_engine_wasm.js") as EngineBindings;
-
-const programDir = join(__dirname, "..", "public", "programs", "ny-snap");
-const artifactJson = readFileSync(join(programDir, "artifact.json"), "utf8");
-const pkg = JSON.parse(readFileSync(join(programDir, "package.json"), "utf8")) as GoldenPackage;
+import { GOLDEN_ROOT, engine, haveCorpus, loadManifest, sliceAt } from "./sliceHarness";
 
 const ANSWERS = {
   household: {
     household_size: "2",
     snap_gross_monthly_earned_income: "1200",
-    household_shelter_costs_incurred: "900",
+    snap_total_allowable_shelter_expenses: "900",
   },
-  people: { member_age: ["42", "9"] },
+  people: {},
 };
 
-function benefit(json: string): string {
-  const request = buildPackageRequest({ pkg, answers: ANSWERS });
-  const response = JSON.parse(engine.execute(json, JSON.stringify(request))) as ExecutionResponse;
-  const output = response.results[0].outputs[pkg.outputs.snap_benefit_amount];
-  if (output.kind !== "scalar") throw new Error(`expected scalar, got ${output.kind}`);
-  return String(output.value.value);
-}
+describe.skipIf(!haveCorpus)("amending a statutory parameter in a slice", () => {
+  const slice = haveCorpus ? sliceAt(loadManifest(), GOLDEN_ROOT) : null!;
 
-describe("amending a statutory parameter in the artifact", () => {
-  it("moves the benefit, and current law is untouched", () => {
-    const before = benefit(artifactJson);
+  function allotment(json: string): string {
+    const request = buildPackageRequest({ pkg: slice.pkg, answers: ANSWERS });
+    const response = JSON.parse(
+      engine.execute(json, JSON.stringify(request)),
+    ) as ExecutionResponse;
+    const output = response.results[0].outputs[slice.pkg.outputs.snap_monthly_allotment];
+    if (output.kind !== "scalar") throw new Error(`expected scalar, got ${output.kind}`);
+    return String(output.value.value);
+  }
+
+  it("moves the allotment, and current law is untouched", () => {
+    const before = allotment(slice.artifactJson);
     expect(before).toBe("478");
 
-    const amended = applyWhatIf(artifactJson, {
+    const amended = applyWhatIf(slice.artifactJson, {
       parameter: "snap_earned_income_deduction_rate_for_net_income",
       value: "0.3",
     });
     expect(amended.previousValue).toBe("0.2");
     expect(amended.parameterId).toContain("#");
 
-    const after = benefit(amended.artifactJson);
+    const after = allotment(amended.artifactJson);
     expect(after).not.toBe(before);
     expect(Number(after)).toBeGreaterThan(Number(before));
 
     // The original string is untouched: current law still computes 478.
-    expect(benefit(artifactJson)).toBe("478");
+    expect(allotment(slice.artifactJson)).toBe("478");
   });
 
   it("refuses to amend a parameter that does not exist", () => {
-    expect(() => applyWhatIf(artifactJson, { parameter: "no_such_rule", value: "1" })).toThrow(
-      /no_such_rule/,
-    );
-  });
-});
-
-describe("presumed-answer overrides by durable ref", () => {
-  it("a ref override wins over the descriptor default", () => {
-    // Flag unearned income via the durable ref directly.
-    const ref = Object.entries(pkg.defaults).find(
-      ([, slot]) => slot.name === "snap_total_monthly_unearned_income",
-    )?.[0];
-    if (!ref) throw new Error("snap_total_monthly_unearned_income not in descriptor");
-    const request = buildPackageRequest({
-      pkg,
-      answers: { ...ANSWERS, refOverrides: { [ref]: "500" } },
-    });
-    const response = JSON.parse(
-      engine.execute(artifactJson, JSON.stringify(request)),
-    ) as ExecutionResponse;
-    const output = response.results[0].outputs[pkg.outputs.snap_benefit_amount];
-    if (output.kind !== "scalar") throw new Error("expected scalar");
-    expect(Number(output.value.value)).toBeLessThan(478);
+    expect(() =>
+      applyWhatIf(slice.artifactJson, { parameter: "no_such_rule", value: "1" }),
+    ).toThrow(/no_such_rule/);
   });
 });

@@ -1,16 +1,15 @@
 /**
- * The golden-path package: a composed, versioned compiled artifact plus a
- * descriptor that makes it answerable with a handful of headline questions.
+ * The runnable descriptor and its request builder: a compiled artifact
+ * plus the slot/entity/output plan that makes it answerable. Descriptors
+ * are synthesized per slice by src/lib/corpus.ts (there are no vendored
+ * program packages) and carry a screening-presumption default for every
+ * discovered input. Callers state the handful of facts they know; every
+ * other input takes its default — and all of them stay visible and
+ * overridable, because presuming an answer is a legal position the trace
+ * must be able to show.
  *
- * The descriptor (public/programs/<id>/package.json, emitted by
- * scripts/build-packages.mjs) carries a screening-presumption default
- * for every one of the program's discovered inputs. The page asks only the
- * curated headline questions; every other input takes its default — and all
- * of them stay visible and overridable, because presuming an answer is a
- * legal position the trace must be able to show.
- *
- * This module is shared verbatim by the page (browser/web wasm build) and
- * the test suite (vendored nodejs build), like src/lib/request.ts.
+ * This module is shared verbatim by the page (browser/web wasm build), the
+ * CLI, and the test suite (vendored nodejs build), like src/lib/request.ts.
  */
 
 import type {

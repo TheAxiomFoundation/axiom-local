@@ -1,24 +1,28 @@
 /**
- * Run any vendored program locally — same engine, same composed artifacts,
- * same request path as the page, from your terminal:
+ * Run any corpus subtree locally — same engine, same slicing machinery,
+ * same request path as the page, from your terminal. The subtree is the
+ * unit: pick a root, its import closure is compiled by the vendored wasm
+ * engine and executed on your machine.
  *
- *   bun scripts/determine.mjs --programs                     # the catalog, with statuses
- *   bun scripts/determine.mjs                                # ny-snap example ($478)
- *   bun scripts/determine.mjs --program <id>                 # switch programs
- *   bun scripts/determine.mjs --set snap_gross_monthly_earned_income=2400
- *   bun scripts/determine.mjs --people member_age=42,9,70    # per-person values
+ *   bun scripts/determine.mjs --roots [filter]         # the subtree catalog
+ *   bun scripts/determine.mjs                          # the 7 CFR 273.10 example
+ *   bun scripts/determine.mjs --root <target>          # slice a different subtree
+ *   bun scripts/determine.mjs --set household_size=3   # state a fact
  *   bun scripts/determine.mjs --what-if <parameter>=<value>  # amend the law
- *   bun scripts/determine.mjs --set household_size=4         # override a presumption
- *   bun scripts/determine.mjs --trace [--depth 3]            # chain of citation
- *   bun scripts/determine.mjs --slots | --json               # discover / integrate
+ *   bun scripts/determine.mjs --trace [--depth 3]      # chain of citation
+ *   bun scripts/determine.mjs --slots | --json         # discover / integrate
  *
- * Every program starts from its descriptor's example case; --set/--people
- * override slots by name. No Rust toolchain, no network: the wasm engine
- * and the artifacts are checked into this repo. Certification is a status,
- * not a gate: every determination is labeled "certified (ledger …)" or
- * "encoded — not certified" against the vendored ledger
- * (public/corpus/ledger.json). Set AXIOM_CERTIFIED_ENFORCEMENT=enforced
- * for the hard cut — uncertified programs then refuse to load.
+ * Requires public/corpus/ (bun scripts/build-corpus.mjs <rulespec checkout>).
+ * Inputs not stated with --set take synthesized screening presumptions; a
+ * presumption is a legal position, listed by --slots, never hidden. No Rust
+ * toolchain, no network. Certification is a status, not a gate: every
+ * determination is labeled "certified (ledger …)" or "encoded — not
+ * certified" against the vendored ledger (public/corpus/ledger.json). Set
+ * AXIOM_CERTIFIED_ENFORCEMENT=enforced for the hard cut — subtrees whose
+ * closure is not fully certified then refuse to run.
+ *
+ * Axiom-authored composition/pipeline paths are not law and refuse as
+ * roots — slice the statute, regulation, or policy modules they compose.
  */
 
 // This script imports the repo's TypeScript directly, which needs Bun.
@@ -33,7 +37,7 @@ if (!process.versions.bun) {
 }
 
 import { createRequire } from "node:module";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -41,20 +45,26 @@ const { buildPackageRequest } = await import("../src/lib/goldenPath.ts");
 const { applyWhatIf } = await import("../src/lib/whatIf.ts");
 const { buildDisplayTree } = await import("../src/lib/trace.ts");
 const {
-  assertPackageCertified,
-  collectClosureIds,
-  findUncertified,
-  packageStatus,
-  resolveEnforcement,
-  validateLedger,
-} = await import("../src/lib/certified.ts");
+  assertSliceableRoot,
+  moduleUrl,
+  probeFixpoint,
+  resolveClosure,
+  subtreeCatalog,
+  synthesizePackage,
+} = await import("../src/lib/corpus.ts");
+const { collectClosureIds, findUncertified, resolveEnforcement, validateLedger } = await import(
+  "../src/lib/certified.ts"
+);
 
 const require = createRequire(import.meta.url);
 const engine = require("../engine/pkg-node/axiom_rules_engine_wasm.js");
 
 const here = dirname(fileURLToPath(import.meta.url));
-const programsDir = join(here, "..", "public", "programs");
-const ledgerFile = join(here, "..", "public", "corpus", "ledger.json");
+const corpusDir = join(here, "..", "public", "corpus");
+const ledgerFile = join(corpusDir, "ledger.json");
+
+/** The worked example: pure 7 CFR 273.10 — the SNAP benefit computation. */
+const DEFAULT_ROOT = "us:regulations/7-cfr/273/10";
 
 /** A user mistake: print the message, no stack, exit 1. */
 class UsageError extends Error {}
@@ -70,7 +80,7 @@ const rawArgs = process.argv.slice(2);
 const args = [];
 for (let i = 0; i < rawArgs.length; i += 1) {
   const token = rawArgs[i];
-  if (["--set", "--people", "--what-if"].includes(token)) {
+  if (["--set", "--what-if"].includes(token)) {
     let assignment = rawArgs[i + 1] ?? "";
     let consumed = 1;
     if (!assignment.includes("=") && rawArgs[i + 2] === "=") {
@@ -102,34 +112,50 @@ async function main() {
     return;
   }
 
-  const index = JSON.parse(readFileSync(join(programsDir, "index.json"), "utf8")).programs;
+  if (!existsSync(join(corpusDir, "manifest.json"))) {
+    fail(
+      "public/corpus/ is not generated — run: bun scripts/build-corpus.mjs <rulespec checkout>",
+    );
+  }
+  const manifest = JSON.parse(readFileSync(join(corpusDir, "manifest.json"), "utf8"));
+  const catalog = subtreeCatalog(manifest);
 
-  if (has("programs")) {
-    if (index.length === 0) {
-      console.log("no programs vendored — the registry is empty");
+  if (has("roots")) {
+    const filter = (flag("roots") ?? "").toLowerCase();
+    const shown = filter
+      ? catalog.filter(
+          (entry) =>
+            entry.target.toLowerCase().includes(filter) ||
+            entry.rules.some((rule) => rule.toLowerCase().includes(filter)),
+        )
+      : catalog;
+    for (const entry of shown) {
+      console.log(`${String(entry.rules.length).padStart(4)}  ${entry.target}`);
     }
-    for (const program of index) {
-      console.log(
-        `${program.id.padEnd(20)} ${(program.certification ?? "encoded").padEnd(10)} ${program.title} — ${program.rules} rules (${program.jurisdiction})`,
-      );
-    }
+    console.log(
+      `\n${shown.length} of ${catalog.length} sliceable subtrees` +
+        (filter ? ` matching "${filter}"` : "") +
+        " — run one with --root <target>",
+    );
     return;
   }
 
-  const programId = flag("program") ?? "ny-snap";
-  if (!index.some((program) => program.id === programId)) {
-    fail(`Unknown program "${programId}". Try: bun scripts/determine.mjs --programs`);
+  const root = flag("root") ?? DEFAULT_ROOT;
+  // Composition/pipeline assembly is not law: refuse before anything
+  // resolves or compiles, with the honest reason.
+  try {
+    assertSliceableRoot(root);
+  } catch (error) {
+    fail(error instanceof Error ? error.message : String(error));
   }
-
-  const programDir = join(programsDir, programId);
-  let artifactJson = readFileSync(join(programDir, "artifact.json"), "utf8");
-  const pkg = JSON.parse(readFileSync(join(programDir, "package.json"), "utf8"));
+  if (!manifest.modules.some((entry) => entry.target === root)) {
+    fail(`Unknown root "${root}". Try: bun scripts/determine.mjs --roots ${root.split(":")[0]}`);
+  }
 
   // Certification status/gate: this CLI is a serving surface, so refusal
   // reasons report counts, never node ids. Permissive (the default and
-  // launch posture) serves everything with the status labeled; enforced
-  // is the hard cut — a package without matching certificate provenance
-  // and a fully certified closure refuses to load.
+  // launch posture) serves every slice with the status labeled; enforced
+  // is the hard cut — a closure with any uncertified node refuses to run.
   const enforcement = resolveEnforcement(process.env.AXIOM_CERTIFIED_ENFORCEMENT);
   let certified = null;
   try {
@@ -142,30 +168,41 @@ async function main() {
       );
     }
   }
-  const certification = packageStatus(
-    pkg,
-    JSON.parse(artifactJson),
-    Object.keys(pkg.defaults),
-    certified,
+
+  // Slice: resolve the import closure, compile it in the vendored engine,
+  // synthesize the runnable descriptor, probe entity attribution to a
+  // fixpoint — the page's exact machinery.
+  const closure = resolveClosure(manifest, root);
+  const modules = Object.fromEntries(
+    closure.map((target) => [
+      target,
+      readFileSync(join(corpusDir, moduleUrl(target).replace("/corpus/", "")), "utf8"),
+    ]),
   );
-  if (enforcement === "enforced" && certification !== "certified") {
-    try {
-      assertPackageCertified(pkg, certified);
-    } catch (error) {
-      fail(`${programId} ${error instanceof Error ? error.message : error}`);
-    }
-    const uncertified = findUncertified(
-      collectClosureIds(JSON.parse(artifactJson), Object.keys(pkg.defaults)),
-      certified,
-    );
+  let artifactJson = engine.compile(JSON.stringify(modules), root);
+  const artifact = JSON.parse(artifactJson);
+  const { pkg } = synthesizePackage(artifact, root, manifest.sources[0]?.commit ?? "unknown");
+  if (Object.keys(pkg.outputs).length === 0) {
     fail(
-      `refused: ${uncertified.length} node(s) in ${programId} are not certified under the ` +
-        `served ledger (${certified.ledger.ledger_id})`,
+      `${root} defines ${artifact.program.parameters.length} parameters and no executable ` +
+        `rules — nothing to run at this root. Pick one from --roots.`,
+    );
+  }
+  probeFixpoint(engine, artifactJson, artifact, pkg);
+
+  const uncertified = certified
+    ? findUncertified(collectClosureIds(artifact, Object.keys(pkg.defaults)), certified)
+    : null;
+  const certification = uncertified && uncertified.length === 0 ? "certified" : "encoded";
+  if (enforcement === "enforced" && certification !== "certified") {
+    fail(
+      `refused: ${uncertified.length} node(s) in the ${root} closure are not certified ` +
+        `under the served ledger (${certified.ledger.ledger_id})`,
     );
   }
   const certificationLine =
     certification === "certified"
-      ? `certified (ledger ${pkg.certified.ledger_id})`
+      ? `certified (ledger ${certified.ledger.ledger_id})`
       : "encoded — not certified";
 
   if (has("slots")) {
@@ -188,15 +225,8 @@ async function main() {
     fail(`--depth expects a positive number, got "${depthRaw}"`);
   }
 
-  // The descriptor's example is the base case; --set and --people override it.
-  const answers = {
-    household: { ...pkg.example.household },
-    people: Object.fromEntries(
-      Object.entries(pkg.example.people ?? {}).map(([slot, values]) => [slot, [...values]]),
-    ),
-    refOverrides: {},
-  };
-
+  // Synthesized presumptions are the base case; --set states the facts.
+  const answers = { household: {}, people: {}, refOverrides: {} };
   const slotByName = (name) => Object.values(pkg.defaults).find((slot) => slot.name === name);
 
   /** "$1,200" is fine; "four" is not. Validated against the slot's type. */
@@ -220,17 +250,6 @@ async function main() {
       }
       if (!slotByName(slot)) fail(`No input slot named "${slot}" — see --slots`);
       answers.household[slot] = checkValue(slot, value);
-    }
-    if (args[i] === "--people") {
-      const [slot, values] = (args[i + 1] ?? "").split("=");
-      if (!slot || values === undefined) {
-        fail(`--people expects slot=v1,v2,…, got "${args[i + 1]}"`);
-      }
-      if (!slotByName(slot)) fail(`No input slot named "${slot}" — see --slots`);
-      answers.people[slot] = values.split(",").map((value) => checkValue(slot, value.trim()));
-      // Growing the people list grows the counted entity with it.
-      const sizeSlot = pkg.entities.find((entity) => entity.count_from)?.count_from;
-      if (sizeSlot) answers.household[sizeSlot] = String(answers.people[slot].length);
     }
   }
 
@@ -256,7 +275,7 @@ async function main() {
   const outputName = flag("output") ?? Object.keys(pkg.outputs)[0];
   if (!pkg.outputs[outputName]) {
     fail(
-      `No output named "${outputName}". This program has: ${Object.keys(pkg.outputs).join(", ")}`,
+      `No output named "${outputName}". This subtree has: ${Object.keys(pkg.outputs).join(", ")}`,
     );
   }
 
@@ -270,7 +289,7 @@ async function main() {
     const message = error instanceof Error ? error.message : String(error);
     if (/has no value/.test(message)) {
       fail(
-        `${message}\nThe artifact encodes law effective for its period — try the program's default period (${pkg.default_period}).`,
+        `${message}\nThe corpus encodes law effective for its period — try the subtree's default period (${pkg.default_period}).`,
       );
     }
     fail(message);
@@ -288,8 +307,10 @@ async function main() {
     console.log(
       JSON.stringify(
         {
-          program: pkg.program_id,
+          root,
+          corpus_commit: manifest.sources[0]?.commit ?? "unknown",
           period: request.queries[0].period,
+          certification,
           amendment: whatIf ?? null,
           answers,
           outputs,
@@ -301,13 +322,14 @@ async function main() {
     return;
   }
 
-  console.log(`\n${pkg.title} (${pkg.jurisdiction})`);
+  console.log(`\n${root}`);
+  console.log(
+    `${closure.length} modules · ${artifact.program.derived.length} rules · ` +
+      `${artifact.program.parameters.length} parameters — compiled and executed locally`,
+  );
   console.log(`period ${request.queries[0].period.start}`);
   console.log(certificationLine);
   for (const [slot, v] of Object.entries(answers.household)) console.log(`  ${slot} = ${v}`);
-  for (const [slot, values] of Object.entries(answers.people)) {
-    if (values.length) console.log(`  ${slot} = ${values.join(", ")}`);
-  }
   if (amendment) {
     console.log(`AMENDED LAW: ${whatIf} (current law: ${amendment.previousValue}) — hypothetical`);
   }

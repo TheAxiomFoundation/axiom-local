@@ -51,6 +51,60 @@ export interface CorpusModuleEntry {
 }
 
 /**
+ * Axiom-authored assembly is never served as law: state-plan composition
+ * bridges, fy-2026 benefit-calculation compositions, `composition` policy
+ * buckets, and — bucket-agnostic — the mis-kinded `pilot_*_oracle_pipeline`
+ * family that lives even inside statute/regulation buckets. Mirrors
+ * `isCompositionPath` in axiom-api-runtime-sync/src/corpus-subtrees.ts.
+ * Accepts both corpus targets (`us-ny:policies/...`) and citation-shaped
+ * paths (`us-ny/policies/...`); only the first colon is a target separator
+ * (statute paths can contain colons, e.g. `us-la:statutes/47:294`).
+ *
+ * These paths stay in the vendored manifest — the flagship's import
+ * closure needs them to compile — but they are excluded from every corpus
+ * listing UI and refused as slice roots (assertSliceableRoot below).
+ */
+export function isCompositionPath(target: string): boolean {
+  const path = target.replace(":", "/");
+  if (path.endsWith("_pipeline")) return true;
+  if (!/\/(policy|policies)\//.test(`/${path}/`)) return false;
+  return (
+    path.includes("state-plan-composition") ||
+    path.includes("fy-2026-benefit-calculation") ||
+    path.endsWith("composition") ||
+    path.includes("/composition")
+  );
+}
+
+/**
+ * The slice-root gate for the corpus explorer: composition/pipeline
+ * assembly is not law and is not sliceable. The refusal is honest about
+ * why, and points at what IS browsable.
+ */
+export function assertSliceableRoot(root: string): void {
+  if (isCompositionPath(root)) {
+    throw new Error(
+      `${root} is Axiom-authored composition/pipeline assembly, not law — it is excluded ` +
+        `from the corpus explorer and cannot be sliced. Slice the statute, regulation, or ` +
+        `policy modules it composes instead.`,
+    );
+  }
+}
+
+/**
+ * The subtree catalog — everything offerable. The corpus subtree is THE
+ * unit this app serves (there is no vendored program registry): every
+ * module in the vendored corpus is a root you can slice at, minus
+ * axiom-authored composition/pipeline assembly (not law) and minus
+ * rule-less modules (parameter/citation shells with nothing to run).
+ */
+export function subtreeCatalog(manifest: CorpusManifest): CorpusModuleEntry[] {
+  return manifest.modules.filter(
+    (entry) => entry.rules.length > 0 && !isCompositionPath(entry.target),
+  );
+}
+
+/**
  * `us-co:regulations/10-ccr-2506-1/4.311.3` → `/corpus/modules/us-co/regulations/10-ccr-2506-1/4.311.3.yaml`.
  * Split on the FIRST colon only — statute paths can themselves contain
  * colons (e.g. `us-la:statutes/47:294`), and those are part of the path.

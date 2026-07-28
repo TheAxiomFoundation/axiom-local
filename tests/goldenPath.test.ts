@@ -1,177 +1,106 @@
 /**
- * The NY SNAP golden path: the artifact compiled directly from the pinned
- * corpus, executed by the vendored engine through the descriptor in
- * public/programs/ny-snap/, must reproduce the canonical two-person
- * household: $478 monthly benefit, $226.50 net income — the same values
- * axiom-api's parity suite pins for these facts (the federal arithmetic
- * dominates this household).
+ * The 7 CFR 273.10 golden path: the SNAP benefit-computation subtree,
+ * sliced straight from the vendored corpus and executed by the vendored
+ * engine, must reproduce the canonical two-person household — $478 monthly
+ * allotment, $226 net monthly income for $1,200 wages and $900 shelter.
+ * The allotment matches the value axiom-api's parity suite pins for the
+ * same household (the federal §273.10 arithmetic dominates it); the values
+ * here are regression pins on this corpus commit, asserted through the
+ * page's own request path.
  *
- * The golden path is also the certified path: the descriptor must carry
- * certificate provenance that matches the vendored ledger, or the runtime
- * loader would refuse the very program this test blesses.
+ * There is no vendored program behind this: the subtree IS the unit, and
+ * this test is the proof that pick → compile → state facts → execute is
+ * end-to-end sound.
  */
 
-import { createRequire } from "node:module";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import type { CompiledProgramArtifact, EngineBindings, ExecutionResponse } from "@/lib/engine/types";
-import {
-  assertPackageCertified,
-  certifiedSetVersion,
-  collectClosureIds,
-  findUncertified,
-  validateLedger,
-} from "@/lib/certified";
-import { discoverInputs } from "@/lib/program";
-import { buildPackageRequest, type GoldenPackage } from "@/lib/goldenPath";
+import type { ExecutionResponse } from "@/lib/engine/types";
+import { buildPackageRequest } from "@/lib/goldenPath";
+import { GOLDEN_ROOT, engine, haveCorpus, loadManifest, sliceAt } from "./sliceHarness";
 
-const require = createRequire(import.meta.url);
-const engine = require("../engine/pkg-node/axiom_rules_engine_wasm.js") as EngineBindings;
-
-const programDir = join(__dirname, "..", "public", "programs", "ny-snap");
-const artifactJson = readFileSync(join(programDir, "artifact.json"), "utf8");
-const artifact = JSON.parse(artifactJson) as CompiledProgramArtifact;
-const pkg = JSON.parse(readFileSync(join(programDir, "package.json"), "utf8")) as GoldenPackage;
-const ledgerRaw = JSON.parse(
-  readFileSync(join(__dirname, "..", "data", "certified-nodes.json"), "utf8"),
-);
-
-/** The canonical household: two people (42, 9), $1,200 wages, $900 shelter. */
+/** The canonical household: two people, $1,200 wages, $900 shelter. */
 const PARITY_ANSWERS = {
   household: {
     household_size: "2",
     snap_gross_monthly_earned_income: "1200",
-    household_shelter_costs_incurred: "900",
+    snap_total_allowable_shelter_expenses: "900",
   },
-  people: { member_age: ["42", "9"] },
+  people: {},
 };
 
-describe("the vendored engine accepts the direct-compiled artifact", () => {
-  it("carries the provenance envelope the vendored engine expects", () => {
-    expect(artifact.artifact_format_version).toBe(engine.artifact_format_version());
-    expect(artifact.engine_version).toBe(engine.engine_version());
+describe.skipIf(!haveCorpus)("the 7 CFR 273.10 golden path", () => {
+  const manifest = haveCorpus ? loadManifest() : null!;
+  const slice = haveCorpus ? sliceAt(manifest, GOLDEN_ROOT) : null!;
+
+  it("compiles to the provenance envelope the vendored engine expects", () => {
+    expect(slice.artifact.artifact_format_version).toBe(engine.artifact_format_version());
+    expect(slice.artifact.engine_version).toBe(engine.engine_version());
   });
 
-  it("addresses every discovered input through the certified prefix spelling", () => {
-    // The descriptor collapses per-module input spellings to the package
-    // prefix the ledger certifies; every discovered NAME must still be
-    // declared, and no ref may use another spelling.
-    const prefix = "us-ny:policies/otda/snap/fy-2026-benefit-calculation#input.";
-    const declaredNames = new Set(Object.values(pkg.defaults).map((slot) => slot.name));
-    for (const input of discoverInputs(artifact)) {
-      expect(declaredNames.has(input.name), input.name).toBe(true);
-    }
-    for (const ref of Object.keys(pkg.defaults)) {
-      expect(ref.startsWith(prefix), ref).toBe(true);
+  it("the outputs are the root module's own rules, durably identified", () => {
+    expect(Object.keys(slice.pkg.outputs).length).toBeGreaterThan(0);
+    for (const id of Object.values(slice.pkg.outputs)) {
+      expect(id.startsWith(`${GOLDEN_ROOT}#`), id).toBe(true);
     }
   });
 
-  it("every headline slot resolves to at least one declared input", () => {
-    for (const headline of pkg.headline) {
-      const hits = Object.values(pkg.defaults).filter(
-        (slot) => slot.name === headline.slot && slot.entity === headline.entity,
-      );
-      expect(hits.length, headline.slot).toBeGreaterThan(0);
-    }
-  });
-});
-
-describe("certificate provenance — the reason this program is servable at all", () => {
-  it("carries a stamp that matches the vendored ledger identity", async () => {
-    const certified = await validateLedger(ledgerRaw);
-    // The flagship's status is earned, not asserted: "certified".
-    expect(pkg.certification).toBe("certified");
-    expect(pkg.certified).toBeDefined();
-    expect(pkg.certified?.ledger_id).toBe(certified.ledger.ledger_id);
-    expect(pkg.certified?.certified_set_version).toBe(
-      await certifiedSetVersion(certified.ledger.entries),
-    );
-    // The loader's own gate must accept the shipped descriptor.
-    assertPackageCertified(pkg, certified);
-  });
-
-  it("names a certificate for every output, matching the ledger's", async () => {
-    const certified = await validateLedger(ledgerRaw);
-    for (const [name, id] of Object.entries(pkg.outputs)) {
-      const certificate = pkg.certified?.certificates[name];
-      expect(certificate, name).toBeDefined();
-      expect(certificate, name).toBe(certified.byId.get(id)?.certificate_id);
+  it("every default is keyed by the root-prefix input ref", () => {
+    for (const ref of Object.keys(slice.pkg.defaults)) {
+      expect(ref.startsWith(`${GOLDEN_ROOT}#input.`), ref).toBe(true);
     }
   });
 
-  it("has a fully certified node closure — nothing served is uncertified", async () => {
-    const certified = await validateLedger(ledgerRaw);
-    const missing = findUncertified(
-      collectClosureIds(artifact, Object.keys(pkg.defaults)),
-      certified,
-    );
-    expect(missing).toEqual([]);
-  });
-});
-
-describe("the pinned parity case, through the page's own request path", () => {
-  const request = buildPackageRequest({ pkg, answers: PARITY_ANSWERS });
-  const response = JSON.parse(
-    engine.execute(artifactJson, JSON.stringify(request)),
-  ) as ExecutionResponse;
-
-  it("executes in explain mode", () => {
+  it("executes the canonical household in explain mode", () => {
+    const response = JSON.parse(
+      engine.execute(
+        slice.artifactJson,
+        JSON.stringify(buildPackageRequest({ pkg: slice.pkg, answers: PARITY_ANSWERS })),
+      ),
+    ) as ExecutionResponse;
     expect(response.metadata.requested_mode).toBe("explain");
     expect(response.metadata.actual_mode).toBe("explain");
   });
 
-  it("computes the $478 benefit the parity suite pins", () => {
-    const output = response.results[0].outputs[pkg.outputs.snap_benefit_amount];
+  const outputs = () => {
+    const response = JSON.parse(
+      engine.execute(
+        slice.artifactJson,
+        JSON.stringify(buildPackageRequest({ pkg: slice.pkg, answers: PARITY_ANSWERS })),
+      ),
+    ) as ExecutionResponse;
+    return response.results[0].outputs;
+  };
+
+  it("computes the $478 allotment — the same figure axiom-api's parity suite pins", () => {
+    const output = outputs()[slice.pkg.outputs.snap_monthly_allotment];
     if (output.kind !== "scalar") throw new Error(`expected scalar, got ${output.kind}`);
     expect(output.value).toEqual({ kind: "decimal", value: "478" });
   });
 
-  it("computes the $226.50 net income the parity suite pins", () => {
-    const output = response.results[0].outputs[pkg.outputs.snap_net_income];
+  it("computes the $226 net monthly income", () => {
+    const output = outputs()[slice.pkg.outputs.snap_net_monthly_income];
     if (output.kind !== "scalar") throw new Error(`expected scalar, got ${output.kind}`);
-    expect(output.value).toEqual({ kind: "decimal", value: "226.5" });
+    expect(output.value).toEqual({ kind: "decimal", value: "226" });
   });
 
-  it("finds the household eligible", () => {
-    const output = response.results[0].outputs[pkg.outputs.snap_eligible];
-    expect(output.kind).not.toBe("scalar");
-    expect((output as { outcome?: string }).outcome).toBe("holds");
-  });
-});
-
-describe("the member_of_household relations actually bind people to the household", () => {
-  const benefitFor = (people: Record<string, string[]>, shelter: string) => {
-    const request = buildPackageRequest({
-      pkg,
-      answers: {
-        household: {
-          household_size: "2",
-          snap_gross_monthly_earned_income: "1200",
-          household_shelter_costs_incurred: shelter,
-        },
-        people,
-      },
-    });
+  it("a stated fact by ref override wins over the presumption", () => {
+    const ref = Object.entries(slice.pkg.defaults).find(
+      ([, slot]) => slot.name === "snap_total_monthly_unearned_income",
+    )?.[0];
+    if (!ref) throw new Error("snap_total_monthly_unearned_income not discovered");
     const response = JSON.parse(
-      engine.execute(artifactJson, JSON.stringify(request)),
+      engine.execute(
+        slice.artifactJson,
+        JSON.stringify(
+          buildPackageRequest({
+            pkg: slice.pkg,
+            answers: { ...PARITY_ANSWERS, refOverrides: { [ref]: "500" } },
+          }),
+        ),
+      ),
     ) as ExecutionResponse;
-    const output = response.results[0].outputs[pkg.outputs.snap_benefit_amount];
-    if (output.kind !== "scalar") throw new Error(`expected scalar, got ${output.kind}`);
-    return output.value;
-  };
-
-  it("an elderly-or-disabled member lifts the excess-shelter cap", () => {
-    // With $2,000 shelter costs the excess-shelter deduction hits the cap
-    // for a household with no elderly or disabled member; flagging one
-    // lifts the cap, so the benefit must differ. If the relation records
-    // were silently dropped, the person-level flag could never reach the
-    // household-level rule and these two values would be equal.
-    const capped = benefitFor({ member_age: ["42", "9"] }, "2000");
-    const lifted = benefitFor(
-      { member_age: ["70", "9"], snap_member_is_elderly_or_disabled: ["1", "0"] },
-      "2000",
-    );
-    expect(capped).not.toEqual(lifted);
+    const output = response.results[0].outputs[slice.pkg.outputs.snap_monthly_allotment];
+    if (output.kind !== "scalar") throw new Error("expected scalar");
+    expect(Number(output.value.value)).toBeLessThan(478);
   });
 });

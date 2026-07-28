@@ -1,104 +1,92 @@
 /**
- * The web Runner's exact flow, for EVERY vendored program — the invariant
- * the page sells: pick any program in the dropdown, see its inputs, edit a
- * presumption, run, get outputs. Mirrors Runner.tsx step for step (example
- * seeding, per-person list growth, refOverrides), so a regression here is a
- * regression a visitor would hit.
+ * The web explorer's exact flow, for a spread of catalog subtrees — the
+ * invariant the page sells: pick any offerable root, its closure compiles
+ * in-tab, its inputs are discovered from the compiled artifact, it runs
+ * with synthesized presumptions, and a presumption edit re-runs cleanly.
+ * Mirrors CorpusExplorer.tsx step for step (root gate, slice, probe,
+ * refOverrides), so a regression here is a regression a visitor would hit.
  */
 
-import { createRequire } from "node:module";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import type { EngineBindings, ExecutionResponse } from "@/lib/engine/types";
-import { buildPackageRequest, type GoldenAnswers, type GoldenPackage } from "@/lib/goldenPath";
+import type { ExecutionResponse } from "@/lib/engine/types";
+import { assertSliceableRoot, subtreeCatalog } from "@/lib/corpus";
+import { buildPackageRequest } from "@/lib/goldenPath";
+import { GOLDEN_ROOT, engine, haveCorpus, loadManifest, sliceAt } from "./sliceHarness";
 
-const require = createRequire(import.meta.url);
-const engine = require("../engine/pkg-node/axiom_rules_engine_wasm.js") as EngineBindings;
+/** A federal regulation, a state regulation, another state's — the spread. */
+const ROOTS = [
+  GOLDEN_ROOT,
+  "us-co:regulations/10-ccr-2506-1/4.311.3",
+  "us-ny:regulations/18-nycrr/385/3",
+];
 
-const programsDir = join(__dirname, "..", "public", "programs");
-const index = JSON.parse(readFileSync(join(programsDir, "index.json"), "utf8")) as {
-  programs: { id: string; provenance?: "envelope" | "legacy" }[];
-};
+describe.skipIf(!haveCorpus)("web explorer flow", () => {
+  const manifest = haveCorpus ? loadManifest() : null!;
+  const catalog = haveCorpus ? subtreeCatalog(manifest) : [];
 
-/** What Runner.tsx does between "program selected" and "outputs rendered". */
-function runnerFlow(pkg: GoldenPackage, artifactJson: string, refOverrides: Record<string, string>) {
-  // Seed from the example exactly as the effect does (join → split round-trip).
-  const household = { ...pkg.example.household };
-  const peopleText = Object.fromEntries(
-    Object.entries(pkg.example.people ?? {}).map(([slot, values]) => [slot, values.join(", ")]),
-  );
-  const answers: GoldenAnswers = {
-    household,
-    people: Object.fromEntries(
-      Object.entries(peopleText).map(([slot, text]) => [
-        slot,
-        text
-          .split(",")
-          .map((value) => value.trim())
-          .filter((value) => value !== ""),
-      ]),
-    ),
-    refOverrides,
-  };
-  const sizeSlot = pkg.entities.find((entity) => entity.count_from)?.count_from;
-  if (sizeSlot) {
-    const lists = Object.values(answers.people ?? {}).filter((values) => values.length > 0);
-    if (lists.length > 0) {
-      answers.household[sizeSlot] = String(Math.max(...lists.map((v) => v.length)));
+  it("every flow root is actually offerable — in the catalog, sliceable", () => {
+    for (const root of ROOTS) {
+      expect(catalog.some((entry) => entry.target === root), root).toBe(true);
+      expect(() => assertSliceableRoot(root), root).not.toThrow();
     }
-  }
-  const request = buildPackageRequest({ pkg, answers, month: pkg.default_period, mode: "explain" });
-  const response = JSON.parse(
-    engine.execute(artifactJson, JSON.stringify(request)),
-  ) as ExecutionResponse;
-  const result = response.results[0];
-  return Object.fromEntries(
-    Object.keys(pkg.outputs).map((name) => {
-      const output = result.outputs[pkg.outputs[name]];
-      if (!output || output.kind !== "scalar") return [name, output?.outcome ?? null];
-      return [name, output.value.value];
-    }),
-  );
-}
-
-for (const entry of index.programs) {
-  describe(`web runner flow: ${entry.id}`, () => {
-    const dir = join(programsDir, entry.id);
-    const artifactJson = readFileSync(join(dir, "artifact.json"), "utf8");
-    const pkg = JSON.parse(readFileSync(join(dir, "package.json"), "utf8")) as GoldenPackage;
-
-    it("has inputs to show — the form is never empty", () => {
-      expect(Object.keys(pkg.defaults).length).toBeGreaterThan(0);
-    });
-
-    it("runs with the seeded example and every output answers", () => {
-      const outputs = runnerFlow(pkg, artifactJson, {});
-      expect(Object.keys(outputs).length).toBeGreaterThan(0);
-      for (const [name, value] of Object.entries(outputs)) {
-        expect(value, `output ${name} answered`).not.toBeNull();
-      }
-    });
-
-    it("accepts a presumption edit through the editor's refOverrides path", () => {
-      // Flip the first bool presumption (or bump the first numeric one) —
-      // exactly what typing in the PresumptionEditor produces.
-      const entries = Object.entries(pkg.defaults);
-      const bool = entries.find(([, slot]) => slot.dtype === "bool");
-      const numeric = entries.find(
-        ([, slot]) => slot.dtype === "decimal" || slot.dtype === "integer",
-      );
-      const [ref, slot] = bool ?? numeric ?? entries[0];
-      const edited =
-        slot.dtype === "bool"
-          ? String(slot.value).toLowerCase() === "true"
-            ? "false"
-            : "true"
-          : String(Number(String(slot.value).replace(/[$,\s]/g, "") || 0) + 1);
-      const outputs = runnerFlow(pkg, artifactJson, { [ref]: edited });
-      for (const [name, value] of Object.entries(outputs)) {
-        expect(value, `output ${name} answered after edit`).not.toBeNull();
-      }
-    });
   });
-}
+
+  for (const root of ROOTS) {
+    describe(`subtree ${root}`, () => {
+      const slice = haveCorpus ? sliceAt(manifest, root) : null!;
+
+      it("has inputs to show — the form is never empty", () => {
+        expect(Object.keys(slice.pkg.defaults).length).toBeGreaterThan(0);
+      });
+
+      const run = (refOverrides: Record<string, string>) => {
+        const request = buildPackageRequest({
+          pkg: slice.pkg,
+          answers: { household: {}, people: {}, refOverrides },
+          month: slice.pkg.default_period,
+          mode: "explain",
+        });
+        const response = JSON.parse(
+          engine.execute(slice.artifactJson, JSON.stringify(request)),
+        ) as ExecutionResponse;
+        const result = response.results[0];
+        return Object.fromEntries(
+          Object.entries(slice.pkg.outputs).map(([name, id]) => {
+            const output = result.outputs[id];
+            if (!output || output.kind !== "scalar") return [name, output?.outcome ?? null];
+            return [name, output.value.value];
+          }),
+        );
+      };
+
+      it("runs on its synthesized presumptions and every output answers", () => {
+        const outputs = run({});
+        expect(Object.keys(outputs).length).toBeGreaterThan(0);
+        for (const [name, value] of Object.entries(outputs)) {
+          expect(value, `output ${name} answered`).not.toBeNull();
+        }
+      });
+
+      it("accepts a presumption edit through the editor's refOverrides path", () => {
+        // Flip the first bool presumption (or bump the first numeric one) —
+        // exactly what typing in the PresumptionEditor produces.
+        const entries = Object.entries(slice.pkg.defaults);
+        const bool = entries.find(([, slot]) => slot.dtype === "bool");
+        const numeric = entries.find(
+          ([, slot]) => slot.dtype === "decimal" || slot.dtype === "integer",
+        );
+        const [ref, slot] = bool ?? numeric ?? entries[0];
+        const edited =
+          slot.dtype === "bool"
+            ? String(slot.value).toLowerCase() === "true"
+              ? "false"
+              : "true"
+            : String(Number(String(slot.value).replace(/[$,\s]/g, "") || 0) + 1);
+        const outputs = run({ [ref]: edited });
+        for (const [name, value] of Object.entries(outputs)) {
+          expect(value, `output ${name} answered after edit`).not.toBeNull();
+        }
+      });
+    });
+  }
+});

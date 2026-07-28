@@ -36,9 +36,9 @@ export function ProvenanceFooter() {
               </dd>
             </div>
             <div className="flex items-baseline">
-              <dt className="text-ink-muted">artifacts</dt>
+              <dt className="text-ink-muted">corpus</dt>
               <span className="leader" aria-hidden="true" />
-              <dd className="text-ink">sha-256 pinned per program, asserted in CI</dd>
+              <dd className="text-ink">commit-pinned by corpus.lock.json, asserted in CI</dd>
             </div>
           </dl>
 

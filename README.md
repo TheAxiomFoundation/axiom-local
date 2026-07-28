@@ -2,9 +2,11 @@
 
 Law that runs on your machine. This repo is the local Axiom distribution —
 the [Axiom rules engine](https://github.com/TheAxiomFoundation/axiom-rules-engine)'s
-WebAssembly build and full composed statutory programs, hash-pinned and
-checked in — plus the page that tells you how to use it. Exploring the rules
-themselves is the Axiom app's job; running them on your end is this repo's.
+WebAssembly build, checked in, plus the vendored RuleSpec corpus and the page
+that tells you how to use it. The corpus subtree is the unit: pick a root,
+its import closure compiles on your machine and runs there. Exploring the
+rules themselves is the Axiom app's job; running them on your end is this
+repo's.
 
 ## Why this exists
 
@@ -31,55 +33,45 @@ of citation. The explain-mode trace renders as an expandable tree where every
 derived value, every statutory parameter, and every answer you gave is shown with
 the id it came from.
 
-## The programs: full composed artifacts, not demos
+## The subtrees: the corpus is the catalog
 
-The page ships **composed compiled artifacts** — the same versioned release
-units the hosted engine executes, provenance and sha-256 shown on the page —
-and every program wears its **certification status**. Certification is a
-status, not a gate (the launch posture, matching axiom-api): *certified*
-means the program's full node closure — rules, parameters, relations,
-inputs — carries verifier-issued certificates in the vendored ledger
+There is no program registry and no pre-composed bundle. The unit this repo
+serves is the **corpus subtree**: every module in the vendored corpus
+(`public/corpus/`, regenerated from the commit pinned in `corpus.lock.json`)
+is a root you can slice at — a statute section, a regulation paragraph, a
+manual chapter. The root's transitive import closure is compiled by the same
+wasm engine, in your tab or your terminal, and the compiled artifact's own
+expression tree determines which inputs exist. Two kinds of path never
+offer: **Axiom-authored composition/pipeline assembly** (state-plan
+compositions, benefit-calculation compositions, `*_pipeline` modules) —
+authoring scaffolding, not law, refused as a root with the reason stated —
+and rule-less modules, which have nothing to run.
+
+Every slice wears its **certification status**. Certification is a status,
+not a gate (the launch posture, matching axiom-api): *certified* means the
+slice's full node closure — rules, parameters, input refs — carries
+verifier-issued certificates in the vendored ledger
 (`data/certified-nodes.json`, served as `public/corpus/ledger.json`);
-*encoded* means it is served from a compiled graph without that backing —
+*encoded* means it runs from the compiled graph without that backing —
 published, labeled, and on the certification queue. Almost nothing is
 certified yet; publishing that honestly is the point. Set
-`AXIOM_CERTIFIED_ENFORCEMENT=enforced` for the hard cut, where uncertified
-programs refuse to vendor and to load.
+`AXIOM_CERTIFIED_ENFORCEMENT=enforced` for the hard cut, where a closure
+with any uncertified node refuses to run.
 
-The flagship is certified end to end under the current (fixture) ledger:
+The golden path is **7 CFR 273.10** — the SNAP benefit computation, four
+modules deep. For the canonical two-person household ($1,200 monthly earned
+income, $900 shelter costs) it computes a **$478 monthly allotment**,
+pinned by this repo's tests and matching the figure axiom-api's parity
+suite pins for the same household. The handful of facts you state are the
+case; every other input takes a **synthesized screening presumption**, all
+of them inspectable and editable — a presumption is a legal position, so
+the page treats it as one. The CLI's `--what-if` amends a statutory
+parameter inside the compiled artifact and re-runs the same household under
+amended law. See [docs/golden-path.md](docs/golden-path.md) for background.
 
-| Program | Status | Rules | Inputs | Law |
-|---|---|---|---|---|
-| New York SNAP (the golden path) | **certified** | 122 | 143 | 7 USC 2011–2036 · 7 CFR 273 · 18 NYCRR 385–387 |
-| 13 more — AL/AZ/CA/NC/SC/TN SNAP, AK/CO/KS/TX TANF, IL SCRETD, US OASDI, UK UC | encoded | — | — | see `--programs` |
-
-The landing page embeds the runner: state the facts, run — for the canonical
-two-person household ($1,200 monthly earned income, $900 shelter costs) NY
-SNAP computes a **$478 monthly benefit**, matching the value axiom-api's
-parity suite pins for the same facts. Every determination is downloadable as
-the same JSON `scripts/determine.mjs --json` prints, byte for byte.
-`scripts/build-packages.mjs` admits new artifacts (descriptor generation is
-engine-probed; see the DIRECT_PROGRAMS / PROGRAMS configs), stamping
-certificates wherever the ledger covers a full closure.
-
-A handful of headline questions carry the curated determinations; every
-program's remaining inputs take **screening presumptions**, all of them
-inspectable and editable in the presumption editor — a presumption is a legal
-position, so the page treats it as one. The CLI's `--what-if` amends a
-statutory parameter inside the artifact and re-runs the same household under
-amended law. See [docs/golden-path.md](docs/golden-path.md) for the full
-walkthrough.
-
-Beyond the catalog, the landing page carries the **corpus explorer**: search every
-encoded rule across the served RuleSpec corpus, slice at any target
-(a statute section, a regulation paragraph), and the import closure is
-fetched, compiled in the tab, and run — no bundle required. Slices wear the
-same certification status as the catalog; under
-`AXIOM_CERTIFIED_ENFORCEMENT=enforced` a slice whose closure touches any
-uncertified node refuses, naming the missing ids (the explorer is dev
-tooling — the one surface allowed to name them). Slices are valid and cited
-but not parity-pinned; the provenance line says which corpus commit and
-ledger. Generate the corpus locally with
+The landing page embeds the explorer: the catalog on load, search across
+every encoded rule, slice at any target, compiled in the tab and run — no
+bundle, no server. Generate the corpus locally with
 `bun scripts/build-corpus.mjs <rulespec-us checkout>`.
 
 The page is deliberately lean: reading and dissecting rule text is the Axiom
@@ -93,16 +85,16 @@ app's job — this repo carries the execution story.
 - **Vendored wasm engine.** Both wasm-pack targets are checked into the repo:
   - `public/engine/` — the `--target web` build, fetched and instantiated by the
     browser at load time.
-  - `public/programs/<id>/` — the vendored compiled artifacts plus their
-    descriptors (defaults, headline questions, provenance), emitted by
-    `scripts/build-packages.mjs` and pinned by the test suite;
-    `public/programs/index.json` is the registry the page and CLI read.
-    The engine (js + wasm) loads once, each program costs one descriptor +
-    one artifact fetch, and determinations never fetch.
   - `engine/pkg-node/` — the `--target nodejs` build, loaded by the test suite.
 
-  Checking the built packages in means **CI and any host need no Rust toolchain**;
+  Checking the built engine in means **CI and any host need no Rust toolchain**;
   `bun run build` works from a clean checkout.
+- **The vendored corpus** (`public/corpus/`, gitignored; regenerated by
+  `scripts/build-corpus.mjs` from the commit pinned in `corpus.lock.json`)
+  is the only vendored data: per-module RuleSpec YAML plus one manifest of
+  targets, imports, and rule names. Slicing (`src/lib/corpus.ts`) resolves a
+  root's closure from the manifest, compiles it, synthesizes the runnable
+  descriptor, and probes entity attribution to a fixpoint.
 - **A shared request module** (`src/lib/request.ts`) builds the
   `CompiledExecutionRequest` that crosses the wasm boundary. The page (running the
   web build) and the tests (running the nodejs build) call it identically, so the
@@ -133,26 +125,27 @@ public/engine/         vendored web wasm build (served to the browser)
 
 ## Run it locally
 
-This repo is the local distribution: the wasm engine and the composed,
-hash-pinned artifacts are checked in, so a clone runs the whole thing
-offline with no Rust toolchain. Requires [Bun](https://bun.sh) only.
+This repo is the local distribution: the wasm engine is checked in and the
+corpus regenerates from the pinned commit, so everything runs offline with
+no Rust toolchain. Requires [Bun](https://bun.sh) only.
 
 ```sh
 git clone https://github.com/TheAxiomFoundation/axiom-local
 cd axiom-local && bun install
+bun scripts/build-corpus.mjs ../rulespec-us   # generate public/corpus/
 
 # The page, with hot reload:
 bun run dev          # http://localhost:3000
 
 # Or the same determination straight from your terminal:
-bun scripts/determine.mjs --programs                        # the catalog, with statuses
-bun scripts/determine.mjs                                   # $478, the pinned case
-bun scripts/determine.mjs --set snap_gross_monthly_earned_income=2400   # ineligible
-bun scripts/determine.mjs --people member_age=42,9,70
+bun scripts/determine.mjs --roots snap        # the subtree catalog
+bun scripts/determine.mjs \
+  --set household_size=2 --set snap_gross_monthly_earned_income=1200 \
+  --set snap_total_allowable_shelter_expenses=900     # $478, the pinned case
+bun scripts/determine.mjs --root us-ny:regulations/18-nycrr/385/3   # any subtree
 bun scripts/determine.mjs --what-if snap_earned_income_deduction_rate_for_net_income=0.3
-bun scripts/determine.mjs --set snap_total_monthly_unearned_income=500  # override a presumption
 bun scripts/determine.mjs --trace                           # chain of citation
-bun scripts/determine.mjs --slots                           # list all 143 inputs
+bun scripts/determine.mjs --slots                           # every input the slice reads
 bun scripts/determine.mjs --json                            # machine-readable
 ```
 
@@ -165,8 +158,9 @@ Other scripts:
 
 ```sh
 bun run typecheck    # tsc --noEmit
-bun run test         # vitest: runs the UI's own request path through the
-                     #         vendored nodejs engine and asserts the 268 path
+bun run test         # vitest: the 7 CFR 273.10 golden path, the
+                     #         composition/pipeline exclusion, the certified
+                     #         gate, corpus slicing, and the CLI
 bun run build        # static export to ./out
 ```
 

@@ -3,19 +3,21 @@
  * resolve a closure from the generated manifest, compile it, check it
  * against the certification ledger, synthesize a descriptor, probe to a
  * fixpoint, execute. Skipped when public/corpus/ has not been generated
- * (it is gitignored; CI runs without it).
+ * (it is gitignored; CI regenerates it from corpus.lock.json).
  *
- * Both postures are asserted here: under PERMISSIVE (the default) every
- * root slices and runs, wearing its certification status; under ENFORCED
+ * The offerable surface is the subtree catalog: corpus modules minus
+ * Axiom-authored composition/pipeline assembly (excluded from listings,
+ * REFUSED as roots) and minus rule-less shells. Both certification
+ * postures are asserted: under PERMISSIVE (the default) every catalog
+ * root slices and runs wearing its status; under ENFORCED
  * (assertArtifactCertified — pinned explicitly, so the gate cannot rot
  * while it waits behind the launch switch) a root whose closure carries
  * ANY uncertified node refuses, naming the ids (dev-tooling context).
  */
-import { createRequire } from "node:module";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import type { CompiledProgramArtifact } from "../src/lib/engine/types";
 import {
   assertArtifactCertified,
   collectClosureIds,
@@ -24,46 +26,97 @@ import {
   type CertifiedIndex,
 } from "../src/lib/certified";
 import {
+  assertSliceableRoot,
+  isCompositionPath,
   moduleUrl,
-  probeFixpoint,
-  resolveClosure,
+  subtreeCatalog,
   synthesizePackage,
-  type CorpusManifest,
+  probeFixpoint,
 } from "../src/lib/corpus";
-import { buildPackageRequest, type GoldenPackage } from "../src/lib/goldenPath";
+import { buildPackageRequest } from "../src/lib/goldenPath";
+import {
+  GOLDEN_ROOT,
+  compileAt,
+  corpusDir,
+  engine,
+  haveCorpus,
+  loadManifest,
+} from "./sliceHarness";
 
-const require = createRequire(import.meta.url);
-const corpusDir = join(__dirname, "..", "public", "corpus");
-const manifestPath = join(corpusDir, "manifest.json");
-const haveCorpus = existsSync(manifestPath);
-
-const CERTIFIED_ROOT = "us-ny:policies/otda/snap/fy-2026-benefit-calculation";
+const COMPOSITION_ROOT = "us-ny:policies/otda/snap/fy-2026-benefit-calculation";
 const UNCERTIFIED_ROOTS = [
   "us-co:regulations/10-ccr-2506-1/4.311.3",
   "us-ny:regulations/18-nycrr/385/3",
-  "us-co:policies/cdhs/snap/fy-2026-benefit-calculation",
 ];
 
+describe("composition/pipeline exclusion (isCompositionPath)", () => {
+  it("matches axiom-authored assembly in policy buckets", () => {
+    for (const target of [
+      "us:policies/usda/snap/state-plan-composition",
+      "us-ny:policies/otda/snap/fy-2026-benefit-calculation",
+      "us-co:policies/cdhs/snap/fy-2026-benefit-calculation",
+      "us-az:policies/des/faa5/na-eligibility-and-benefit-determination/fy-2026-benefit-calculation",
+      "us:policies/usda/snap/composition",
+      "us:policies/usda/snap/composition/bridge",
+    ]) {
+      expect(isCompositionPath(target), target).toBe(true);
+    }
+  });
+
+  it("matches the mis-kinded pilot pipeline family in ANY bucket", () => {
+    // The `pilot_*_oracle_pipeline` modules live even inside statute and
+    // regulation buckets — the suffix check is bucket-agnostic.
+    expect(isCompositionPath("us:statutes/7/pilot_snap_oracle_pipeline")).toBe(true);
+    expect(isCompositionPath("us-tx:regulations/1-tac/pilot_tanf_oracle_pipeline")).toBe(true);
+  });
+
+  it("passes real law through — statutes, regulations, non-assembly policies", () => {
+    for (const target of [
+      "us:statutes/7/2014/e",
+      "us-la:statutes/47:294",
+      "us-co:regulations/10-ccr-2506-1/4.311.3",
+      "us-ny:regulations/18-nycrr/385/3",
+      "us:policies/usda/snap/fy-2026-cola/maximum-allotments",
+    ]) {
+      expect(isCompositionPath(target), target).toBe(false);
+    }
+  });
+
+  it("refuses a composition root as a slice root, with an honest message", () => {
+    expect(() => assertSliceableRoot(COMPOSITION_ROOT)).toThrowError(
+      /composition\/pipeline assembly, not law.*cannot be sliced/s,
+    );
+    expect(() => assertSliceableRoot("us:statutes/7/2014/e")).not.toThrow();
+  });
+});
+
+describe.skipIf(!haveCorpus)("the subtree catalog", () => {
+  const manifest = haveCorpus ? loadManifest() : null!;
+  const catalog = haveCorpus ? subtreeCatalog(manifest) : [];
+
+  it("offers real law only: no composition/pipeline paths, no rule-less shells", () => {
+    expect(catalog.length).toBeGreaterThan(0);
+    for (const entry of catalog) {
+      expect(isCompositionPath(entry.target), entry.target).toBe(false);
+      expect(entry.rules.length, entry.target).toBeGreaterThan(0);
+    }
+  });
+
+  it("carries the golden-path subtree, and not the composition it also feeds", () => {
+    expect(catalog.some((entry) => entry.target === GOLDEN_ROOT)).toBe(true);
+    expect(catalog.some((entry) => entry.target === COMPOSITION_ROOT)).toBe(false);
+    // The composition module itself stays in the MANIFEST — closures need
+    // it — the catalog is what got smaller.
+    expect(manifest.modules.some((entry) => entry.target === COMPOSITION_ROOT)).toBe(true);
+    expect(catalog.length).toBeLessThan(manifest.modules.length);
+  });
+});
+
 describe.skipIf(!haveCorpus)("corpus slicing under the certified gate", async () => {
-  const engine = require("../engine/pkg-node/axiom_rules_engine_wasm.js");
-  const manifest = haveCorpus
-    ? (JSON.parse(readFileSync(manifestPath, "utf8")) as CorpusManifest)
-    : null!;
+  const manifest = haveCorpus ? loadManifest() : null!;
   const certified: CertifiedIndex = haveCorpus
     ? await validateLedger(JSON.parse(readFileSync(join(corpusDir, "ledger.json"), "utf8")))
     : null!;
-
-  const compileAt = (root: string) => {
-    const closure = resolveClosure(manifest, root);
-    const modules = Object.fromEntries(
-      closure.map((target) => [
-        target,
-        readFileSync(join(corpusDir, moduleUrl(target).replace("/corpus/", "")), "utf8"),
-      ]),
-    );
-    const artifactJson = engine.compile(JSON.stringify(modules), root) as string;
-    return { closure, artifactJson, artifact: JSON.parse(artifactJson) as CompiledProgramArtifact };
-  };
 
   it("records its source commit and its ledger identity", () => {
     expect(manifest.sources[0].repo).toContain("rulespec");
@@ -89,32 +142,9 @@ describe.skipIf(!haveCorpus)("corpus slicing under the certified gate", async ()
     }
   });
 
-  it(`slices, gates, probes, and executes the certified root ${CERTIFIED_ROOT}`, () => {
-    const { closure, artifactJson, artifact } = compileAt(CERTIFIED_ROOT);
-    expect(closure.length).toBeGreaterThan(0);
-    expect(artifact.program.derived.length).toBeGreaterThan(0);
-
-    const { pkg } = synthesizePackage(artifact, CERTIFIED_ROOT, manifest.sources[0].commit);
-    // The explorer's own gate order: post-compile, and again post-probe
-    // for the refs the probe admitted.
-    assertArtifactCertified(artifact, Object.keys(pkg.defaults), certified);
-    probeFixpoint(engine, artifactJson, artifact, pkg);
-    assertArtifactCertified(artifact, Object.keys(pkg.defaults), certified);
-
-    const request = buildPackageRequest({
-      pkg,
-      answers: { household: {}, people: {}, refOverrides: {} },
-    });
-    const response = JSON.parse(engine.execute(artifactJson, JSON.stringify(request)));
-    const outputs = response.results[0].outputs;
-    for (const id of Object.values(pkg.outputs)) {
-      expect(outputs[id], `output ${id} present`).toBeDefined();
-    }
-  });
-
   for (const root of UNCERTIFIED_ROOTS) {
     it(`ENFORCED: refuses the uncertified root ${root}, naming the ids`, () => {
-      const { artifactJson, artifact } = compileAt(root);
+      const { artifactJson, artifact } = compileAt(manifest, root);
       const { pkg } = synthesizePackage(artifact, root, manifest.sources[0].commit);
       expect(artifactJson.length).toBeGreaterThan(0);
       expect(() =>
@@ -134,7 +164,7 @@ describe.skipIf(!haveCorpus)("corpus slicing under the certified gate", async ()
     // The explorer's default path: no refusal — compile, probe, execute,
     // and compute the status the provenance line shows.
     const root = UNCERTIFIED_ROOTS[0];
-    const { artifactJson, artifact } = compileAt(root);
+    const { artifactJson, artifact } = compileAt(manifest, root);
     const { pkg } = synthesizePackage(artifact, root, manifest.sources[0].commit);
     probeFixpoint(engine, artifactJson, artifact, pkg);
     const certification =
@@ -153,53 +183,5 @@ describe.skipIf(!haveCorpus)("corpus slicing under the certified gate", async ()
     for (const id of Object.values(pkg.outputs)) {
       expect(outputs[id], `output ${id} present`).toBeDefined();
     }
-  });
-
-  /**
-   * The whole thesis in one test: a slice compiled from corpus source,
-   * plus curation applied as a data overlay (the vendored descriptor's
-   * entity plan and screening presumptions, carried by slot name),
-   * reproduces the pinned $478 determination — no pre-composed artifact
-   * involved, every node certified.
-   */
-  it("reproduces the pinned ny-snap benefit from source + curation overlay", () => {
-    const { artifactJson, artifact } = compileAt(CERTIFIED_ROOT);
-    const { pkg } = synthesizePackage(artifact, CERTIFIED_ROOT, manifest.sources[0].commit);
-
-    const vendored = JSON.parse(
-      readFileSync(join(__dirname, "..", "public", "programs", "ny-snap", "package.json"), "utf8"),
-    ) as GoldenPackage;
-    pkg.entities = vendored.entities;
-    pkg.query = vendored.query;
-    const vendoredByName = new Map(
-      Object.values(vendored.defaults).map((slot) => [slot.name, slot]),
-    );
-    for (const slot of Object.values(pkg.defaults)) {
-      const carried = vendoredByName.get(slot.name);
-      if (carried && carried.dtype === slot.dtype) slot.value = carried.value;
-    }
-    probeFixpoint(engine, artifactJson, artifact, pkg);
-    assertArtifactCertified(artifact, Object.keys(pkg.defaults), certified);
-    pkg.outputs = vendored.outputs;
-
-    const request = buildPackageRequest({
-      pkg,
-      answers: {
-        household: {
-          household_size: "2",
-          snap_gross_monthly_earned_income: "1200",
-          household_shelter_costs_incurred: "900",
-        },
-        people: { member_age: ["42", "9"] },
-        refOverrides: {},
-      },
-    });
-    const response = JSON.parse(engine.execute(artifactJson, JSON.stringify(request)));
-    const outputs = response.results[0].outputs;
-    const benefit = outputs[pkg.outputs.snap_benefit_amount];
-    expect(benefit.kind).toBe("scalar");
-    expect(benefit.value.value).toBe("478");
-    const eligible = outputs[pkg.outputs.snap_eligible];
-    expect(eligible.outcome).toBe("holds");
   });
 });

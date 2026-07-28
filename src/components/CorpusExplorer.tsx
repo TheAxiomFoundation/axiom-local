@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { PresumptionEditor } from "@/components/PresumptionEditor";
 import { loadEngine } from "@/lib/engine/load";
 import type { CompiledProgramArtifact, ExecutionResponse } from "@/lib/engine/types";
@@ -14,11 +14,14 @@ import {
   type CertifiedIndex,
 } from "@/lib/certified";
 import {
+  assertSliceableRoot,
   moduleUrl,
   probeFixpoint,
   resolveClosure,
+  subtreeCatalog,
   synthesizePackage,
   type CorpusManifest,
+  type CorpusModuleEntry,
 } from "@/lib/corpus";
 import {
   buildPackageRequest,
@@ -27,10 +30,13 @@ import {
 } from "@/lib/goldenPath";
 
 /**
- * The graph, not the bundles: search every rule in the served corpus, slice
- * at any target, compile the closure in this tab, and run it. Slices are
- * VALID (well-formed, cited, from the pinned corpus commit) but not
- * parity-PINNED like the cataloged programs — the provenance line says so.
+ * The subtree IS the unit — there is no program registry. Every module in
+ * the vendored corpus (minus Axiom-authored composition/pipeline assembly,
+ * minus rule-less shells) is a root: pick one from the catalog or search
+ * by rule name or citation, its import closure is fetched and compiled to
+ * an artifact in this tab, its inputs are discovered from the compiled
+ * artifact, and it runs — with every unstated input carried as a visible,
+ * overridable screening presumption.
  *
  * Certification is a status on every slice: the closure is checked against
  * the served ledger and labeled "certified (ledger …)" or "encoded — not
@@ -41,6 +47,9 @@ import {
  */
 
 const ENFORCEMENT = resolveEnforcement(process.env.NEXT_PUBLIC_AXIOM_CERTIFIED_ENFORCEMENT);
+
+/** The worked example: pure 7 CFR 273.10 — the SNAP benefit computation. */
+const DEFAULT_ROOT = "us:regulations/7-cfr/273/10";
 
 interface SearchHit {
   target: string;
@@ -122,14 +131,40 @@ export function CorpusExplorer() {
       });
   }, [manifestState.kind]);
 
+  // Load the catalog immediately: the subtree list IS the landing surface,
+  // not something hidden behind a focused search box.
+  useEffect(() => {
+    ensureManifest();
+  }, [ensureManifest]);
+
+  // The offerable catalog: corpus modules minus composition/pipeline
+  // assembly, minus rule-less shells (subtreeCatalog in src/lib/corpus.ts).
+  const catalog = useMemo<CorpusModuleEntry[]>(
+    () => (manifestState.kind === "ready" ? subtreeCatalog(manifestState.manifest) : []),
+    [manifestState],
+  );
+
   const { hits, totalHits } = useMemo<{ hits: SearchHit[]; totalHits: number }>(() => {
     if (manifestState.kind !== "ready") return { hits: [], totalHits: 0 };
     const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
-    if (terms.length === 0) return { hits: [], totalHits: 0 };
+    if (terms.length === 0) {
+      // No search: offer the largest subtrees as a browsable starting
+      // point; the full catalog is one search away.
+      const top = [...catalog]
+        .sort((a, b) => b.rules.length - a.rules.length || a.target.localeCompare(b.target))
+        .slice(0, 12)
+        .map((entry) => ({
+          target: entry.target,
+          jurisdiction: entry.jurisdiction,
+          ruleCount: entry.rules.length,
+          matched: [],
+        }));
+      return { hits: top, totalHits: catalog.length };
+    }
     // Score every match, sort, THEN cap — manifest order is alphabetical by
     // target, and a raw first-30 cut would hide every late-alphabet state.
     const scored: (SearchHit & { score: number })[] = [];
-    for (const entry of manifestState.manifest.modules) {
+    for (const entry of catalog) {
       const targetText = entry.target.toLowerCase();
       const matched: string[] = [];
       let score = 0;
@@ -157,8 +192,6 @@ export function CorpusExplorer() {
           }
         }
       }
-      // Rule-less parameter/citation shells rank below executable modules.
-      if (entry.rules.length === 0) score -= 2;
       scored.push({
         target: entry.target,
         jurisdiction: entry.jurisdiction,
@@ -169,7 +202,7 @@ export function CorpusExplorer() {
     }
     scored.sort((a, b) => b.score - a.score || b.ruleCount - a.ruleCount);
     return { hits: scored.slice(0, 12), totalHits: scored.length };
-  }, [manifestState, query]);
+  }, [manifestState, catalog, query]);
 
   const sliceAt = useCallback(
     async (root: string) => {
@@ -180,6 +213,9 @@ export function CorpusExplorer() {
       setOverrides({});
       setError(null);
       try {
+        // Composition/pipeline paths are refused as roots outright — before
+        // any closure resolution, compilation, or certification talk.
+        assertSliceableRoot(root);
         const closure = resolveClosure(manifestState.manifest, root);
         const texts = await Promise.all(
           closure.map((target) =>
@@ -225,6 +261,7 @@ export function CorpusExplorer() {
           ).length === 0
             ? "certified"
             : "encoded";
+        setMonth(pkg.default_period);
         setSlice({
           root,
           artifactJson,
@@ -291,6 +328,25 @@ export function CorpusExplorer() {
     }
   }, [slice, overrides, month]);
 
+  // The default subtree slices itself: the landing state is a live
+  // determination over real law, not an empty search box.
+  const autoSliced = useRef(false);
+  useEffect(() => {
+    if (autoSliced.current || manifestState.kind !== "ready") return;
+    if (!catalog.some((entry) => entry.target === DEFAULT_ROOT)) return;
+    autoSliced.current = true;
+    void sliceAt(DEFAULT_ROOT);
+  }, [manifestState, catalog, sliceAt]);
+
+  // A fresh slice runs once with its presumptions so outputs render
+  // without a click; presumption edits re-run through the button.
+  const ranFor = useRef<Slice | null>(null);
+  useEffect(() => {
+    if (!slice || ranFor.current === slice) return;
+    ranFor.current = slice;
+    void run();
+  }, [slice, run]);
+
   const fieldClass = "field text-[0.82rem]";
   const corpusSource =
     manifestState.kind === "ready" ? manifestState.manifest.sources[0] : null;
@@ -300,12 +356,11 @@ export function CorpusExplorer() {
       <div className="panel p-5">
         <label className="block">
           <span className="smallcaps text-[0.62rem] text-ink-secondary">
-            Search the graph — any rule, any citation
+            Pick a subtree — any rule, any citation
           </span>
           <input
             className={`${fieldClass} mt-1`}
             value={query}
-            onFocus={ensureManifest}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="work requirement us-co · abawd · 18-nycrr 385 · standard deduction"
           />
@@ -332,8 +387,9 @@ export function CorpusExplorer() {
 
         {totalHits > hits.length ? (
           <p className="mt-3 font-mono text-[0.68rem] text-ink-muted">
-            showing the {hits.length} most relevant of {totalHits} matches — refine the search
-            to narrow further
+            {query
+              ? `showing the ${hits.length} most relevant of ${totalHits} matches — refine the search to narrow further`
+              : `the ${hits.length} largest of ${totalHits} sliceable subtrees — search to reach the rest`}
           </p>
         ) : null}
         {hits.length > 0 ? (
@@ -474,7 +530,7 @@ export function CorpusExplorer() {
           {slice.corrected + slice.admitted > 0
             ? ` (${slice.corrected} attributions corrected, ${slice.admitted} inputs admitted by probe)`
             : ""}{" "}
-          — well-formed and cited, but not parity-pinned like the cataloged programs above
+          — well-formed and cited; unstated inputs carry synthesized screening presumptions
         </p>
       ) : null}
     </div>
