@@ -151,7 +151,11 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-        run: bunx vercel promote "${{ steps.stage.outputs.url }}" --token "$VERCEL_TOKEN"
+        # Unlike pull/build/deploy, `vercel promote` does not read
+        # VERCEL_ORG_ID from the environment — without an explicit scope it
+        # looks for the deployment under the token's personal account and
+        # fails with "Can't find the deployment".
+        run: bunx vercel promote "${{ steps.stage.outputs.url }}" --scope "$VERCEL_ORG_ID" --token "$VERCEL_TOKEN"
 
       - name: Smoke production
         env:
