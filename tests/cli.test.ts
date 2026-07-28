@@ -96,12 +96,23 @@ describe.skipIf(!haveCorpus)("bun scripts/determine.mjs", () => {
     expect(Number(parsed.outputs.snap_monthly_allotment)).toBeLessThan(478);
   });
 
-  it("emits machine-readable JSON with --json", () => {
+  it("emits the determination envelope with --json", () => {
     const parsed = JSON.parse(run(...FACTS, "--json"));
+    expect(parsed.engine).toBe("axiom");
+    expect(parsed.runtime.mode).toBe("local-wasm");
     expect(parsed.root).toBe("us:regulations/7-cfr/273/10");
-    expect(parsed.corpus_commit).toMatch(/^[0-9a-f]{40}$/);
+    expect(parsed.corpus.commit).toMatch(/^[0-9a-f]{40}$/);
+    expect(parsed.corpus.modules).toContain("us:regulations/7-cfr/273/10");
     expect(parsed.certification).toBe("encoded");
+    expect(parsed.ledger.ledger_id).toBe("fixture-us-ny-snap");
     expect(parsed.outputs.snap_monthly_allotment).toBe("478");
+    // Stated facts flagged against presumptions; trace in hosted naming.
+    expect(
+      parsed.inputs.filter((input: { stated: boolean }) => input.stated).length,
+    ).toBe(3);
+    expect(parsed.trace.length).toBeGreaterThan(0);
+    expect(parsed.trace[0]).toHaveProperty("rule_id");
+    expect(parsed.trace[0]).toHaveProperty("sources");
   });
 
   it("tolerates shell-split assignments (--set slot = value)", () => {

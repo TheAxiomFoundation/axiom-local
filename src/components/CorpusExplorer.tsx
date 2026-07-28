@@ -28,6 +28,12 @@ import {
   findInvalidNumericAnswers,
   type GoldenPackage,
 } from "@/lib/goldenPath";
+import { humanizeCitation, humanizeRuleName } from "@/lib/citations";
+import {
+  buildDeterminationEnvelope,
+  envelopeFilename,
+  type DeterminationEnvelope,
+} from "@/lib/envelope";
 
 /**
  * The subtree IS the unit — there is no program registry. Every module in
@@ -56,10 +62,13 @@ interface SearchHit {
   jurisdiction: string;
   ruleCount: number;
   matched: string[];
+  /** Headline derived rule from the manifest — the entry's title. */
+  headline?: string;
 }
 
 interface Slice {
   root: string;
+  closure: string[];
   artifactJson: string;
   artifact: CompiledProgramArtifact;
   pkg: GoldenPackage;
@@ -92,6 +101,7 @@ export function CorpusExplorer() {
   const [outputs, setOutputs] = useState<{
     values: Record<string, string | number | boolean | null>;
     month: string;
+    envelope: DeterminationEnvelope;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -158,6 +168,7 @@ export function CorpusExplorer() {
           jurisdiction: entry.jurisdiction,
           ruleCount: entry.rules.length,
           matched: [],
+          headline: entry.headline,
         }));
       return { hits: top, totalHits: catalog.length };
     }
@@ -197,6 +208,7 @@ export function CorpusExplorer() {
         jurisdiction: entry.jurisdiction,
         ruleCount: entry.rules.length,
         matched: matched.slice(0, 3),
+        headline: entry.headline,
         score,
       });
     }
@@ -264,6 +276,7 @@ export function CorpusExplorer() {
         setMonth(pkg.default_period);
         setSlice({
           root,
+          closure,
           artifactJson,
           artifact,
           pkg,
@@ -310,8 +323,32 @@ export function CorpusExplorer() {
         engine.execute(slice.artifactJson, JSON.stringify(request)),
       ) as ExecutionResponse;
       const result = response.results[0];
+      // The canonical JSON artifact of this run — the same builder the
+      // CLI's --json prints, byte for byte.
+      const envelope = buildDeterminationEnvelope({
+        root: slice.root,
+        closure: slice.closure,
+        source:
+          manifestState.kind === "ready"
+            ? (manifestState.manifest.sources[0] ?? { repo: "corpus", commit: "unknown" })
+            : { repo: "corpus", commit: "unknown" },
+        pkg: slice.pkg,
+        artifact: slice.artifact,
+        request,
+        response,
+        answers,
+        certification: slice.certification,
+        ledger:
+          manifestState.kind === "ready" && manifestState.certified
+            ? {
+                ledger_id: manifestState.certified.ledger.ledger_id,
+                certified_set_version: manifestState.certified.setVersion,
+              }
+            : null,
+      });
       setOutputs({
         month,
+        envelope,
         values: Object.fromEntries(
           Object.entries(slice.pkg.outputs).map(([name, id]) => {
             const output = result.outputs[id];
@@ -326,7 +363,7 @@ export function CorpusExplorer() {
     } finally {
       setRunning(false);
     }
-  }, [slice, overrides, month]);
+  }, [slice, overrides, month, manifestState]);
 
   // The default subtree slices itself: the landing state is a live
   // determination over real law, not an empty search box.
@@ -402,8 +439,14 @@ export function CorpusExplorer() {
                   disabled={slicing !== null}
                   className="block w-full cursor-pointer px-3 py-2 text-left transition-colors hover:bg-rule-subtle/40"
                 >
-                  <span className="font-mono text-[0.72rem] text-ink">{hit.target}</span>
-                  <span className="ml-2 font-mono text-[0.65rem] text-ink-muted">
+                  {/* Title first: the module's headline rule, humanized;
+                      the citation reads as the subtitle. Rule-less-of-
+                      derived shells fall back to the citation itself. */}
+                  <span className="block text-[0.82rem] font-light text-ink">
+                    {hit.headline ? humanizeRuleName(hit.headline) : humanizeCitation(hit.target)}
+                  </span>
+                  <span className="mt-0.5 block font-mono text-[0.65rem] text-ink-muted">
+                    {hit.headline ? `${humanizeCitation(hit.target)} · ` : ""}
                     {hit.ruleCount} rules
                   </span>
                   {hit.matched.length > 0 ? (
@@ -433,9 +476,12 @@ export function CorpusExplorer() {
       {slice ? (
         <div className="panel mt-4 p-5">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <p className="font-mono text-[0.78rem] text-ink">{slice.root}</p>
+            <p className="text-[0.95rem] font-light text-ink">
+              {humanizeCitation(slice.root)}
+            </p>
             <p className="font-mono text-[0.65rem] text-ink-muted">
-              {slice.closureSize} modules · {slice.artifact.program.derived.length} rules ·{" "}
+              {slice.root} · {slice.closureSize} modules ·{" "}
+              {slice.artifact.program.derived.length} rules ·{" "}
               {slice.artifact.program.parameters.length} parameters · compiled in{" "}
               {slice.compileMs}ms
             </p>
@@ -484,33 +530,36 @@ export function CorpusExplorer() {
       ) : null}
 
       {outputs && slice ? (
-        <div className="record mt-6">
-          <div className="record-caption">
-            <span>
-              {slice.root} · {outputs.month}
-            </span>
-            <span>determined locally</span>
+        <>
+          <div className="record mt-6">
+            <div className="record-caption">
+              <span>
+                {humanizeCitation(slice.root)} · {outputs.month}
+              </span>
+              <span>determined locally</span>
+            </div>
+            <div className="record-body">
+              {Object.entries(outputs.values).map(([name, value]) => (
+                <div key={name} className="rec-line">
+                  {"  "}
+                  {name.padEnd(Math.max(...Object.keys(outputs.values).map((n) => n.length)) + 2)}
+                  <span
+                    className={
+                      value === "holds"
+                        ? "text-code-function"
+                        : value === "not_holds"
+                          ? "text-code-string"
+                          : "text-code-number"
+                    }
+                  >
+                    {String(value)}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="record-body">
-            {Object.entries(outputs.values).map(([name, value]) => (
-              <div key={name} className="rec-line">
-                {"  "}
-                {name.padEnd(Math.max(...Object.keys(outputs.values).map((n) => n.length)) + 2)}
-                <span
-                  className={
-                    value === "holds"
-                      ? "text-code-function"
-                      : value === "not_holds"
-                        ? "text-code-string"
-                        : "text-code-number"
-                  }
-                >
-                  {String(value)}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+          <EnvelopeAffordance root={slice.root} envelope={outputs.envelope} />
+        </>
       ) : null}
 
       {slice ? (
@@ -534,5 +583,62 @@ export function CorpusExplorer() {
         </p>
       ) : null}
     </div>
+  );
+}
+
+/**
+ * The run's canonical JSON artifact: view raw, copy, download — the exact
+ * envelope `determine.mjs --json` prints (src/lib/envelope.ts).
+ */
+function EnvelopeAffordance({
+  root,
+  envelope,
+}: {
+  root: string;
+  envelope: DeterminationEnvelope;
+}) {
+  const [copied, setCopied] = useState(false);
+  const json = useMemo(() => `${JSON.stringify(envelope, null, 2)}\n`, [envelope]);
+  const href = useMemo(
+    () => `data:application/json;charset=utf-8,${encodeURIComponent(json)}`,
+    [json],
+  );
+  return (
+    <details className="mt-3">
+      <summary className="cursor-pointer font-mono text-[0.7rem] text-ink-muted transition-colors hover:text-accent">
+        JSON — the determination as a record ›
+      </summary>
+      <div className="mt-2 border border-rule">
+        <div className="flex items-center justify-between border-b border-rule-subtle px-3 py-1.5">
+          <span className="font-mono text-[0.65rem] text-ink-muted">
+            outputs · trace · inputs as applied · corpus + ledger identity
+          </span>
+          <span className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={async () => {
+                await navigator.clipboard.writeText(json);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 1500);
+              }}
+              className="cursor-pointer select-none font-mono text-[0.62rem] uppercase tracking-wider text-ink-muted transition-colors hover:text-accent"
+            >
+              {copied ? "copied" : "copy"}
+            </button>
+            <a
+              href={href}
+              download={envelopeFilename(root)}
+              className="font-mono text-[0.62rem] uppercase tracking-wider text-ink-muted transition-colors hover:text-accent"
+              style={{ textDecoration: "none" }}
+            >
+              download
+            </a>
+          </span>
+        </div>
+        <pre className="max-h-80 overflow-auto px-3 py-2 font-mono text-[0.65rem] leading-relaxed text-ink-secondary">
+          {json}
+        </pre>
+      </div>
+    </details>
   );
 }

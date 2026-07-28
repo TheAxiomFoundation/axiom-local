@@ -83,7 +83,7 @@ export default function Docs() {
                 <FlagRow flag="--trace" desc="Print the chain of citation — every figure with the durable legal id of the rule that produced it." />
                 <FlagRow flag="--depth" args="<n>" desc="Trace depth (default 3)." />
                 <FlagRow flag="--slots" desc="List every input the slice can consider: entity, type, and slot name." />
-                <FlagRow flag="--json" desc="Machine-readable result: root, corpus commit, period, certification, answers, amendment, and all outputs." />
+                <FlagRow flag="--json" desc="The determination envelope: outputs, the full trace, every input as applied (stated vs presumed), the compiled closure and corpus pin, certification + ledger identity, and engine provenance. The page's JSON affordance emits the identical shape." />
                 <FlagRow flag="--help" desc="Usage with examples." />
               </tbody>
             </table>
@@ -149,13 +149,18 @@ export default function Docs() {
         <Section title="JSON output">
           <Record>
             <Cmd>bun scripts/determine.mjs --json --set household_size=2</Cmd>
-            <L>{dim('{ "root": "us:regulations/7-cfr/273/10",')}</L>
-            <L>{dim('  "corpus_commit": "5cc39ed…",')}</L>
+            <L>{dim('{ "engine": "axiom",')}</L>
+            <L>{dim('  "runtime": { "id": "axiom-local", "mode": "local-wasm", "engine_version": "0.1.0", … },')}</L>
+            <L>{dim('  "root": "us:regulations/7-cfr/273/10",')}</L>
+            <L>{dim('  "corpus": { "repo": "TheAxiomFoundation/rulespec-us", "commit": "5cc39ed…", "modules": [ … ] },')}</L>
             <L>{dim('  "period": { "period_kind": "month", "start": "2026-01-01", "end": "2026-02-01" },')}</L>
             <L>{dim('  "certification": "encoded",')}</L>
+            <L>{dim('  "ledger": { "ledger_id": "fixture-us-ny-snap", "certified_set_version": "38f5286…" },')}</L>
             <L>{dim('  "amendment": null,')}</L>
-            <L>{dim('  "answers": { "household": { "household_size": "2" }, … },')}</L>
-            <L>{dim('  "outputs": { "snap_monthly_allotment": "546", "snap_net_monthly_income": "0", … } }')}</L>
+            <L>{dim('  "inputs": [ { "ref": "…#input.household_size", "value": 2, "stated": true }, … ],')}</L>
+            <L>{dim('  "outputs": { "snap_monthly_allotment": "546", "snap_net_monthly_income": "0", … },')}</L>
+            <L>{dim('  "trace": [ { "rule_id": "…", "variable": "…", "value": "…", "sources": [ … ] }, … ],')}</L>
+            <L>{dim('  "warnings": [] }')}</L>
           </Record>
           <p className="mt-3 max-w-3xl text-[0.88rem] font-light text-ink-secondary">
             Judgment outputs come through as{" "}
@@ -195,7 +200,10 @@ export default function Docs() {
             </L>
           </Record>
           <p className="mt-3 max-w-3xl text-[0.88rem] font-light text-ink-secondary">
-            The request/response shapes are mirrored in{" "}
+            The determination envelope&apos;s builder is{" "}
+            <code className="font-mono text-[0.8rem] text-ink">src/lib/envelope.ts</code> —
+            hosted-API naming (rule_id / variable / sources, ledger identity) wherever it
+            is honest offline. The request/response shapes are mirrored in{" "}
             <code className="font-mono text-[0.8rem] text-ink">src/lib/engine/types.ts</code>;{" "}
             <code className="font-mono text-[0.8rem] text-ink">src/lib/corpus.ts</code>{" "}
             resolves closures, synthesizes the runnable descriptor, and probes entity

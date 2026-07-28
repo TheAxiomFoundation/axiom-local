@@ -48,6 +48,12 @@ export interface CorpusModuleEntry {
   jurisdiction: string;
   imports: string[];
   rules: string[];
+  /**
+   * The module's headline derived rule (src/lib/headline.ts), precomputed
+   * by scripts/build-corpus.mjs — catalog entries lead with its humanized
+   * name. Absent for parameter/citation shells.
+   */
+  headline?: string;
 }
 
 /**

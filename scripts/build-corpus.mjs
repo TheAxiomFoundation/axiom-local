@@ -7,8 +7,11 @@
  *   public/corpus/modules/<jurisdiction>/<path>.yaml   — byte-identical
  * plus one manifest the browser searches and resolves closures against:
  *   public/corpus/manifest.json — per module: canonical target, module-level
- *   imports (fragments stripped), rule names; plus the corpus commit so a
- *   slice's provenance line can say exactly which corpus it came from.
+ *   imports (fragments stripped), rule names, and the headline rule name
+ *   (src/lib/headline.ts — precomputed here because titling 3,500 catalog
+ *   entries client-side would need the YAML of every module); plus the
+ *   corpus commit so a slice's provenance line can say exactly which
+ *   corpus it came from.
  *
  * Axiom-authored composition/pipeline modules (isCompositionPath in
  * src/lib/corpus.ts) ARE vendored: import closures — including the
@@ -30,6 +33,7 @@ import { mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync }
 import { basename, dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { validateLedger } from "../src/lib/certified.ts";
+import { headlineRuleName } from "../src/lib/headline.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const outRoot = join(here, "..", "public", "corpus");
@@ -129,11 +133,13 @@ for (const checkout of checkouts) {
       const outPath = join(outRoot, "modules", jurisdiction, `${path}.yaml`);
       mkdirSync(dirname(outPath), { recursive: true });
       writeFileSync(outPath, yaml);
+      const headline = headlineRuleName(yaml);
       modules.push({
         target,
         jurisdiction,
         imports: parseImports(yaml),
         rules: parseRuleNames(yaml),
+        ...(headline ? { headline } : {}),
       });
     }
   }

@@ -55,6 +55,7 @@ const {
 const { collectClosureIds, findUncertified, resolveEnforcement, validateLedger } = await import(
   "../src/lib/certified.ts"
 );
+const { buildDeterminationEnvelope } = await import("../src/lib/envelope.ts");
 
 const require = createRequire(import.meta.url);
 const engine = require("../engine/pkg-node/axiom_rules_engine_wasm.js");
@@ -303,22 +304,27 @@ async function main() {
   };
 
   if (has("json")) {
-    const outputs = Object.fromEntries(Object.keys(pkg.outputs).map((name) => [name, value(name)]));
-    console.log(
-      JSON.stringify(
-        {
-          root,
-          corpus_commit: manifest.sources[0]?.commit ?? "unknown",
-          period: request.queries[0].period,
-          certification,
-          amendment: whatIf ?? null,
-          answers,
-          outputs,
-        },
-        null,
-        2,
-      ),
-    );
+    // The canonical envelope — the same builder the page's JSON affordance
+    // uses (src/lib/envelope.ts), so page and terminal agree byte for byte.
+    const envelope = buildDeterminationEnvelope({
+      root,
+      closure,
+      source: manifest.sources[0] ?? { repo: "corpus", commit: "unknown" },
+      pkg,
+      artifact: JSON.parse(artifactJson),
+      request,
+      response,
+      answers,
+      certification,
+      ledger: certified
+        ? {
+            ledger_id: certified.ledger.ledger_id,
+            certified_set_version: certified.setVersion,
+          }
+        : null,
+      amendment: whatIf ?? null,
+    });
+    console.log(JSON.stringify(envelope, null, 2));
     return;
   }
 
