@@ -9,6 +9,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "setup": "bun scripts/setup.mjs",
     "engine:setup": "bash scripts/engine-setup.sh"
   },
   "dependencies": {

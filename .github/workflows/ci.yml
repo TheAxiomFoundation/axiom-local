@@ -36,8 +36,14 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
-      - name: Test (vitest, against the vendored nodejs wasm build)
-        run: bun run test
+      - name: Generate the corpus from the locked commit
+        # public/corpus/ is gitignored; without it vitest skips every
+        # corpus-slicing suite and still reports green. The full test
+        # surface only exists once the pinned corpus is present.
+        run: bun scripts/setup.mjs --corpus-only
+
+      - name: Test (vitest, full suite — skipped tests fail the step)
+        run: bun scripts/setup.mjs --verify-only
 
       - name: Build (static export)
         run: bun run build

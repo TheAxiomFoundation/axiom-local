@@ -47,8 +47,13 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
-      - name: Test (vitest, against the vendored nodejs wasm build)
-        run: bun run test
+      - name: Generate the corpus from the locked commit
+        # Same reason as CI: without the pinned corpus, vitest skips the
+        # corpus-slicing suites and the gate would prove almost nothing.
+        run: bun scripts/setup.mjs --corpus-only
+
+      - name: Test (vitest, full suite — skipped tests fail the step)
+        run: bun scripts/setup.mjs --verify-only
 
       - name: Build (static export)
         run: bun run build
@@ -89,20 +94,11 @@ jobs:
       - name: Generate the corpus from the locked commit
         # public/corpus/ is gitignored (32MB of YAML), but the subtree
         # catalog IS the product — production must serve it. The lock file
-        # pins exactly which corpus commit ships.
-        run: |
-          repo=$(python3 -c "import json;print(json.load(open('corpus.lock.json'))['sources'][0]['repo'])")
-          commit=$(python3 -c "import json;print(json.load(open('corpus.lock.json'))['sources'][0]['commit'])")
-          git init -q .corpus-src
-          git -C .corpus-src remote add origin "https://github.com/${repo}.git"
-          git -C .corpus-src fetch -q --depth 1 origin "$commit"
-          git -C .corpus-src checkout -q FETCH_HEAD
-          bun scripts/build-corpus.mjs .corpus-src
-          test -f public/corpus/manifest.json
-          grep -q "axiom-local.corpus.v1" public/corpus/manifest.json
-          # The regenerated lock must match the committed one — otherwise the
-          # checkout is not the corpus that was reviewed.
-          git diff --exit-code corpus.lock.json
+        # pins exactly which corpus commit ships; the setup script fetches
+        # each pinned source, rebuilds, and fails unless the rebuilt lock
+        # byte-matches the committed one — the corpus that ships is the
+        # corpus that was reviewed.
+        run: bun scripts/setup.mjs --corpus-only
 
       - name: Pull Vercel project settings
         env:
