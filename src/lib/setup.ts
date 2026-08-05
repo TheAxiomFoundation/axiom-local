@@ -20,7 +20,7 @@
  */
 
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, join, resolve, sep } from "node:path";
 
@@ -135,6 +135,21 @@ function assertManagedDir(root: string, dir: string): void {
   if (!resolve(dir).startsWith(managedRoot + sep)) {
     throw new Error(`refusing to manage ${dir}: outside ${managedRoot}`);
   }
+  // Lexical containment is not physical containment: a symlinked
+  // .corpus-src (or checkout dir) would aim the recursive delete and the
+  // hard reset at wherever the link points. Refuse links outright.
+  const lstatIfExists = (path: string) => {
+    try {
+      return lstatSync(path);
+    } catch {
+      return null;
+    }
+  };
+  for (const path of [managedRoot, resolve(dir)]) {
+    if (lstatIfExists(path)?.isSymbolicLink()) {
+      throw new Error(`refusing to manage ${path}: it is a symlink`);
+    }
+  }
 }
 
 function isRepo(dir: string): boolean {
@@ -180,9 +195,12 @@ export function ensurePinnedCheckout(root: string, source: CorpusSource): "clone
     run("git", ["checkout", "-q", "--force", "--detach", source.commit], { cwd: dir });
     touched = true;
   }
-  if (run("git", ["status", "--porcelain"], { cwd: dir }) !== "") {
+  // --ignored: plain porcelain output omits ignored files, which the
+  // corpus scan would still pick up. -ff: a single -f leaves nested git
+  // repos (and any yaml inside them) in place.
+  if (run("git", ["status", "--porcelain", "--ignored"], { cwd: dir }) !== "") {
     run("git", ["reset", "-q", "--hard", source.commit], { cwd: dir });
-    run("git", ["clean", "-qfdx"], { cwd: dir });
+    run("git", ["clean", "-qffdx"], { cwd: dir });
     touched = true;
   }
   return touched ? "updated" : "reused";

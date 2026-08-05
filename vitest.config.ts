@@ -10,5 +10,9 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["tests/**/*.test.ts"],
+    // Integration-heavy suite: CLI tests spawn bun + compile wasm slices,
+    // and the setup tests drive real git fixtures. The 5s default flakes
+    // under load; a hang still dies here.
+    testTimeout: 30_000,
   },
 });

@@ -9,7 +9,7 @@
  */
 
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
@@ -54,7 +54,8 @@ function makeFixtureRemote(): { url: string; first: string; second: string } {
   git(dir, "init", "-q");
   git(dir, "config", "uploadpack.allowAnySHA1InWant", "true");
   writeFileSync(join(dir, "module.yaml"), "format: rulespec/v1\nversion: first\n");
-  git(dir, "add", "module.yaml");
+  writeFileSync(join(dir, ".gitignore"), "*.local.yaml\n");
+  git(dir, "add", "module.yaml", ".gitignore");
   git(dir, "commit", "-qm", "first");
   const first = git(dir, "rev-parse", "HEAD");
   writeFileSync(join(dir, "module.yaml"), "format: rulespec/v1\nversion: second\n");
@@ -207,6 +208,41 @@ describe("ensurePinnedCheckout", () => {
     expect(ensurePinnedCheckout(root, pin)).toBe("updated");
     expect(existsSync(join(dir, "stray.yaml"))).toBe(false);
     expect(readFileSync(join(dir, "module.yaml"), "utf8")).toContain("version: first");
+  });
+
+  it("heals drift plain porcelain misses: ignored files and nested repos", () => {
+    const remote = makeFixtureRemote();
+    const root = tmp("axiom-setup-app-");
+    const pin: CorpusSource = { repo: remote.url, commit: remote.first };
+    const dir = checkoutDirFor(root, pin);
+    ensurePinnedCheckout(root, pin);
+
+    // Gitignored yaml: invisible to `status --porcelain`, visible to the
+    // corpus scan. Nested repo: `clean -fdx` (single -f) leaves it behind.
+    writeFileSync(join(dir, "scratch.local.yaml"), "format: rulespec/v1\n");
+    const nested = join(dir, "vendored");
+    mkdirSync(nested);
+    git(nested, "init", "-q");
+    writeFileSync(join(nested, "smuggled.yaml"), "format: rulespec/v1\n");
+
+    expect(ensurePinnedCheckout(root, pin)).toBe("updated");
+    expect(existsSync(join(dir, "scratch.local.yaml"))).toBe(false);
+    expect(existsSync(nested)).toBe(false);
+  });
+
+  it("refuses a symlinked managed dir instead of deleting through it", () => {
+    const remote = makeFixtureRemote();
+    const victim = tmp("axiom-setup-victim-");
+    writeFileSync(join(victim, "canary.txt"), "still here\n");
+
+    // .corpus-src itself is a link: lexical containment would pass while
+    // every recursive operation landed inside the victim directory.
+    const root = tmp("axiom-setup-app-");
+    symlinkSync(victim, join(root, ".corpus-src"));
+
+    const pin: CorpusSource = { repo: remote.url, commit: remote.first };
+    expect(() => ensurePinnedCheckout(root, pin)).toThrow(/symlink/);
+    expect(readFileSync(join(victim, "canary.txt"), "utf8")).toBe("still here\n");
   });
 
   it("rebuilds from scratch when the remote no longer matches the lock", () => {
