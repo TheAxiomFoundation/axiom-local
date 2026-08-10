@@ -123,21 +123,29 @@ engine/
 public/engine/         vendored web wasm build (served to the browser)
 ```
 
-## Run it locally
+## Install locally
 
-This repo is the local distribution: the wasm engine is checked in and the
-corpus regenerates from the pinned commit, so everything runs offline with
-no Rust toolchain. Requires [Bun](https://bun.sh) only.
+This local distribution runs while completely offline, as the wasm engine is checked in and the corpus regenerates from the pinned commit. The only pre-install tool requirement is [Bun](https://bun.sh).
 
 ```sh
 git clone https://github.com/TheAxiomFoundation/axiom-local
+git clone https://github.com/TheAxiomFoundation/rulespec-us
 cd axiom-local && bun install
 bun scripts/build-corpus.mjs ../rulespec-us   # generate public/corpus/
+bun run test         # vitest: the 7 CFR 273.10 golden path, the
+                     #         composition/pipeline exclusion, the certified
+                     #         gate, corpus slicing, and the CLI
+```
+If installation was successful, all tests will pass. No tests should fail or be skipped. 
 
-# The page, with hot reload:
+## Run locally
+The determination page, viewable in your browser, with hot reload:
+```sh
 bun run dev          # http://localhost:3000
+```
 
-# Or the same determination straight from your terminal:
+Or the same determination page viewable in your terminal:
+```sh
 bun scripts/determine.mjs --roots snap        # the subtree catalog
 bun scripts/determine.mjs \
   --set household_size=2 --set snap_gross_monthly_earned_income=1200 \
@@ -158,9 +166,6 @@ Other scripts:
 
 ```sh
 bun run typecheck    # tsc --noEmit
-bun run test         # vitest: the 7 CFR 273.10 golden path, the
-                     #         composition/pipeline exclusion, the certified
-                     #         gate, corpus slicing, and the CLI
 bun run build        # static export to ./out
 ```
 
