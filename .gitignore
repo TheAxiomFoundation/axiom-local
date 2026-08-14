@@ -4,6 +4,8 @@ node_modules/
 # next.js
 .next/
 out/
+# production-preview mount created by the README preview recipe
+preview/
 next-env.d.ts
 
 # engine source checkout used by `bun run engine:setup`

@@ -129,19 +129,20 @@ This local distribution runs while completely offline, as the wasm engine is che
 
 ```sh
 git clone https://github.com/TheAxiomFoundation/axiom-local
-git clone https://github.com/TheAxiomFoundation/rulespec-us
-cd axiom-local && bun install
-bun scripts/build-corpus.mjs ../rulespec-us   # generate public/corpus/
-bun run test         # vitest: the 7 CFR 273.10 golden path, the
-                     #         composition/pipeline exclusion, the certified
-                     #         gate, corpus slicing, and the CLI
+cd axiom-local
+bun run setup        # installs deps, fetches the rule sources at their
+                     # pinned commits, rebuilds the corpus (verified
+                     # byte-identical to corpus.lock.json), and runs the
+                     # full test suite — the 7 CFR 273.10 golden path,
+                     # the composition/pipeline exclusion, the certified
+                     # gate, corpus slicing, and the CLI
 ```
-If installation was successful, all tests will pass. No tests should fail or be skipped. 
+If installation was successful, all tests will pass. No tests should fail or be skipped.
 
 ## Run locally
 The determination page, viewable in your browser, with hot reload:
 ```sh
-bun run dev          # http://localhost:3000
+bun run dev          # http://localhost:3000/local/ — the root 404s by design
 ```
 
 Or the same determination page viewable in your terminal:
@@ -169,11 +170,13 @@ bun run typecheck    # tsc --noEmit
 bun run build        # static export to ./out
 ```
 
-To preview the production build exactly as it ships:
+To preview the production build exactly as it ships (the site mounts at
+`/local`, so the export must be served under a `/local` directory):
 
 ```sh
 bun run build
-bunx serve out
+mkdir -p preview && ln -sfn "$PWD/out" preview/local
+bunx serve preview   # then open /local/ on the printed port
 ```
 
 ## Regenerating the wasm engine
