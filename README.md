@@ -204,6 +204,6 @@ Then run `bun run test` and `bun run build` and commit the refreshed
 
 ## License
 
-The application code is released under Apache-2.0. The vendored engine packages
-carry the upstream Apache-2.0 license (`engine/pkg-node/LICENSE`,
-`public/engine/LICENSE`).
+The application code is released under MIT. The vendored engine packages
+carry the license of the engine release they were vendored from
+(`engine/pkg-node/LICENSE`, `public/engine/LICENSE`).
