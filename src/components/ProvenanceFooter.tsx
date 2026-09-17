@@ -55,7 +55,7 @@ export function ProvenanceFooter() {
             <a href={upstream.repo} target="_blank" rel="noreferrer">
               axiom-rules-engine
             </a>{" "}
-            (Apache-2.0)
+            (MIT)
           </p>
         </div>
       </div>
